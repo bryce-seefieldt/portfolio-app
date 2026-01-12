@@ -43,25 +43,63 @@ const CAPABILITIES: Capability[] = [
   {
     category: "Full-stack web engineering",
     items: [
-      { label: "Next.js (App Router), React, TypeScript", proof: { text: "Portfolio App dossier", href: docsUrl("projects/portfolio-app/") } },
-      { label: "Component architecture and scalable content models", proof: { text: "Architecture evidence", href: docsUrl("projects/portfolio-app/architecture") } },
-      { label: "Performance and accessibility fundamentals (phased hardening)", proof: { text: "Roadmap", href: docsUrl("portfolio/roadmap") } },
+      {
+        label: "Next.js (App Router), React, TypeScript",
+        proof: { text: "Portfolio App dossier", href: docsUrl("projects/portfolio-app/") },
+      },
+      {
+        label: "Component architecture and scalable content models",
+        proof: {
+          text: "Architecture evidence",
+          href: docsUrl("projects/portfolio-app/architecture"),
+        },
+      },
+      {
+        label: "Performance and accessibility fundamentals (phased hardening)",
+        proof: { text: "Roadmap", href: docsUrl("portfolio/roadmap") },
+      },
     ],
   },
   {
     category: "DevOps / platform delivery",
     items: [
-      { label: "CI quality gates (lint/format/typecheck/build)", proof: { text: "Testing & gates", href: docsUrl("projects/portfolio-app/testing") } },
-      { label: "Release governance with promotion checks", proof: { text: "Hosting ADR", href: docsUrl("architecture/adr/adr-0007-portfolio-app-hosting-vercel-with-promotion-checks") } },
-      { label: "Operational readiness: deploy/rollback/triage runbooks", proof: { text: "Runbooks", href: docsUrl("operations/runbooks/") } },
+      {
+        label: "CI quality gates (lint/format/typecheck/build)",
+        proof: { text: "Testing & gates", href: docsUrl("projects/portfolio-app/testing") },
+      },
+      {
+        label: "Release governance with promotion checks",
+        proof: {
+          text: "Hosting ADR",
+          href: docsUrl(
+            "architecture/adr/adr-0007-portfolio-app-hosting-vercel-with-promotion-checks",
+          ),
+        },
+      },
+      {
+        label: "Operational readiness: deploy/rollback/triage runbooks",
+        proof: { text: "Runbooks", href: docsUrl("operations/runbooks/") },
+      },
     ],
   },
   {
     category: "Security-minded engineering",
     items: [
-      { label: "Threat modeling and SDLC controls", proof: { text: "Threat models", href: docsUrl("security/threat-models/") } },
-      { label: "Supply chain hygiene and dependency governance", proof: { text: "Threat model (Portfolio App)", href: docsUrl("security/threat-models/portfolio-app-threat-model") } },
-      { label: "Public-safe documentation and evidence discipline", proof: { text: "Documentation App dossier", href: docsUrl("projects/portfolio-docs-app/") } },
+      {
+        label: "Threat modeling and SDLC controls",
+        proof: { text: "Threat models", href: docsUrl("security/threat-models/") },
+      },
+      {
+        label: "Supply chain hygiene and dependency governance",
+        proof: {
+          text: "Threat model (Portfolio App)",
+          href: docsUrl("security/threat-models/portfolio-app-threat-model"),
+        },
+      },
+      {
+        label: "Public-safe documentation and evidence discipline",
+        proof: { text: "Documentation App dossier", href: docsUrl("projects/portfolio-docs-app/") },
+      },
     ],
   },
 ];
@@ -83,20 +121,21 @@ export default function CVPage() {
       <header className="flex flex-col gap-3">
         <h1 className="text-3xl font-semibold tracking-tight">Interactive CV</h1>
         <p className="max-w-3xl text-zinc-700 dark:text-zinc-300">
-          This CV is designed for rapid review and verification. It prioritizes evidence links over claims.
-          Deep technical artifacts (ADRs, threat models, runbooks) live in the Documentation App.
+          This CV is designed for rapid review and verification. It prioritizes evidence links over
+          claims. Deep technical artifacts (ADRs, threat models, runbooks) live in the Documentation
+          App.
         </p>
 
         <div className="flex flex-wrap items-center gap-3">
           <Link
             href="/projects"
-            className="text-sm font-medium underline text-zinc-800 hover:text-zinc-950 dark:text-zinc-200 dark:hover:text-white"
+            className="text-sm font-medium text-zinc-800 underline hover:text-zinc-950 dark:text-zinc-200 dark:hover:text-white"
           >
             Browse projects
           </Link>
           <a
             href={DOCS_BASE_URL}
-            className="text-sm font-medium underline text-zinc-800 hover:text-zinc-950 dark:text-zinc-200 dark:hover:text-white"
+            className="text-sm font-medium text-zinc-800 underline hover:text-zinc-950 dark:text-zinc-200 dark:hover:text-white"
           >
             Open evidence docs
           </a>
@@ -146,18 +185,28 @@ export default function CVPage() {
         </div>
       </Callout>
 
-      <Section title="Professional summary" subtitle="Senior full-stack delivery with enterprise IT operational context.">
+      <Section
+        title="Professional summary"
+        subtitle="Senior full-stack delivery with enterprise IT operational context."
+      >
         <p className="text-sm text-zinc-700 dark:text-zinc-300">
-          I build and operate production-grade systems with an evidence-first mindset: planning artifacts are
-          version-controlled, decisions are recorded, risks are assessed, and operational procedures are documented.
-          This portfolio program is intentionally designed to demonstrate that discipline publicly and reproducibly.
+          I build and operate production-grade systems with an evidence-first mindset: planning
+          artifacts are version-controlled, decisions are recorded, risks are assessed, and
+          operational procedures are documented. This portfolio program is intentionally designed to
+          demonstrate that discipline publicly and reproducibly.
         </p>
       </Section>
 
-      <Section title="Capabilities (with proof links)" subtitle="Each capability maps to evidence artifacts where possible.">
+      <Section
+        title="Capabilities (with proof links)"
+        subtitle="Each capability maps to evidence artifacts where possible."
+      >
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {CAPABILITIES.map((cap) => (
-            <div key={cap.category} className="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
+            <div
+              key={cap.category}
+              className="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800"
+            >
               <div className="font-medium">{cap.category}</div>
               <ul className="mt-2 list-disc pl-5 text-sm text-zinc-700 dark:text-zinc-300">
                 {cap.items.map((it) => (
@@ -178,10 +227,16 @@ export default function CVPage() {
         </div>
       </Section>
 
-      <Section title="Experience timeline (first-pass)" subtitle="Replace placeholder entries with real roles and outcomes; keep proof links.">
+      <Section
+        title="Experience timeline (first-pass)"
+        subtitle="Replace placeholder entries with real roles and outcomes; keep proof links."
+      >
         <div className="flex flex-col gap-4">
           {EXPERIENCE.map((item) => (
-            <div key={`${item.title}-${item.org}`} className="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
+            <div
+              key={`${item.title}-${item.org}`}
+              className="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800"
+            >
               <div className="flex flex-col gap-1">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <div className="font-medium">{item.title}</div>
@@ -237,11 +292,16 @@ export default function CVPage() {
         </ul>
       </Section>
 
-      <Section title="Next actions" subtitle="If you want to validate ongoing work, these are the current program priorities.">
+      <Section
+        title="Next actions"
+        subtitle="If you want to validate ongoing work, these are the current program priorities."
+      >
         <ul className="list-disc pl-5 text-sm text-zinc-700 dark:text-zinc-300">
           <li>Finalize CI gates and Vercel promotion checks for the Portfolio App repo.</li>
           <li>Implement the first “gold standard” project page with a complete evidence trail.</li>
-          <li>Convert projects to a data-driven registry (filters, tags, repeatable publishing).</li>
+          <li>
+            Convert projects to a data-driven registry (filters, tags, repeatable publishing).
+          </li>
         </ul>
       </Section>
     </div>

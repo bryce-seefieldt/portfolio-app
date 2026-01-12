@@ -18,16 +18,12 @@ The Portfolio App provides:
 
 The design goal is for reviewers to evaluate the portfolio like a real service: clear UX, stable routes, and verifiable evidence trails.
 
-
-
 ## Documentation App (Evidence Engine)
 
 Enterprise-grade documentation is hosted separately to preserve a clean product surface and maintain governance discipline.
 
 - Docs base URL is configured via: `NEXT_PUBLIC_DOCS_BASE_URL`
 - The code constructs evidence links through: `src/lib/config.ts`
-
-
 
 ## Tech stack
 
@@ -39,10 +35,10 @@ Enterprise-grade documentation is hosted separately to preserve a clean product 
   - `src/lib/config.ts` (public-safe runtime configuration)
   - `src/data/projects.ts` (project registry placeholder)
 
-
 ## Local development
 
 ### Prerequisites
+
 - Node.js (LTS recommended)
 - pnpm
 
@@ -52,14 +48,19 @@ Enterprise-grade documentation is hosted separately to preserve a clean product 
 pnpm install
 cp .env.example .env.local
 ```
+
 Edit `.env.local` to set at least:
+
 - `NEXT_PUBLIC_DOCS_BASE_URL` (path strategy or subdomain strategy)
 
 #### Run dev server
+
 ```bash
 pnpm dev
 ```
+
 #### Build
+
 ```bash
 pnpm build
 ```
@@ -72,26 +73,23 @@ See `.env.example` for the public-safe configuration contract.
 
 All variables prefixed with `NEXT_PUBLIC_` are exposed to the browser. Do not place secrets, tokens, private endpoints, or sensitive values in `NEXT_PUBLIC_*`.
 
-
-
 ## Governance (Current State)
 
 At this stage, this repo provides the baseline application skeleton and content structure.
 
 Next steps (planned):
+
 - Enforce PR discipline with required CI checks (lint/format/typecheck/build)
 - Add CodeQL and dependency governance (Dependabot)
 - Deploy to Vercel with preview deployments and production promotion gated by checks
 
-
 ## Deployment (planned)
 
 The intended deployment platform is Vercel:
+
 - PR → preview deployments
 - `main` → production deployment
 - production promotion gated by GitHub checks (imported into Vercel)
-
-
 
 ## Security note
 

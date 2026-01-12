@@ -61,7 +61,7 @@ export const SITE_URL: string | null = asAbsoluteUrl(env.NEXT_PUBLIC_SITE_URL);
  * For local dev, you may leave this unset and it will default to "/docs".
  */
 export const DOCS_BASE_URL: string = normalizeBaseUrl(
-  env.NEXT_PUBLIC_DOCS_BASE_URL?.trim() || "/docs"
+  env.NEXT_PUBLIC_DOCS_BASE_URL?.trim() || "/docs",
 );
 
 /**
