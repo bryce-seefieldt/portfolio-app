@@ -4,13 +4,7 @@ import { Callout } from "@/components/Callout";
 import { Section } from "@/components/Section";
 import { DOCS_BASE_URL, GITHUB_URL, LINKEDIN_URL, docsUrl } from "@/lib/config";
 
-function PrimaryButton({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
+function PrimaryButton({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <Link
       href={href}
@@ -21,13 +15,7 @@ function PrimaryButton({
   );
 }
 
-function SecondaryLink({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
+function SecondaryLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <Link
       href={href}
@@ -92,11 +80,17 @@ export default function HomePage() {
           <div className="font-medium">How to evaluate this portfolio (fast path)</div>
           <ol className="list-decimal pl-5">
             <li>
-              Read the <Link className="underline" href="/cv">CV</Link> for impact, scope, and
-              seniority signals.
+              Read the{" "}
+              <Link className="underline" href="/cv">
+                CV
+              </Link>{" "}
+              for impact, scope, and seniority signals.
             </li>
             <li>
-              Open a project page in <Link className="underline" href="/projects">Projects</Link>{" "}
+              Open a project page in{" "}
+              <Link className="underline" href="/projects">
+                Projects
+              </Link>{" "}
               and follow the evidence links.
             </li>
             <li>
@@ -119,7 +113,9 @@ export default function HomePage() {
           <ul className="list-disc pl-5 text-sm text-zinc-700 dark:text-zinc-300">
             <li>Modern TypeScript web engineering (Next.js App Router).</li>
             <li>Enterprise SDLC: PR discipline, CI quality gates, and release governance.</li>
-            <li>Security posture: safe-publication rules, supply chain hygiene, threat modeling.</li>
+            <li>
+              Security posture: safe-publication rules, supply chain hygiene, threat modeling.
+            </li>
             <li>Operational readiness: deploy/rollback runbooks and failure-mode triage.</li>
           </ul>
         </Section>
@@ -188,7 +184,10 @@ export default function HomePage() {
                 <a className="underline" href={docsUrl("projects/portfolio-app/")}>
                   Read dossier
                 </a>
-                <a className="underline" href={docsUrl("security/threat-models/portfolio-app-threat-model")}>
+                <a
+                  className="underline"
+                  href={docsUrl("security/threat-models/portfolio-app-threat-model")}
+                >
                   Threat model
                 </a>
               </div>
@@ -196,17 +195,10 @@ export default function HomePage() {
           </div>
         </Section>
 
-        <Section
-          title="Next steps"
-          subtitle="Where this program goes from here."
-        >
+        <Section title="Next steps" subtitle="Where this program goes from here.">
           <ul className="list-disc pl-5 text-sm text-zinc-700 dark:text-zinc-300">
-            <li>
-              Implement CI quality gates and promotion checks (mirroring the docs platform).
-            </li>
-            <li>
-              Create one “gold standard” project page with a complete evidence trail.
-            </li>
+            <li>Implement CI quality gates and promotion checks (mirroring the docs platform).</li>
+            <li>Create one “gold standard” project page with a complete evidence trail.</li>
             <li>
               Convert projects to a data-driven registry (scales cleanly as the portfolio grows).
             </li>

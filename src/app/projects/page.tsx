@@ -14,7 +14,13 @@ function Tag({ children }: { children: React.ReactNode }) {
 
 function StatusBadge({ status }: { status: string }) {
   const label =
-    status === "featured" ? "Featured" : status === "active" ? "Active" : status === "planned" ? "Planned" : "Archived";
+    status === "featured"
+      ? "Featured"
+      : status === "active"
+        ? "Active"
+        : status === "planned"
+          ? "Planned"
+          : "Archived";
   return (
     <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
       {label}
@@ -30,8 +36,9 @@ export default function ProjectsPage() {
       <header className="flex flex-col gap-3">
         <h1 className="text-3xl font-semibold tracking-tight">Projects</h1>
         <p className="max-w-3xl text-zinc-700 dark:text-zinc-300">
-          Projects are documented with an evidence-first model. Each project page links to deeper artifacts
-          (dossier, ADRs, threat model, runbooks) in the Documentation App where applicable.
+          Projects are documented with an evidence-first model. Each project page links to deeper
+          artifacts (dossier, ADRs, threat model, runbooks) in the Documentation App where
+          applicable.
         </p>
         <div className="text-sm text-zinc-600 dark:text-zinc-400">
           Evidence engine:{" "}
@@ -41,10 +48,16 @@ export default function ProjectsPage() {
         </div>
       </header>
 
-      <Section title="Featured" subtitle="Best entry points for reviewers. Each has a defined evidence trail.">
+      <Section
+        title="Featured"
+        subtitle="Best entry points for reviewers. Each has a defined evidence trail."
+      >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {featured.map((p) => (
-            <div key={p.slug} className="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
+            <div
+              key={p.slug}
+              className="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800"
+            >
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <div className="font-medium">
@@ -91,7 +104,10 @@ export default function ProjectsPage() {
       >
         <div className="flex flex-col gap-3">
           {PROJECTS.map((p) => (
-            <div key={p.slug} className="flex flex-col gap-1 rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
+            <div
+              key={p.slug}
+              className="flex flex-col gap-1 rounded-xl border border-zinc-200 p-4 dark:border-zinc-800"
+            >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <Link className="font-medium hover:underline" href={`/projects/${p.slug}`}>
                   {p.title}

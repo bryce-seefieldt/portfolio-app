@@ -15,13 +15,7 @@ export const metadata: Metadata = {
   metadataBase: undefined, // Intentionally not guessing SITE_URL at this stage
 };
 
-function TopNavLink({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
+function TopNavLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <Link
       href={href}

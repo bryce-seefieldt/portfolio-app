@@ -42,7 +42,10 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
         </div>
       </header>
 
-      <Section title="What this project proves" subtitle="A reviewer-oriented proof checklist (expand as you mature).">
+      <Section
+        title="What this project proves"
+        subtitle="A reviewer-oriented proof checklist (expand as you mature)."
+      >
         <ul className="list-disc pl-5 text-sm text-zinc-700 dark:text-zinc-300">
           <li>Clear technical scope, boundaries, and design rationale.</li>
           <li>Enterprise SDLC posture: PR discipline and CI quality gates.</li>
@@ -51,7 +54,10 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
         </ul>
       </Section>
 
-      <Section title="Evidence links" subtitle="Deep artifacts live in the Documentation App (Docusaurus).">
+      <Section
+        title="Evidence links"
+        subtitle="Deep artifacts live in the Documentation App (Docusaurus)."
+      >
         <ul className="list-disc pl-5 text-sm text-zinc-700 dark:text-zinc-300">
           {evidence?.dossierPath ? (
             <li>
@@ -93,16 +99,20 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
         </ul>
       </Section>
 
-      <Section title="Technical summary (first-pass)" subtitle="Keep this concise; link to dossiers for depth.">
+      <Section
+        title="Technical summary (first-pass)"
+        subtitle="Keep this concise; link to dossiers for depth."
+      >
         <div className="flex flex-col gap-2 text-sm text-zinc-700 dark:text-zinc-300">
           <p>
-            This page is intentionally structured to scale: project data will move into a validated registry, and
-            evidence links will remain stable. Long-form technical details and operational artifacts live in the
-            Documentation App to preserve a clean front-of-house experience.
+            This page is intentionally structured to scale: project data will move into a validated
+            registry, and evidence links will remain stable. Long-form technical details and
+            operational artifacts live in the Documentation App to preserve a clean front-of-house
+            experience.
           </p>
           <p className="text-zinc-600 dark:text-zinc-400">
-            Next step: replace placeholder proof statements with project-specific evidence and add diagrams/screenshots
-            where public-safe.
+            Next step: replace placeholder proof statements with project-specific evidence and add
+            diagrams/screenshots where public-safe.
           </p>
         </div>
       </Section>
