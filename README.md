@@ -73,15 +73,26 @@ See `.env.example` for the public-safe configuration contract.
 
 All variables prefixed with `NEXT_PUBLIC_` are exposed to the browser. Do not place secrets, tokens, private endpoints, or sensitive values in `NEXT_PUBLIC_*`.
 
-## Governance (Current State)
+## Governance (Implemented)
 
-At this stage, this repo provides the baseline application skeleton and content structure.
+Phase 1 governance is enforced:
 
-Next steps (planned):
+- Required CI checks with stable names:
+  - `ci / quality` (lint, format:check, typecheck)
+  - `ci / build` (Next.js build; depends on quality)
+- Deterministic installs in CI: `pnpm install --frozen-lockfile`
+- Supply chain and static analysis: CodeQL (JS/TS) and Dependabot (weekly; majors excluded)
 
-- Enforce PR discipline with required CI checks (lint/format/typecheck/build)
-- Add CodeQL and dependency governance (Dependabot)
-- Deploy to Vercel with preview deployments and production promotion gated by checks
+### Local quality contract
+
+Run locally before pushing:
+
+```bash
+pnpm lint
+pnpm format:check
+pnpm typecheck
+pnpm build
+```
 
 ## Deployment (planned)
 
