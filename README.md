@@ -94,13 +94,16 @@ pnpm typecheck
 pnpm build
 ```
 
-## Deployment (planned)
+## Deployment (Live — Phase 1 Complete)
 
-The intended deployment platform is Vercel:
+✅ **Production is live on Vercel:**
 
-- PR → preview deployments
-- `main` → production deployment
-- production promotion gated by GitHub checks (imported into Vercel)
+- PR → preview deployments (Vercel auto-generates preview URLs)
+- `main` → production deployment at `https://portfolio-app.vercel.app`
+- Production promotion gated by GitHub Deployment Checks (`ci / quality`, `ci / build`)
+- GitHub Ruleset protects `main` branch
+
+For Phase 1 setup details, see [Vercel Setup Runbook](/docs/50-operations/runbooks/rbk-vercel-setup-and-promotion-validation.md) in the documentation app.
 
 ## Security note
 
