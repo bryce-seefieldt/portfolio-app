@@ -67,8 +67,8 @@ export default function ContactPage() {
           </div>
         ) : (
           <div className="text-sm text-zinc-600 dark:text-zinc-400">
-            UPDATED REQUIRED: No contact links are configured yet. Set one or more of the following environment
-            variables:
+            UPDATED REQUIRED: No contact links are configured yet. Set one or more of the following
+            environment variables:
             <ul className="mt-2 list-disc pl-5">
               <li>
                 <code>NEXT_PUBLIC_LINKEDIN_URL</code>
