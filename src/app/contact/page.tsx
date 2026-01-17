@@ -61,13 +61,13 @@ export default function ContactPage() {
               <ContactLink
                 href={mailtoUrl(CONTACT_EMAIL, "Portfolio inquiry")}
                 label="Email"
-                sublabel="Mailto link (no form)."
+                sublabel="Mailto link."
               />
             ) : null}
           </div>
         ) : (
           <div className="text-sm text-zinc-600 dark:text-zinc-400">
-            No contact links are configured yet. Set one or more of the following environment
+            UPDATED REQUIRED: No contact links are configured yet. Set one or more of the following environment
             variables:
             <ul className="mt-2 list-disc pl-5">
               <li>
