@@ -5,8 +5,9 @@ import { Section } from "@/components/Section";
 import { getProjectBySlug } from "@/data/projects";
 import { docsUrl } from "@/lib/config";
 
-export default function ProjectDetailPage({ params }: { params: { slug: string } }) {
-  const project = getProjectBySlug(params.slug);
+export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const project = getProjectBySlug(slug);
   if (!project) return notFound();
 
   const evidence = project.evidence;
