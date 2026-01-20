@@ -177,7 +177,66 @@ The Portfolio App must link to evidence artifacts hosted in Docusaurus via `DOCS
 
 Do not copy deep operational or security content into the Portfolio App. Link to it.
 
-### 6.3 Documentation updates expectation
+### 6.3 URL linking strategy (required for all documentation links)
+
+When linking to Portfolio Documentation, use environment variables to ensure portability and correctness:
+
+#### Links to rendered Docusaurus pages (`/portfolio/portfolio-docs/docs/*`)
+
+Use `NEXT_PUBLIC_DOCS_BASE_URL` to construct links to published docs.
+
+**Rules:**
+- Prefix: `NEXT_PUBLIC_DOCS_BASE_URL` (replaces the base `/portfolio/portfolio-docs/docs/` path)
+- Path: start with `docs/` then the documentation path
+- **Do NOT include** section prefix numbers (e.g., use `portfolio` not `00-portfolio`)
+- **Do NOT include** `.md` file extension
+- Append path components with `/` (not `.`)
+
+**Examples:**
+- ✅ `NEXT_PUBLIC_DOCS_BASE_URL + "docs/portfolio/roadmap"` → `https://bns-portfolio-docs.vercel.app/docs/portfolio/roadmap`
+- ✅ `docsUrl("portfolio/architecture")` (use the helper function)
+- ❌ `NEXT_PUBLIC_DOCS_BASE_URL + "docs/00-portfolio/roadmap.md"` (wrong prefix + extension)
+- ❌ `NEXT_PUBLIC_DOCS_BASE_URL + "portfolio.roadmap"` (wrong separator)
+
+#### Links to non-rendered portfolio-docs files (configuration, CI, etc.)
+
+Use `NEXT_PUBLIC_DOCS_GITHUB_URL` for files NOT under `/portfolio/portfolio-docs/docs/`:
+
+**Rules:**
+- Prefix: `NEXT_PUBLIC_DOCS_GITHUB_URL + "blob/main/"`
+- Path: relative from `/portfolio/portfolio-docs/` root
+- **DO include** file extensions (`.md`, `.yml`, `.ts`, etc.)
+
+**Examples:**
+- ✅ `NEXT_PUBLIC_DOCS_GITHUB_URL + "blob/main/package.json"` → `https://github.com/bryce-seefieldt/portfolio-docs/blob/main/package.json`
+- ✅ `NEXT_PUBLIC_DOCS_GITHUB_URL + "blob/main/docusaurus.config.ts"`
+- ✅ `NEXT_PUBLIC_DOCS_GITHUB_URL + "blob/main/.github/workflows/ci.yml"`
+- ❌ `NEXT_PUBLIC_DOCS_GITHUB_URL + "package.json"` (missing `/blob/main/` prefix)
+
+#### Links to portfolio-app repository files
+
+Use full GitHub URLs for non-rendered files in portfolio-app:
+
+**Rules:**
+- Format: `https://github.com/bryce-seefieldt/portfolio-app/blob/main/<path>`
+- Include file extensions
+- Use for: CI workflows, config files, source not meant to be viewed as docs
+
+**Examples:**
+- ✅ `https://github.com/bryce-seefieldt/portfolio-app/blob/main/.github/workflows/ci.yml`
+- ✅ `https://github.com/bryce-seefieldt/portfolio-app/blob/main/src/lib/config.ts`
+
+### 6.4 Environment variable contract
+
+Ensure these `NEXT_PUBLIC_*` variables are defined (checked in CI):
+
+```typescript
+// .env.example
+NEXT_PUBLIC_DOCS_BASE_URL=https://bns-portfolio-docs.vercel.app/docs/
+NEXT_PUBLIC_DOCS_GITHUB_URL=https://github.com/bryce-seefieldt/portfolio-docs/
+```
+
+### 6.5 Documentation updates expectation
 
 When you make changes that materially affect behavior/architecture:
 
