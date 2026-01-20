@@ -252,8 +252,6 @@ NEXT_PUBLIC_DOCS_GITHUB_URL=https://github.com/bryce-seefieldt/portfolio-docs/
 
 When you make changes that materially affect behavior/architecture:
 
-
-
 ## 7) Content strategy (portfolio-grade writing standards)
 
 ### 7.1 Tone and structure
@@ -279,7 +277,6 @@ Every major claim should have an evidence path:
 
 ## 8) Implementation protocols (how you should work)
 
-
 - `package.json` scripts and `packageManager`
 - `src/lib/config.ts` contract and usage
 - route structure in `src/app/`
@@ -298,7 +295,9 @@ Every major claim should have an evidence path:
 - Avoid over-engineering (no premature frameworks, complex state management, or heavy UI libraries without justification).
 - add it under `src/app/<route>/page.tsx`
 - update navigation if it’s a top-level reviewer concern
+
 ### 8.4 Adding a new project entry
+
 When adding projects:
 
 - update `src/data/projects.ts`
