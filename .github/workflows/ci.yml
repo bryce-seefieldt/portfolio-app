@@ -7,7 +7,7 @@ on:
 
 # Phase 2 Enhancement: Least-privilege permissions (scoped to specific jobs)
 # Ref: Threat model — Tampering & Elevation of Privilege mitigations
-permissions: {}  # No global permissions; each job specifies its own
+permissions: {} # No global permissions; each job specifies its own
 
 concurrency:
   group: ci-${{ github.ref }}
