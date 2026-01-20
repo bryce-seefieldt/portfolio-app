@@ -186,6 +186,7 @@ When linking to Portfolio Documentation, use environment variables to ensure por
 Use `NEXT_PUBLIC_DOCS_BASE_URL` to construct links to published docs.
 
 **Rules:**
+
 - Prefix: `NEXT_PUBLIC_DOCS_BASE_URL` (replaces the base `/portfolio/portfolio-docs/docs/` path)
 - Path: start with `docs/` then the documentation path
 - **Do NOT include** section prefix numbers (e.g., use `portfolio` not `00-portfolio`)
@@ -193,6 +194,7 @@ Use `NEXT_PUBLIC_DOCS_BASE_URL` to construct links to published docs.
 - Append path components with `/` (not `.`)
 
 **Examples:**
+
 - ✅ `NEXT_PUBLIC_DOCS_BASE_URL + "docs/portfolio/roadmap"` → `https://bns-portfolio-docs.vercel.app/docs/portfolio/roadmap`
 - ✅ `docsUrl("portfolio/architecture")` (use the helper function)
 - ❌ `NEXT_PUBLIC_DOCS_BASE_URL + "docs/00-portfolio/roadmap.md"` (wrong prefix + extension)
@@ -203,11 +205,13 @@ Use `NEXT_PUBLIC_DOCS_BASE_URL` to construct links to published docs.
 Use `NEXT_PUBLIC_DOCS_GITHUB_URL` for files NOT under `/portfolio/portfolio-docs/docs/`:
 
 **Rules:**
+
 - Prefix: `NEXT_PUBLIC_DOCS_GITHUB_URL + "blob/main/"`
 - Path: relative from `/portfolio/portfolio-docs/` root
 - **DO include** file extensions (`.md`, `.yml`, `.ts`, etc.)
 
 **Examples:**
+
 - ✅ `NEXT_PUBLIC_DOCS_GITHUB_URL + "blob/main/package.json"` → `https://github.com/bryce-seefieldt/portfolio-docs/blob/main/package.json`
 - ✅ `NEXT_PUBLIC_DOCS_GITHUB_URL + "blob/main/docusaurus.config.ts"`
 - ✅ `NEXT_PUBLIC_DOCS_GITHUB_URL + "blob/main/.github/workflows/ci.yml"`
@@ -218,11 +222,13 @@ Use `NEXT_PUBLIC_DOCS_GITHUB_URL` for files NOT under `/portfolio/portfolio-docs
 Use full GitHub URLs for non-rendered files in portfolio-app:
 
 **Rules:**
+
 - Format: `https://github.com/bryce-seefieldt/portfolio-app/blob/main/<path>`
 - Include file extensions
 - Use for: CI workflows, config files, source not meant to be viewed as docs
 
 **Examples:**
+
 - ✅ `https://github.com/bryce-seefieldt/portfolio-app/blob/main/.github/workflows/ci.yml`
 - ✅ `https://github.com/bryce-seefieldt/portfolio-app/blob/main/src/lib/config.ts`
 
