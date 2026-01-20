@@ -1,0 +1,15 @@
+# Phase 2 Enhancement: Local secrets scanning pre-commit hook
+# Prevents accidental commit of secrets before they reach CI/CD
+# Ref: Threat model — Information Disclosure mitigation
+
+repos:
+  - repo: https://github.com/trufflesecurity/trufflehog
+    rev: v3.63.0
+    hooks:
+      - id: trufflehog
+        name: TruffleHog secrets scan
+        description: Detect secrets in code
+        entry: trufflehog filesystem .
+        language: python
+        stages: [commit]
+        types: [python, typescript, javascript, json, yaml, toml, markdown]

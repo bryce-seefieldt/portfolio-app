@@ -13,7 +13,8 @@
     "format:write": "prettier --write .",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
-    "test:debug": "playwright test --debug"
+    "test:debug": "playwright test --debug",
+    "secrets:scan": "trufflehog filesystem . --debug --only-verified"
   },
   "dependencies": {
     "next": "16.1.3",
