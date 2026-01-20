@@ -232,6 +232,12 @@ Use full GitHub URLs for non-rendered files in portfolio-app:
 - ✅ `https://github.com/bryce-seefieldt/portfolio-app/blob/main/.github/workflows/ci.yml`
 - ✅ `https://github.com/bryce-seefieldt/portfolio-app/blob/main/src/lib/config.ts`
 
+#### Diagram standard when proposing docs changes
+
+- If you add/update diagrams in `portfolio-docs/docs/`, use **Mermaid code blocks only** (no PNG/SVG/ASCII/external tools)
+- Fence with ` ```mermaid ` blocks and include a brief caption explaining the diagram
+- Keep diagrams focused and readable; test rendering locally in the docs repo (`pnpm build && pnpm serve`)
+
 ### 6.4 Environment variable contract
 
 Ensure these `NEXT_PUBLIC_*` variables are defined (checked in CI):
@@ -246,10 +252,7 @@ NEXT_PUBLIC_DOCS_GITHUB_URL=https://github.com/bryce-seefieldt/portfolio-docs/
 
 When you make changes that materially affect behavior/architecture:
 
-- include a “Documentation impact” section in the PR
-- propose the doc updates required in the Documentation App (do not implement those here unless explicitly asked)
 
----
 
 ## 7) Content strategy (portfolio-grade writing standards)
 
@@ -272,15 +275,10 @@ Every major claim should have an evidence path:
 - runbooks
 - roadmap
 
-Where evidence is not yet published, use explicit placeholder text (do not invent links).
-
 ---
 
 ## 8) Implementation protocols (how you should work)
 
-### 8.1 Before coding: repository reconnaissance checklist
-
-Perform this quick review before proposing changes:
 
 - `package.json` scripts and `packageManager`
 - `src/lib/config.ts` contract and usage
@@ -298,18 +296,9 @@ Perform this quick review before proposing changes:
   - clear link text
   - keyboard-friendly interactions
 - Avoid over-engineering (no premature frameworks, complex state management, or heavy UI libraries without justification).
-
-### 8.3 Adding a new page/route
-
-When adding routes:
-
 - add it under `src/app/<route>/page.tsx`
 - update navigation if it’s a top-level reviewer concern
-- add it to README if it changes the app surface materially
-- ensure evidence links use `docsUrl()` and are public-safe
-
 ### 8.4 Adding a new project entry
-
 When adding projects:
 
 - update `src/data/projects.ts`
