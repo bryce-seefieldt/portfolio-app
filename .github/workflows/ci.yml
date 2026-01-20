@@ -68,6 +68,8 @@ jobs:
     name: secrets-scan
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    # Only run on pull requests where a real diff exists (avoids TruffleHog BASE==HEAD issue on push)
+    if: github.event_name == 'pull_request'
     permissions:
       contents: read
 
@@ -87,7 +89,10 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    needs: [quality, secrets-scan]
+    # Require quality job; secrets-scan is optional (only on PRs)
+    needs: [quality]
+    # Allow skipping when secrets-scan is conditional (not run on push events)
+    if: always() && needs.quality.result == 'success'
     # Phase 2 Enhancement: Least-privilege permissions (contents: read only)
     permissions:
       contents: read
