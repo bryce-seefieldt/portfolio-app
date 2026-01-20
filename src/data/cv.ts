@@ -1,5 +1,5 @@
 // src/data/cv.ts
-import { docsUrl } from "@/lib/config";
+import { docsUrl, githubUrl } from "@/lib/config";
 
 export interface TimelineEntry {
   title: string;
@@ -42,11 +42,11 @@ export const TIMELINE: TimelineEntry[] = [
       },
       {
         text: "CI/CD Workflow (4 Required Checks)",
-        href: "https://github.com/bryce-seefieldt/portfolio-app/blob/main/.github/workflows/ci.yml",
+        href: githubUrl("blob/main/.github/workflows/ci.yml"),
       },
       {
         text: "Smoke Test Suite (Playwright)",
-        href: "https://github.com/bryce-seefieldt/portfolio-app/blob/main/tests/e2e/smoke.spec.ts",
+        href: githubUrl("blob/main/tests/e2e/smoke.spec.ts"),
       },
       {
         text: "Operational Runbooks",
