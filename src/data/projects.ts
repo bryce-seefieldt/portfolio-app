@@ -4,6 +4,8 @@
 // This intentionally starts small and static so the app can scale cleanly later.
 // Do not store secrets or sensitive/internal data here.
 
+import { DOCS_BASE_URL, DOCS_GITHUB_URL, GITHUB_URL } from "@/lib/config";
+
 export type EvidenceLinks = {
   dossierPath?: string; // Docusaurus path relative to DOCS_BASE_URL, e.g. "projects/portfolio-app/"
   threatModelPath?: string; // e.g. "security/threat-models/portfolio-app-threat-model"
@@ -30,8 +32,8 @@ export const PROJECTS: Project[] = [
       "Production-quality portfolio application designed to be reviewed like a real service (CI gates, release governance, security posture).",
     tags: ["TypeScript", "Next.js", "Vercel", "CI/CD", "Security", "Docs-as-code"],
     status: "featured",
-    repoUrl: "", // add once repo URL is finalized/published
-    demoUrl: "", // add once domain is live
+    repoUrl: GITHUB_URL || undefined,
+    demoUrl: undefined, // Will be set once production domain is finalized
     evidence: {
       dossierPath: "projects/portfolio-app/",
       threatModelPath: "security/threat-models/portfolio-app-threat-model",
@@ -46,8 +48,8 @@ export const PROJECTS: Project[] = [
       "Enterprise documentation platform hosting dossiers, ADRs, threat models, runbooks, and release notes for the portfolio program.",
     tags: ["Docusaurus", "Docs-as-code", "Vercel", "Governance", "Operations"],
     status: "featured",
-    repoUrl: "", // add once repo URL is finalized/published
-    demoUrl: "", // add once docs URL is live (DOCS_BASE_URL)
+    repoUrl: DOCS_GITHUB_URL || undefined,
+    demoUrl: DOCS_BASE_URL || undefined,
     evidence: {
       dossierPath: "projects/portfolio-docs-app/",
       adrIndexPath: "architecture/adr/",

@@ -5,7 +5,7 @@ import { Section } from "@/components/Section";
 import { Callout } from "@/components/Callout";
 import { GoldStandardBadge } from "@/components/GoldStandardBadge";
 import { getProjectBySlug } from "@/data/projects";
-import { docsUrl } from "@/lib/config";
+import { docsUrl, githubUrl } from "@/lib/config";
 
 export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -105,10 +105,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             <div className="mt-4 flex flex-col gap-3 text-sm text-zinc-700 dark:text-zinc-300">
               <div>
                 <strong>Enforced quality gates:</strong> Open{" "}
-                <a
-                  className="underline"
-                  href="https://github.com/cdoremus/portfolio-app/blob/main/.github/workflows/ci.yml"
-                >
+                <a className="underline" href={githubUrl("blob/main/.github/workflows/ci.yml")}>
                   .github/workflows/ci.yml
                 </a>{" "}
                 → see <code>quality</code>, <code>secrets-scan</code>, <code>build-and-test</code>,{" "}
@@ -117,10 +114,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
               <div>
                 <strong>PR discipline:</strong> Open{" "}
-                <a
-                  className="underline"
-                  href="https://github.com/cdoremus/portfolio-app/settings/branches"
-                >
+                <a className="underline" href={githubUrl("settings/branches")}>
                   Branch Protection
                 </a>{" "}
                 → confirm require-PR + status-checks enabled.
@@ -140,7 +134,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
               <div>
                 <strong>Smoke tests:</strong> Check{" "}
-                <a className="underline" href="https://github.com/cdoremus/portfolio-app/actions">
+                <a className="underline" href={githubUrl("actions")}>
                   recent CI runs
                 </a>{" "}
                 → see Playwright smoke tests passing post-build.
@@ -148,10 +142,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
               <div>
                 <strong>Dependencies:</strong> Open{" "}
-                <a
-                  className="underline"
-                  href="https://github.com/cdoremus/portfolio-app/blob/main/package.json"
-                >
+                <a className="underline" href={githubUrl("blob/main/package.json")}>
                   package.json
                 </a>{" "}
                 → see Next 15+, React 19, Tailwind 4, TypeScript 5.

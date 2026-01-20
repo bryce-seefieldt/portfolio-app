@@ -12,6 +12,7 @@ type Env = {
 
   // Optional public links
   NEXT_PUBLIC_GITHUB_URL?: string;
+  NEXT_PUBLIC_DOCS_GITHUB_URL?: string;
   NEXT_PUBLIC_LINKEDIN_URL?: string;
   NEXT_PUBLIC_CONTACT_EMAIL?: string;
 
@@ -68,6 +69,7 @@ export const DOCS_BASE_URL: string = normalizeBaseUrl(
  * Public profile links (optional). Prefer these over hardcoding URLs in components.
  */
 export const GITHUB_URL: string | null = asAbsoluteUrl(env.NEXT_PUBLIC_GITHUB_URL);
+export const DOCS_GITHUB_URL: string | null = asAbsoluteUrl(env.NEXT_PUBLIC_DOCS_GITHUB_URL);
 export const LINKEDIN_URL: string | null = asAbsoluteUrl(env.NEXT_PUBLIC_LINKEDIN_URL);
 
 /**
@@ -88,6 +90,26 @@ export function docsUrl(pathname: string): string {
   // Accept "foo/bar", "/foo/bar", or "".
   const p = pathname.replace(/^\/+/, "");
   return p ? `${DOCS_BASE_URL}/${p}` : DOCS_BASE_URL;
+}
+
+export function githubUrl(pathname: string): string {
+  // Build URL from GITHUB_URL with optional path
+  if (!GITHUB_URL) {
+    console.warn("GITHUB_URL not configured, returning placeholder");
+    return "#";
+  }
+  const p = pathname.replace(/^\/+/, "");
+  return p ? `${GITHUB_URL}/${p}` : GITHUB_URL;
+}
+
+export function docsGithubUrl(pathname: string): string {
+  // Build URL from DOCS_GITHUB_URL with optional path
+  if (!DOCS_GITHUB_URL) {
+    console.warn("DOCS_GITHUB_URL not configured, returning placeholder");
+    return "#";
+  }
+  const p = pathname.replace(/^\/+/, "");
+  return p ? `${DOCS_GITHUB_URL}/${p}` : DOCS_GITHUB_URL;
 }
 
 export function mailtoUrl(email: string, subject?: string): string {
