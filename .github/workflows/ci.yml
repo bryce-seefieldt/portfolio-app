@@ -5,8 +5,9 @@ on:
   push:
     branches: [main]
 
-permissions:
-  contents: write
+# Phase 2 Enhancement: Least-privilege permissions (scoped to specific jobs)
+# Ref: Threat model — Tampering & Elevation of Privilege mitigations
+permissions: {}  # No global permissions; each job specifies its own
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -17,6 +18,10 @@ jobs:
     name: quality
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # Phase 2 Enhancement: Least-privilege permissions (write needed for Dependabot auto-format)
+    permissions:
+      contents: write
+      pull-requests: read
 
     steps:
       - name: Checkout
@@ -57,11 +62,35 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
+  # Phase 2 Enhancement: Secrets scanning gate
+  # Ref: Threat model — Information Disclosure mitigation (hardened control)
+  secrets-scan:
+    name: secrets-scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: TruffleHog Secret Scanning
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --debug --only-verified
+
   build:
     name: build
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    needs: [quality]
+    needs: [quality, secrets-scan]
+    # Phase 2 Enhancement: Least-privilege permissions (contents: read only)
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout
