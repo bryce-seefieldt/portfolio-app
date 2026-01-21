@@ -98,40 +98,112 @@ Phase 1 governance is enforced:
 
 ### Local quality contract
 
-Run all checks with one command:
+**Pre-deploy validation (required before every commit/PR):**
 
 ```bash
-pnpm verify        # Full verification including smoke tests (12 E2E tests)
-pnpm verify:quick  # Skip smoke tests for faster validation
+# Recommended: Full verification (catches all issues)
+pnpm verify
+
+# Alternative: Quick verification (during active development)
+pnpm verify:quick
+
+# Manual sequence (if verify script unavailable):
+pnpm format:write && pnpm lint && pnpm typecheck && pnpm registry:validate && pnpm build && pnpm test
 ```
 
-**Full verification** (`pnpm verify`) runs:
+**What each verification command does:**
 
-- Environment validation (Node, pnpm, .env.local, required vars)
-- Auto-formats code (`format:write` then `format:check`)
-- Runs ESLint with zero-warning enforcement
-- Validates TypeScript types
-- Scans for secrets (TruffleHog - warns if not installed)
-- Validates the project registry (YAML + Zod schema)
-- Builds the Next.js app
-- Runs Playwright smoke tests (12 tests across 2 browsers)
-- Provides detailed troubleshooting guidance for any failures
+**Full verification** (`pnpm verify`) — Complete pre-deploy validation (~90-120s):
 
-**Quick verification** (`pnpm verify:quick`) runs all checks except smoke tests - use for rapid iteration during development.
+1. Environment validation (Node, pnpm, .env.local, required vars)
+2. Auto-formats code (`format:write` then `format:check`)
+3. Runs ESLint with zero-warning enforcement
+4. Validates TypeScript types
+5. Scans for secrets (TruffleHog - warns if not installed)
+6. Validates the project registry (YAML + Zod schema)
+7. Builds the Next.js app
+8. Runs Playwright smoke tests (12 tests across 2 browsers)
+9. Provides detailed troubleshooting guidance for any failures
 
-Or run checks individually:
+**Quick verification** (`pnpm verify:quick`) — Fast iteration during development (~30-60s):
+- Runs steps 1-7 above, **skips smoke tests** (step 8)
+- Use when making frequent small changes and need rapid feedback
+
+### Available scripts reference
+
+**Development:**
+```bash
+pnpm dev          # Start Next.js dev server (http://localhost:3000)
+pnpm build        # Production build
+pnpm start        # Start production server (requires build first)
+```
+
+**Quality checks (individual):**
+```bash
+pnpm lint              # ESLint (zero warnings enforced)
+pnpm typecheck         # TypeScript type checking
+pnpm format:check      # Check if files are formatted
+pnpm format:write      # Auto-format all files with Prettier
+pnpm quality           # Combined: lint + format:check + typecheck
+```
+
+**Testing:**
+```bash
+pnpm test              # Run Playwright smoke tests (headless)
+pnpm test:ui           # Run tests in Playwright UI mode
+pnpm test:debug        # Run tests in debug mode with inspector
+```
+
+**Security:**
+```bash
+pnpm secrets:scan      # Scan for accidentally committed secrets (TruffleHog)
+                       # Requires: brew install trufflesecurity/trufflehog/trufflehog
+```
+
+**Registry management:**
+```bash
+pnpm registry:validate # Validate projects.yml schema and integrity
+pnpm registry:list     # List all projects with interpolated values
+```
+
+**Comprehensive validation:**
+```bash
+pnpm verify            # Full pre-deploy validation (all checks + tests)
+pnpm verify:quick      # Fast validation (all checks, skip tests)
+```
+
+### Pre-deploy checklist (step-by-step)
+
+If running commands manually instead of using `pnpm verify`:
 
 ```bash
-pnpm lint
-pnpm format:check
-pnpm typecheck
+# 1. Ensure environment is configured
+test -f .env.local || { echo "Missing .env.local - copy from .env.example"; exit 1; }
+
+# 2. Auto-format code (prevents format failures)
+pnpm format:write
+
+# 3. Validate code quality
+pnpm lint              # ESLint must pass with 0 warnings
+pnpm typecheck         # TypeScript must have no errors
+
+# 4. Validate data integrity
+pnpm registry:validate # Projects YAML must be valid
+
+# 5. Ensure production build works
 pnpm build
-pnpm test              # Smoke tests only
-# Security
-pnpm secrets:scan      # Requires TruffleHog
-# Registry checks
-pnpm registry:validate
-pnpm registry:list
+
+# 6. Run smoke tests (optional but recommended)
+pnpm test
+
+# 7. Security scan (recommended if TruffleHog installed)
+pnpm secrets:scan || echo "TruffleHog not installed - skipping secret scan"
+```
+
+**Or use the automated workflow:**
+
+```bash
+pnpm verify    # Runs all above steps with detailed error reporting
 ```
 
 ## Deployment (Live — Phase 1 Complete)
