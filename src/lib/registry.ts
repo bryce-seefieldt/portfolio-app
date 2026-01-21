@@ -9,18 +9,11 @@ if (typeof process !== "undefined" && !process.env.NEXT_RUNTIME) {
   require("dotenv").config({ path: ".env.local" });
 }
 
-
 import fs from "node:fs";
 import path from "node:path";
 import * as yaml from "js-yaml";
 import { z } from "zod";
-import {
-  docsUrl,
-  GITHUB_URL,
-  DOCS_GITHUB_URL,
-  DOCS_BASE_URL,
-  SITE_URL,
-} from "@/lib/config";
+import { docsUrl, GITHUB_URL, DOCS_GITHUB_URL, DOCS_BASE_URL, SITE_URL } from "@/lib/config";
 
 // ----- Schemas -----
 
@@ -33,18 +26,18 @@ import {
  */
 function interpolate(value: string | null | undefined): string | null {
   if (!value || typeof value !== "string") return null;
-  
+
   const result = value
     .replace(/\{GITHUB_URL\}/g, GITHUB_URL || "")
     .replace(/\{DOCS_GITHUB_URL\}/g, DOCS_GITHUB_URL || "")
     .replace(/\{DOCS_BASE_URL\}/g, DOCS_BASE_URL || "")
     .replace(/\{SITE_URL\}/g, SITE_URL || "");
-  
+
   // Return null if result is empty or still contains unresolved placeholders
   if (!result || result.trim() === "" || result.includes("{")) {
     return null;
   }
-  
+
   return result;
 }
 
@@ -133,6 +126,10 @@ const RegistryWithMetaSchema = z
 
 type RegistryInput = z.infer<typeof RegistryArraySchema> | z.infer<typeof RegistryWithMetaSchema>;
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 function parseRegistryInput(input: unknown): unknown[] {
   // Accept either an array of projects or an object with { metadata, projects }
   // Extract raw projects without validation (validation happens after interpolation)
@@ -145,9 +142,7 @@ function parseRegistryInput(input: unknown): unknown[] {
       return obj.projects;
     }
   }
-  throw new Error(
-    `Invalid registry format. Expected array or { metadata, projects } object.`,
-  );
+  throw new Error(`Invalid registry format. Expected array or { metadata, projects } object.`);
 }
 
 // ----- Loader -----
@@ -172,18 +167,25 @@ export function loadProjectRegistry(): Project[] {
   const raw = fs.readFileSync(filePath, "utf8");
   const parsed = yaml.load(raw) as RegistryInput;
   const projects = parseRegistryInput(parsed).map((p) => {
+    if (!isRecord(p)) {
+      throw new Error("Invalid project entry: expected object");
+    }
+
+    const evidence = isRecord(p.evidence) ? p.evidence : undefined;
+
     // Interpolate placeholders before validation
     const interpolated = {
       ...p,
-      repoUrl: interpolate(p.repoUrl),
-      demoUrl: interpolate(p.demoUrl),
-      evidence: p.evidence
+      repoUrl: interpolate(p.repoUrl as string | null | undefined),
+      demoUrl: interpolate(p.demoUrl as string | null | undefined),
+      evidence: evidence
         ? {
-            ...p.evidence,
-            github: interpolate(p.evidence.github),
+            ...evidence,
+            github: interpolate(evidence.github as string | null | undefined),
           }
         : undefined,
     };
+
     return ProjectSchema.parse(interpolated);
   });
 
