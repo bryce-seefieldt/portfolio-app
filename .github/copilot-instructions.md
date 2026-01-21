@@ -181,6 +181,7 @@ When implementing a **Phase Stage**, use **Phase Stage App Issue** template:
 - **Post-merge:** Reference this issue in PR with `Closes #[issue-number]`
 
 **Example phase stage issue:**
+
 - Title: `Stage 3.1: Data-Driven Project Registry — App Implementation`
 - Companion: `Stage 3.1: Data-Driven Project Registry — Documentation` (in portfolio-docs)
 
