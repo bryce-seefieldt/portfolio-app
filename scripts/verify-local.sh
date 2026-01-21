@@ -201,55 +201,72 @@ else
 fi
 
 # Step 5: Secret scanning
-print_section "Step 5: Secret Scanning (secrets:scan)"
+print_section "Step 5: Secret Scanning (basic local scan)"
 
-print_info "Scanning for accidentally committed secrets (TruffleHog)..."
+print_info "Running lightweight pattern-based scan for common secrets..."
 
-# Check if trufflehog is available
-if command -v trufflehog &> /dev/null; then
-  SECRETS_OUTPUT=$(pnpm secrets:scan 2>&1)
-  SECRETS_EXIT_CODE=$?
-  
-  if [ $SECRETS_EXIT_CODE -eq 0 ]; then
-    # Check if any secrets were found in output
-    if echo "$SECRETS_OUTPUT" | grep -qi "found verified result" || echo "$SECRETS_OUTPUT" | grep -qi "detector"; then
-      print_failure "Potential secrets detected"
-      echo ""
-      echo "$SECRETS_OUTPUT" | head -100
-      echo ""
-      print_troubleshooting "  1. Review findings above carefully
-  2. If false positive: update .trufflehog-ignore or use inline ignore comments
-  3. If real secret exposed:
-     - Remove from code immediately
-     - If already committed: use git-filter-repo or BFG to rewrite history
-     - Rotate the exposed credential
-     - Review security incident response plan
-  4. Never commit: API keys, tokens, passwords, private keys, connection strings"
-    else
-      print_success "No secrets detected"
-    fi
-  else
-    print_failure "Secret scan failed to complete"
-    print_troubleshooting "  1. Ensure TruffleHog CLI binary is installed (see above for installation steps)
-  2. Verify it's in your PATH: which trufflehog
-  3. Or use pre-commit hook instead: pre-commit install
-  4. Check scan output for specific errors"
+# Build grep excludes
+EXCLUDES=(
+  "--exclude-dir=.git"
+  "--exclude-dir=node_modules"
+  "--exclude-dir=.next"
+  "--exclude-dir=playwright-report"
+  "--exclude-dir=out"
+  "--exclude-dir=dist"
+  "--exclude-dir=coverage"
+)
+
+FILES=(
+  "--include=*.ts" "--include=*.tsx" "--include=*.js" "--include=*.jsx"
+  "--include=*.json" "--include=*.yml" "--include=*.yaml" "--include=*.md"
+  "--include=.env*"
+)
+
+POTENTIAL_FINDINGS=""
+
+# Helper to run a labeled grep and append findings
+run_scan() {
+  local label="$1"
+  local pattern="$2"
+  local results
+  # shellcheck disable=SC2068
+  results=$(grep -RInEI ${EXCLUDES[@]} ${FILES[@]} -- "$pattern" . 2>/dev/null || true)
+  if [ -n "$results" ]; then
+    POTENTIAL_FINDINGS+=$'\n'"[Match] $label"$'\n'"$results"$'\n'
   fi
+}
+
+# Common high-signal patterns
+run_scan "Private key material" "-----BEGIN (RSA |EC )?PRIVATE KEY-----"
+run_scan "AWS Access Key ID" "AKIA[0-9A-Z]{16}"
+run_scan "GitHub token (ghp_)" "ghp_[A-Za-z0-9]{36}"
+run_scan "Slack token (xox)" "xox[baprs]-[A-Za-z0-9-]{10,48}"
+run_scan "Stripe secret key" "sk_live_[0-9a-zA-Z]{16,}"
+run_scan "Google API key" "AIza[0-9A-Za-z_-]{35}"
+run_scan "AWS Secret Access Key" "(?i)aws_secret_access_key\s*[:=]\s*['\"][A-Za-z0-9/+=]{40}['\"]"
+run_scan "Generic credential assignment" "(?i)(api[_-]?key|secret|token|password)\s*[:=]\s*['\"][A-Za-z0-9/_+=.-]{12,}['\"]"
+
+# Check for tracked .env files (allow .env.example)
+TRACKED_ENV=$(git ls-files | grep -E "\.env(\.|$)" | grep -v "^\.env\.example$" || true)
+if [ -n "$TRACKED_ENV" ]; then
+  POTENTIAL_FINDINGS+=$'\n[Match] Tracked .env files (should be gitignored, except .env.example)\n'
+  POTENTIAL_FINDINGS+="$TRACKED_ENV"$'\n'
+fi
+
+if [ -n "$POTENTIAL_FINDINGS" ]; then
+  print_failure "Potential secrets detected by basic scan"
+  echo ""
+  echo "$POTENTIAL_FINDINGS" | head -200
+  echo ""
+  print_troubleshooting "  1. Review the matches above; validate if real secrets or false positives
+  2. If real secrets:
+     - Remove from repository immediately
+     - If committed previously, consider history rewrite (git-filter-repo / BFG)
+     - Rotate any exposed credentials
+  3. If false positives, adjust code/comments to avoid secret-like patterns
+  4. For stronger scanning, enable the pre-commit hook (recommended):\n     pip install pre-commit && pre-commit install"
 else
-  print_warning "TruffleHog not installed - skipping secret scan"
-  print_info "Install TruffleHog CLI binary for secret scanning:"
-  echo ""
-  echo "  macOS:"
-  echo "    brew install trufflesecurity/trufflehog/trufflehog"
-  echo ""
-  echo "  Linux:"
-  echo "    1. Download from: https://github.com/trufflesecurity/trufflehog/releases/"
-  echo "    2. Extract: tar -xzf trufflehog_*_linux_x86_64.tar.gz"
-  echo "    3. Install: sudo mv trufflehog /usr/local/bin/"
-  echo ""
-  echo "  Alternative (pre-commit hook - automatic scanning on commit):"
-  echo "    pip install pre-commit"
-  echo "    pre-commit install"
+  print_success "No secrets detected by basic scan"
 fi
 
 # Step 6: Registry validation

@@ -126,12 +126,14 @@ pnpm format:write && pnpm lint && pnpm typecheck && pnpm registry:validate && pn
 9. Provides detailed troubleshooting guidance for any failures
 
 **Quick verification** (`pnpm verify:quick`) — Fast iteration during development (~30-60s):
+
 - Runs steps 1-7 above, **skips smoke tests** (step 8)
 - Use when making frequent small changes and need rapid feedback
 
 ### Available scripts reference
 
 **Development:**
+
 ```bash
 pnpm dev          # Start Next.js dev server (http://localhost:3000)
 pnpm build        # Production build
@@ -139,6 +141,7 @@ pnpm start        # Start production server (requires build first)
 ```
 
 **Quality checks (individual):**
+
 ```bash
 pnpm lint              # ESLint (zero warnings enforced)
 pnpm typecheck         # TypeScript type checking
@@ -148,6 +151,7 @@ pnpm quality           # Combined: lint + format:check + typecheck
 ```
 
 **Testing:**
+
 ```bash
 pnpm test              # Run Playwright smoke tests (headless)
 pnpm test:ui           # Run tests in Playwright UI mode
@@ -155,12 +159,14 @@ pnpm test:debug        # Run tests in debug mode with inspector
 ```
 
 **Security:**
+
 ```bash
 pnpm secrets:scan      # Scan for accidentally committed secrets (TruffleHog)
                        # Requires TruffleHog CLI binary (see installation below)
 ```
 
 **TruffleHog installation:**
+
 ```bash
 # macOS
 brew install trufflesecurity/trufflehog/trufflehog
@@ -202,12 +208,14 @@ pre-commit run --all-files
 Secrets will still be scanned in CI (GitHub Actions), but setting up the local hook catches issues earlier and prevents commits in the first place.
 
 **Registry management:**
+
 ```bash
 pnpm registry:validate # Validate projects.yml schema and integrity
 pnpm registry:list     # List all projects with interpolated values
 ```
 
 **Comprehensive validation:**
+
 ```bash
 pnpm verify            # Full pre-deploy validation (all checks + tests)
 pnpm verify:quick      # Fast validation (all checks, skip tests)
