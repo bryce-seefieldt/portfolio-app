@@ -351,18 +351,21 @@ Every major claim should have an evidence path:
 Stage 3.2 introduces three reusable React components for standardized evidence visualization:
 
 **`EvidenceBlock.tsx`** — Evidence card display
+
 - Purpose: Render a grid of evidence artifact links (dossier, threat model, ADRs, runbooks, GitHub)
 - Props: `project: Project`, `className?: string`
 - Behavior: Displays each evidence category in a responsive grid; placeholders for unavailable categories
 - Styling: Tailwind CSS with `dark:` support, `hover:` effects, rounded corners, borders
 
 **`VerificationBadge.tsx`** — Status indicator badges
+
 - Purpose: Display evidence completeness and project quality signals
 - Props: `type: 'docs-available' | 'threat-model' | 'gold-standard' | 'adr-complete'`, `title?: string`
 - Behavior: Each badge type has specific color scheme (gold for gold-standard, blue for docs, etc.)
 - Styling: Inline badges with icon, text, and subtle shadow effects
 
 **`BadgeGroup.tsx`** — Multi-badge container
+
 - Purpose: Conditionally render multiple badges based on project evidence
 - Props: `project: Project`, `className?: string`
 - Behavior: Analyzes project's evidence links and renders appropriate badges; responsive flex wrapping
@@ -371,6 +374,7 @@ Stage 3.2 introduces three reusable React components for standardized evidence v
 ### 8.2 Component Architecture
 
 **File Structure:**
+
 ```
 src/components/
   EvidenceBlock.tsx          (new)
@@ -380,6 +384,7 @@ src/components/
 ```
 
 **Design Pattern:**
+
 - All components are functional React components (not class-based)
 - Use TypeScript strict mode with full type annotations
 - Export named exports for each component
@@ -387,6 +392,7 @@ src/components/
 - Keep components small, focused, single-responsibility
 
 **Integration:**
+
 - Import components in `src/app/projects/[slug]/page.tsx`
 - Place `BadgeGroup` in header near project title
 - Place `EvidenceBlock` after "What This Project Proves" section
@@ -408,6 +414,7 @@ interface EvidenceBlockProps {
 ```
 
 **Evidence categories to display:**
+
 1. Dossier (`evidence.dossierPath`)
 2. Threat Model (`evidence.threatModelPath`)
 3. ADR Index (`evidence.adrIndexPath`)
@@ -417,7 +424,7 @@ interface EvidenceBlockProps {
 **VerificationBadge Component:**
 
 ```typescript
-type BadgeType = 'docs-available' | 'threat-model' | 'gold-standard' | 'adr-complete';
+type BadgeType = "docs-available" | "threat-model" | "gold-standard" | "adr-complete";
 
 interface VerificationBadgeProps {
   type: BadgeType;
@@ -449,26 +456,28 @@ interface BadgeGroupProps {
 ### 8.4 Styling Guidelines
 
 **Color Scheme (Tailwind 4):**
+
 - Gold Standard: amber (use existing GoldStandardBadge as reference)
 - Docs Available: blue (`border-blue-500`, `bg-blue-50`, `text-blue-900`)
 - Threat Model: violet (`border-violet-500`, `bg-violet-50`, `text-violet-900`)
 - ADR Complete: indigo (`border-indigo-500`, `bg-indigo-50`, `text-indigo-900`)
 
 **Responsive Pattern:**
+
 ```tsx
 // Mobile-first, build up
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-  {/* children */}
-</div>
+<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">{/* children */}</div>
 ```
 
 **Dark Mode Support:**
+
 - Use `dark:` modifier for all color classes
 - Example: `border-blue-500 dark:border-blue-400 bg-blue-50 dark:bg-blue-950`
 
 ### 8.5 Testing Strategy (for PR)
 
 **Manual testing:**
+
 - [ ] Components render without TypeScript errors
 - [ ] Project page still renders for both featured projects
 - [ ] EvidenceBlock displays correctly on mobile (DevTools: iPhone 12)
@@ -478,6 +487,7 @@ interface BadgeGroupProps {
 - [ ] Hover states work on badges (shadow/opacity changes)
 
 **Automated testing (Playwright):**
+
 - [ ] Evidence block renders on `/projects/[slug]` page
 - [ ] All evidence links are present in the DOM (if evidence data exists)
 - [ ] Badge count matches expected evidence completeness
