@@ -33,7 +33,17 @@ Enterprise-grade documentation is hosted separately to preserve a clean product 
 - Tailwind CSS (baseline styling)
 - Minimal internal modules:
   - `src/lib/config.ts` (public-safe runtime configuration)
-  - `src/data/projects.ts` (project registry placeholder)
+  - `src/lib/registry.ts` (YAML-backed registry loader with Zod validation and env interpolation)
+  - `src/data/projects.yml` (canonical project registry data)
+  - `src/data/projects.ts` (typed export of the validated registry)
+
+## Data-driven project registry (Stage 3.1)
+
+- Source of truth: `src/data/projects.yml`
+- Validation and interpolation: `src/lib/registry.ts` resolves placeholders `{GITHUB_URL}`, `{DOCS_BASE_URL}`, `{DOCS_GITHUB_URL}`, `{SITE_URL}` from `NEXT_PUBLIC_*` env vars and enforces schema/slug rules.
+- Scripts:
+  - `pnpm registry:validate` — fail-fast validation during CI/local
+  - `pnpm registry:list` — list slugs/titles after interpolation
 
 ## Local development
 
@@ -52,6 +62,9 @@ cp .env.example .env.local
 Edit `.env.local` to set at least:
 
 - `NEXT_PUBLIC_DOCS_BASE_URL` (path strategy or subdomain strategy)
+- `NEXT_PUBLIC_DOCS_GITHUB_URL` (link to docs repo source when needed)
+- `NEXT_PUBLIC_GITHUB_URL` (portfolio-app repo URL for interpolation)
+- `NEXT_PUBLIC_SITE_URL` (production site URL for demos)
 
 #### Run dev server
 
@@ -92,6 +105,9 @@ pnpm lint
 pnpm format:check
 pnpm typecheck
 pnpm build
+# Registry checks
+pnpm registry:validate
+pnpm registry:list
 ```
 
 ## Deployment (Live — Phase 1 Complete)

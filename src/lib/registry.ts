@@ -108,23 +108,13 @@ export const ProjectSchema = z
   .strict();
 
 export type Project = z.infer<typeof ProjectSchema>;
+type RegistryArray = Array<z.infer<typeof ProjectSchema>>;
+type RegistryWithMeta = {
+  metadata?: { version: number; lastUpdated: string };
+  projects: RegistryArray;
+};
 
-const RegistryArraySchema = z.array(ProjectSchema);
-
-const RegistryWithMetaSchema = z
-  .object({
-    metadata: z
-      .object({
-        version: z.number().int().positive(),
-        lastUpdated: z.string().min(4),
-      })
-      .strict()
-      .optional(),
-    projects: z.array(ProjectSchema),
-  })
-  .strict();
-
-type RegistryInput = z.infer<typeof RegistryArraySchema> | z.infer<typeof RegistryWithMetaSchema>;
+type RegistryInput = RegistryArray | RegistryWithMeta;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);

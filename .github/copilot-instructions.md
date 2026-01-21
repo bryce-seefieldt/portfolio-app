@@ -51,9 +51,14 @@ Before proposing changes, review and internalize the existing architecture and c
 - `src/lib/config.ts`
   - **Public-safe configuration** and URL builders (`DOCS_BASE_URL`, `docsUrl()`, `mailtoUrl()`)
   - **All client-exposed config must be `NEXT_PUBLIC_*` only**
+- `src/lib/registry.ts`
+  - Zod-validated registry loader for YAML data with env placeholder interpolation
+  - Supports `{GITHUB_URL}`, `{DOCS_BASE_URL}`, `{DOCS_GITHUB_URL}`, `{SITE_URL}` → resolved from `NEXT_PUBLIC_*`
+- `src/data/projects.yml`
+  - Canonical project registry (validated by `pnpm registry:validate`)
+  - Evidence links (dossier, ADR index, threat model, runbooks, repo) must be present when available
 - `src/data/projects.ts`
-  - Minimal project registry placeholder
-  - Includes stable slugs and optional evidence link paths into Docusaurus
+  - Re-exports loaded registry data for use in pages/components
 - `src/app/layout.tsx`
   - global layout + navigation
 - `src/app/page.tsx`
@@ -246,6 +251,8 @@ Ensure these `NEXT_PUBLIC_*` variables are defined (checked in CI):
 // .env.example
 NEXT_PUBLIC_DOCS_BASE_URL=https://bns-portfolio-docs.vercel.app/docs/
 NEXT_PUBLIC_DOCS_GITHUB_URL=https://github.com/bryce-seefieldt/portfolio-docs/
+NEXT_PUBLIC_GITHUB_URL=https://github.com/bryce-seefieldt/portfolio-app
+NEXT_PUBLIC_SITE_URL=https://bns-portfolio.vercel.app/
 ```
 
 ### 6.5 Documentation updates expectation
@@ -300,12 +307,36 @@ Every major claim should have an evidence path:
 
 When adding projects:
 
-- update `src/data/projects.ts`
+- update `src/data/projects.yml` (YAML registry) and ensure it validates via `pnpm registry:validate`
 - include:
-  - stable `slug`
-  - short `summary`
-  - concise `tags`
-  - evidence link paths (dossier/threat model/runbooks/ADR index) when available
+  - stable `slug` (lowercase, hyphenated)
+  - short `summary` and meaningful `tags`
+  - evidence links (dossier, ADR index, threat model, runbooks, repo/github) using placeholders where appropriate
+- use `pnpm registry:list` to verify interpolation and slug visibility
+- schema reference lives in [portfolio-docs/docs/70-reference/registry-schema-guide.md](portfolio-docs/docs/70-reference/registry-schema-guide.md); decision rationale in [portfolio-docs/docs/10-architecture/adr/adr-0011-data-driven-project-registry.md](portfolio-docs/docs/10-architecture/adr/adr-0011-data-driven-project-registry.md)
+
+YAML template (minimal to gold-standard-ready):
+
+```yaml
+- slug: sample-project
+  title: "Sample Project"
+  summary: "Concise 1–2 sentence summary (>=10 chars)."
+  category: frontend
+  tags: ["Next.js"]
+  status: active
+  repoUrl: "{GITHUB_URL}"
+  evidence:
+    dossierPath: "projects/sample-project/"
+    adrIndexPath: "architecture/adr/"
+    runbooksPath: "operations/runbooks/"
+    github: "{DOCS_GITHUB_URL}"
+```
+
+Cross-repo linking reminders:
+
+- Use `NEXT_PUBLIC_DOCS_BASE_URL` for rendered docs links (strip numeric prefixes and `.md`).
+- Use `NEXT_PUBLIC_DOCS_GITHUB_URL + "blob/main/"` for non-rendered files in `portfolio-docs` (keep extensions).
+- Use `NEXT_PUBLIC_GITHUB_URL + "blob/main/"` for `portfolio-app` file links when needed.
 
 ---
 
