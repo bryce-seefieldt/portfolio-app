@@ -101,17 +101,23 @@ Phase 1 governance is enforced:
 Run all checks with one command:
 
 ```bash
-pnpm verify
+pnpm verify        # Full verification including smoke tests (12 E2E tests)
+pnpm verify:quick  # Skip smoke tests for faster validation
 ```
 
-This runs the comprehensive verification script (`./scripts/verify-local.sh`) which:
+**Full verification** (`pnpm verify`) runs:
 
+- Environment validation (Node, pnpm, .env.local, required vars)
 - Auto-formats code (`format:write` then `format:check`)
 - Runs ESLint with zero-warning enforcement
 - Validates TypeScript types
+- Scans for secrets (TruffleHog - warns if not installed)
 - Validates the project registry (YAML + Zod schema)
 - Builds the Next.js app
+- Runs Playwright smoke tests (12 tests across 2 browsers)
 - Provides detailed troubleshooting guidance for any failures
+
+**Quick verification** (`pnpm verify:quick`) runs all checks except smoke tests - use for rapid iteration during development.
 
 Or run checks individually:
 
@@ -120,6 +126,9 @@ pnpm lint
 pnpm format:check
 pnpm typecheck
 pnpm build
+pnpm test              # Smoke tests only
+# Security
+pnpm secrets:scan      # Requires TruffleHog
 # Registry checks
 pnpm registry:validate
 pnpm registry:list
