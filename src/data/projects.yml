@@ -6,8 +6,35 @@ projects:
   - slug: portfolio-app
     title: "Portfolio App (Next.js + TypeScript)"
     summary: "Production-quality portfolio application designed to be reviewed like a real service (CI gates, release governance, security posture)."
+    category: fullstack
     tags: ["TypeScript", "Next.js", "Vercel", "CI/CD", "Security", "Docs-as-code"]
+    startDate: "2026-01"
+    ongoing: true
     status: featured
+    techStack:
+      - name: "Next.js 15+"
+        category: framework
+        rationale: "App Router, React Server Components, modern React patterns"
+      - name: "TypeScript 5"
+        category: language
+        rationale: "Strict mode for type safety and compile-time error detection"
+      - name: "Tailwind CSS 4"
+        category: framework
+        rationale: "Utility-first CSS with responsive design primitives"
+      - name: "Playwright"
+        category: tool
+        rationale: "E2E testing and smoke test coverage"
+      - name: "Zod"
+        category: library
+        rationale: "Runtime validation for data-driven registry"
+    keyProofs:
+      - "Next.js 15+ App Router with React Server Components"
+      - "TypeScript strict mode and zero any types"
+      - "CI quality gates: lint, format, typecheck, secrets scan"
+      - "Automated smoke testing with Playwright"
+      - "Branch protection and PR-only merge discipline"
+      - "Public-safe by design (no secrets in codebase)"
+      - "Evidence-based documentation (dossier, threat model, ADRs, runbooks)"
     repoUrl: "https://github.com/bryce-seefieldt/portfolio-app"
     demoUrl: null
     evidence:
@@ -15,15 +42,52 @@ projects:
       threatModelPath: "security/threat-models/portfolio-app-threat-model"
       adrIndexPath: "architecture/adr/"
       runbooksPath: "operations/runbooks/"
+      adr:
+        - title: "ADR-0005: Stack Choice (Next.js + TypeScript + Tailwind)"
+          url: "docs/10-architecture/adr/adr-0005-stack-choice"
+        - title: "ADR-0008: CI Quality Gates"
+          url: "docs/10-architecture/adr/adr-0008-ci-quality-gates"
+        - title: "ADR-0010: Gold Standard Exemplar"
+          url: "docs/10-architecture/adr/adr-0010-gold-standard-exemplar"
+      runbooks:
+        - title: "Deploy to Vercel"
+          url: "docs/50-operations/runbooks/rbk-portfolio-app-deploy-vercel"
+        - title: "Rollback Deployment"
+          url: "docs/50-operations/runbooks/rbk-portfolio-app-rollback"
+      github: "https://github.com/bryce-seefieldt/portfolio-app"
+    isGoldStandard: true
+    goldStandardReason: "Comprehensive Phase 2 completion with full enterprise SDLC posture: threat model, dossier, ADRs, runbooks, CI quality gates, security controls, and automated testing."
 
   - slug: portfolio-docs-app
     title: "Portfolio Documentation App (Docusaurus Evidence Engine)"
     summary: "Enterprise documentation platform hosting dossiers, ADRs, threat models, runbooks, and release notes for the portfolio program."
+    category: devops
     tags: ["Docusaurus", "Docs-as-code", "Vercel", "Governance", "Operations"]
+    startDate: "2026-01"
+    ongoing: true
     status: featured
+    techStack:
+      - name: "Docusaurus 3"
+        category: framework
+        rationale: "Static site generation with MDX support and versioning"
+      - name: "TypeScript"
+        category: language
+        rationale: "Type-safe configuration and plugin development"
+      - name: "Vercel"
+        category: platform
+        rationale: "Zero-config deployment with preview environments"
+    keyProofs:
+      - "Docusaurus 3 with custom configuration and MDX support"
+      - "Structured documentation (dossiers, ADRs, threat models, runbooks)"
+      - "Automated CI builds with broken link detection"
+      - "Environment-based configuration (staging/production)"
     repoUrl: "https://github.com/bryce-seefieldt/portfolio-docs"
     demoUrl: "https://portfolio-docs-seven30.vercel.app"
     evidence:
       dossierPath: "projects/portfolio-docs-app/"
       adrIndexPath: "architecture/adr/"
       runbooksPath: "operations/runbooks/"
+      adr:
+        - title: "ADR-0009: Documentation Platform (Docusaurus)"
+          url: "docs/10-architecture/adr/adr-0009-documentation-platform"
+      github: "https://github.com/bryce-seefieldt/portfolio-docs"

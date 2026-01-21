@@ -12,12 +12,34 @@ import { docsUrl } from "@/lib/config";
 
 // ----- Schemas -----
 
+export const TechStackItemSchema = z
+  .object({
+    name: z.string().min(1),
+    category: z.enum(["language", "framework", "library", "tool", "platform"]),
+    rationale: z.string().min(1).optional(),
+  })
+  .strict();
+
+export type TechStackItem = z.infer<typeof TechStackItemSchema>;
+
+export const EvidenceLinkItemSchema = z
+  .object({
+    title: z.string().min(1),
+    url: z.string().min(1),
+  })
+  .strict();
+
+export type EvidenceLinkItem = z.infer<typeof EvidenceLinkItemSchema>;
+
 export const EvidenceLinksSchema = z
   .object({
     dossierPath: z.string().min(1).optional(),
     threatModelPath: z.string().min(1).optional(),
     adrIndexPath: z.string().min(1).optional(),
     runbooksPath: z.string().min(1).optional(),
+    adr: z.array(EvidenceLinkItemSchema).optional(),
+    runbooks: z.array(EvidenceLinkItemSchema).optional(),
+    github: z.string().url().optional(),
   })
   .strict();
 
@@ -30,11 +52,19 @@ export const ProjectSchema = z
       .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/u, "slug must be lowercase, hyphenated, no spaces"),
     title: z.string().min(3),
     summary: z.string().min(10),
+    category: z.enum(["fullstack", "frontend", "backend", "devops", "data", "mobile", "other"]).optional(),
     tags: z.array(z.string().min(1)).min(1),
+    startDate: z.string().regex(/^\d{4}-\d{2}$/u, "startDate must be YYYY-MM format").optional(),
+    endDate: z.string().regex(/^\d{4}-\d{2}$/u, "endDate must be YYYY-MM format").optional(),
+    ongoing: z.boolean().optional(),
     status: z.enum(["featured", "active", "archived", "planned"]).default("active"),
+    techStack: z.array(TechStackItemSchema).min(1).optional(),
+    keyProofs: z.array(z.string().min(1)).min(1).optional(),
     repoUrl: z.string().url().nullable().optional(),
     demoUrl: z.string().url().nullable().optional(),
     evidence: EvidenceLinksSchema.optional(),
+    isGoldStandard: z.boolean().optional(),
+    goldStandardReason: z.string().min(10).optional(),
   })
   .strict();
 
@@ -133,6 +163,46 @@ export function evidenceLinks(project: Project): {
   };
 }
 
+/**
+ * Validate evidence links follow expected patterns.
+ * Returns array of validation warnings (non-blocking).
+ */
+export function validateEvidenceLinks(project: Project): string[] {
+  const warnings: string[] = [];
+  const e = project.evidence;
+  if (!e) return warnings;
+
+  // Check dossier path pattern
+  if (e.dossierPath && !e.dossierPath.startsWith("projects/") && !e.dossierPath.startsWith("docs/60-projects/")) {
+    warnings.push(`[${project.slug}] dossierPath should start with 'projects/' or 'docs/60-projects/'`);
+  }
+
+  // Check threat model pattern
+  if (e.threatModelPath && !e.threatModelPath.includes("threat-model")) {
+    warnings.push(`[${project.slug}] threatModelPath should include 'threat-model'`);
+  }
+
+  // Validate ADR array URLs
+  if (e.adr) {
+    for (const item of e.adr) {
+      if (!item.url.startsWith("docs/") && !item.url.startsWith("http")) {
+        warnings.push(`[${project.slug}] ADR url '${item.url}' should start with 'docs/' or be absolute`);
+      }
+    }
+  }
+
+  // Validate runbook array URLs
+  if (e.runbooks) {
+    for (const item of e.runbooks) {
+      if (!item.url.startsWith("docs/") && !item.url.startsWith("http")) {
+        warnings.push(`[${project.slug}] Runbook url '${item.url}' should start with 'docs/' or be absolute`);
+      }
+    }
+  }
+
+  return warnings;
+}
+
 // ----- CLI entrypoint -----
 
 if (require.main === module) {
@@ -147,8 +217,17 @@ if (require.main === module) {
     }
     // Default / --validate
     // Do a shallow evidence link materialization check
+    const allWarnings: string[] = [];
     for (const p of projects) {
       void evidenceLinks(p); // Ensure no throw
+      const warnings = validateEvidenceLinks(p);
+      allWarnings.push(...warnings);
+    }
+    if (allWarnings.length > 0) {
+      console.warn("⚠️  Evidence link warnings:");
+      for (const w of allWarnings) {
+        console.warn(`  ${w}`);
+      }
     }
     console.log(`Registry OK (projects: ${projects.length})`);
     process.exit(0);
