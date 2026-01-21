@@ -3,16 +3,41 @@
 # verify-local.sh
 #
 # Comprehensive local development verification script for portfolio-app.
-# Runs all quality checks, validation, and tests with detailed reporting and troubleshooting guidance.
+# Runs all quality checks, security scanning, validation, and tests with detailed 
+# reporting and troubleshooting guidance.
+#
+# Includes:
+#   - Environment validation
+#   - Code formatting (auto-fix + validation)
+#   - Linting (ESLint with zero-warning enforcement)
+#   - Type checking (TypeScript strict mode)
+#   - Secret scanning (TruffleHog for credential detection)
+#   - Registry validation (Zod schema + YAML integrity)
+#   - Production build (Next.js)
+#   - Smoke tests (Playwright E2E - 12 tests across 2 browsers)
 #
 # Usage:
-#   ./scripts/verify-local.sh
+#   ./scripts/verify-local.sh              # Run all checks including smoke tests
+#   ./scripts/verify-local.sh --skip-tests # Skip smoke tests (faster)
+#   # or via package.json script:
+#   pnpm verify
 #
 # Exit codes:
 #   0 - All checks passed
 #   1 - One or more checks failed
 
 set -euo pipefail
+
+# Parse command line arguments
+SKIP_TESTS=false
+for arg in "$@"; do
+  case $arg in
+    --skip-tests)
+      SKIP_TESTS=true
+      shift
+      ;;
+  esac
+done
 
 # Color codes for output
 RED='\033[0;31m'
@@ -175,8 +200,50 @@ else
   4. Run: pnpm typecheck for full output"
 fi
 
-# Step 5: Registry validation
-print_section "Step 5: Registry Validation (registry:validate)"
+# Step 5: Secret scanning
+print_section "Step 5: Secret Scanning (secrets:scan)"
+
+print_info "Scanning for accidentally committed secrets (TruffleHog)..."
+
+# Check if trufflehog is available
+if command -v trufflehog &> /dev/null; then
+  SECRETS_OUTPUT=$(pnpm secrets:scan 2>&1)
+  SECRETS_EXIT_CODE=$?
+  
+  if [ $SECRETS_EXIT_CODE -eq 0 ]; then
+    # Check if any secrets were found in output
+    if echo "$SECRETS_OUTPUT" | grep -qi "found verified result" || echo "$SECRETS_OUTPUT" | grep -qi "detector"; then
+      print_failure "Potential secrets detected"
+      echo ""
+      echo "$SECRETS_OUTPUT" | head -100
+      echo ""
+      print_troubleshooting "  1. Review findings above carefully
+  2. If false positive: update .trufflehog-ignore or use inline ignore comments
+  3. If real secret exposed:
+     - Remove from code immediately
+     - If already committed: use git-filter-repo or BFG to rewrite history
+     - Rotate the exposed credential
+     - Review security incident response plan
+  4. Never commit: API keys, tokens, passwords, private keys, connection strings"
+    else
+      print_success "No secrets detected"
+    fi
+  else
+    print_failure "Secret scan failed to complete"
+    print_troubleshooting "  1. Ensure TruffleHog is installed: brew install trufflesecurity/trufflehog/trufflehog
+  2. Or use pre-commit hook: pre-commit install
+  3. Check scan output for errors"
+  fi
+else
+  print_warning "TruffleHog not installed - skipping secret scan"
+  print_info "Install TruffleHog for secret scanning:"
+  echo "  - macOS: brew install trufflesecurity/trufflehog/trufflehog"
+  echo "  - Linux: Download from https://github.com/trufflesecurity/trufflehog/releases"
+  echo "  - Or use pre-commit: pre-commit install"
+fi
+
+# Step 6: Registry validation
+print_section "Step 6: Registry Validation (registry:validate)"
 
 REGISTRY_OUTPUT=$(pnpm registry:validate 2>&1)
 REGISTRY_EXIT_CODE=$?
@@ -204,8 +271,8 @@ else
      - NEXT_PUBLIC_DOCS_GITHUB_URL"
 fi
 
-# Step 6: Next.js build
-print_section "Step 6: Next.js Build (build)"
+# Step 7: Next.js build
+print_section "Step 7: Next.js Build (build)"
 
 print_info "Starting production build (this may take 30-60 seconds)..."
 echo ""
@@ -242,25 +309,82 @@ else
   5. Check build output for specific error messages"
 fi
 
-# Step 7: Smoke tests (optional - only if build passed)
-if [ $BUILD_EXIT_CODE -eq 0 ]; then
-  print_section "Step 7: Smoke Tests (optional)"
-  
-  print_info "Smoke tests require Playwright browsers installed"
-  print_info "To run smoke tests manually:"
-  echo "  1. Start dev server: pnpm dev"
-  echo "  2. In another terminal: pnpm test"
-  echo "  3. Or use UI mode: pnpm test:ui"
-  
-  # Check if Playwright is set up
-  if [ -d "node_modules/@playwright/test" ]; then
-    print_success "Playwright installed"
-  else
-    print_warning "Playwright not installed"
+# Step 8: Smoke tests
+print_section "Step 8: Smoke Tests (test)"
+
+if [ "$SKIP_TESTS" = true ]; then
+  print_warning "Smoke tests skipped (--skip-tests flag)"
+  print_info "Run without --skip-tests to execute full test suite"
+elif [ $BUILD_EXIT_CODE -eq 0 ]; then
+  # Check if Playwright is installed
+  if [ ! -d "node_modules/@playwright/test" ]; then
+    print_warning "Playwright not installed - skipping smoke tests"
     print_info "Install with: pnpm install && npx playwright install --with-deps"
+  else
+    # Check if browsers are installed
+    if ! npx playwright --version &> /dev/null; then
+      print_warning "Playwright browsers not installed"
+      print_info "Install with: npx playwright install --with-deps"
+    else
+      print_success "Playwright installed"
+      
+      # Start dev server in background
+      print_info "Starting dev server for smoke tests..."
+      pnpm dev > /dev/null 2>&1 &
+      DEV_SERVER_PID=$!
+      
+      # Wait for dev server to be ready (max 30 seconds)
+      print_info "Waiting for dev server to be ready..."
+      if npx wait-on http://localhost:3000 -t 30000 2>/dev/null; then
+        print_success "Dev server ready"
+        
+        # Run smoke tests
+        print_info "Running Playwright smoke tests (12 tests across 2 browsers)..."
+        echo ""
+        
+        TEST_OUTPUT=$(pnpm test 2>&1)
+        TEST_EXIT_CODE=$?
+        
+        # Kill dev server
+        kill $DEV_SERVER_PID 2>/dev/null || true
+        wait $DEV_SERVER_PID 2>/dev/null || true
+        
+        if [ $TEST_EXIT_CODE -eq 0 ]; then
+          print_success "All smoke tests passed"
+          
+          # Extract test results
+          if echo "$TEST_OUTPUT" | grep -q "passed"; then
+            TEST_COUNT=$(echo "$TEST_OUTPUT" | grep -o "[0-9]* passed" | grep -o "^[0-9]*" | head -1)
+            print_info "Tests passed: ${TEST_COUNT:-12}"
+          fi
+        else
+          print_failure "Smoke tests failed"
+          echo ""
+          echo "$TEST_OUTPUT" | tail -50
+          echo ""
+          print_troubleshooting "  1. Review test failures above
+  2. Run tests in UI mode for debugging: pnpm test:ui
+  3. Run tests in debug mode: pnpm test:debug
+  4. Check test files: tests/e2e/smoke.spec.ts
+  5. Common issues:
+     - Routes not rendering (check for build errors)
+     - Navigation broken (check component logic)
+     - Timeouts (increase in playwright.config.ts)
+  6. View detailed HTML report: npx playwright show-report"
+        fi
+      else
+        print_failure "Dev server failed to start"
+        kill $DEV_SERVER_PID 2>/dev/null || true
+        wait $DEV_SERVER_PID 2>/dev/null || true
+        print_troubleshooting "  1. Check if port 3000 is already in use: lsof -i :3000
+  2. Try starting manually: pnpm dev
+  3. Check for build errors above
+  4. Review .env.local configuration"
+      fi
+    fi
   fi
 else
-  print_section "Step 7: Smoke Tests (skipped - build failed)"
+  print_section "Step 8: Smoke Tests (skipped - build failed)"
   print_warning "Fix build errors before running tests"
 fi
 
