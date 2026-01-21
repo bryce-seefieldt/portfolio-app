@@ -157,7 +157,61 @@ Use `.github/pull_request_template.md`.
 
 ---
 
-## 5) Branch protection (GitHub Rulesets)
+## 5) Issue and planning templates
+
+### When to create GitHub issues
+
+All work in portfolio-app should be tracked as issues (unless it's a hot-fix or tiny refactor that's already in an issue).
+
+### Phase-based work (Stage X.Y implementation)
+
+When implementing a **Phase Stage**, use **Phase Stage App Issue** template:
+
+- **Template:** Located in `portfolio-docs/docs/_meta/templates/template-phase-stage-app-issue.md`
+- **Usage:** Create issue using this template in `portfolio-app` repository
+- **Title format:** `Stage X.Y: [Stage Title] — App Implementation`
+- **Key sections to fill:**
+  - Overview and objectives
+  - Design specifications (schema, API signatures)
+  - Files to create/update
+  - Implementation tasks (broken into phases)
+  - Testing strategy (unit, integration, E2E)
+  - Acceptance criteria
+  - Linked companion docs issue
+- **Post-merge:** Reference this issue in PR with `Closes #[issue-number]`
+
+**Example phase stage issue:**
+- Title: `Stage 3.1: Data-Driven Project Registry — App Implementation`
+- Companion: `Stage 3.1: Data-Driven Project Registry — Documentation` (in portfolio-docs)
+
+### Standalone work (non-phase issues)
+
+For work **NOT tied to a phase stage**, use **Generic GitHub Issue** template:
+
+- **Template:** Located in `portfolio-docs/docs/_meta/templates/template-github-issue-generic.md`
+- **Usage:** Copy template when creating new issue
+- **Types supported:** Bug, Feature, Enhancement, Documentation, Refactoring, Maintenance, Other
+- **Sections to fill:** Adapt to issue type (use relevant sections only)
+- **Examples:**
+  - `Bug: Fix contact form email validation` (generic issue)
+  - `Refactor: Extract CV fetching logic` (generic issue)
+  - `Fix: Broken link in projects page` (generic issue)
+
+### Cross-repository coordination
+
+When phase work spans both repositories:
+
+1. Create both issues (app + docs)
+2. Link them together in "Related Issues"
+3. Reference app issue in app PRs (`Closes #X`)
+4. Reference docs issue in docs PRs (`Closes #Y`)
+5. Verify both PRs merged before marking phase stage complete
+
+**Reference:** See [Template Usage Guide](https://bns-portfolio-docs.vercel.app/docs/_meta/templates) for full details on all templates.
+
+---
+
+## 6) Branch protection (GitHub Rulesets)
 
 The `main` branch is protected using GitHub **Rulesets** (not classic branch protection).
 
@@ -173,23 +227,23 @@ If work requires temporarily adjusting protections, propose a documented excepti
 
 ---
 
-## 6) Documentation integration (evidence-first model)
+## 7) Documentation integration (evidence-first model)
 
-### 6.1 The Documentation App is the evidence engine
+### 7.1 The Documentation App is the evidence engine
 
 The Portfolio App must link to evidence artifacts hosted in Docusaurus via `DOCS_BASE_URL`.
 
 - Use `docsUrl("path")` to build links.
 - Evidence paths should be stable and maintained in `src/data/projects.ts` where possible.
 
-### 6.2 What belongs in Portfolio App vs Docs App
+### 7.2 What belongs in Portfolio App vs Docs App
 
 - Portfolio App: concise, user-facing summaries, navigation, and entry points
 - Documentation App: deep technical content (ADRs, threat models, runbooks, dossiers, diagrams, release notes)
 
 Do not copy deep operational or security content into the Portfolio App. Link to it.
 
-### 6.3 URL linking strategy (required for all documentation links)
+### 7.3 URL linking strategy (required for all documentation links)
 
 When linking to Portfolio Documentation, use environment variables to ensure portability and correctness:
 
