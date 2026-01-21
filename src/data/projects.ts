@@ -4,7 +4,11 @@
 // Do not store secrets or sensitive/internal data here.
 
 import type { Project } from "@/lib/registry";
-import { getAllProjects as _getAll, getProjectBySlug as _bySlug, getFeaturedProjects as _featured } from "@/lib/registry";
+import {
+  getAllProjects as _getAll,
+  getProjectBySlug as _bySlug,
+  getFeaturedProjects as _featured,
+} from "@/lib/registry";
 
 export type { Project };
 

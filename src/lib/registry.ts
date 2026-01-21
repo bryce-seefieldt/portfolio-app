@@ -3,12 +3,50 @@
 // YAML-backed project registry with Zod validation and helper functions.
 // - Single source of truth for portfolio projects
 // - Validates at load time (fail fast during build)
+// Load environment variables when running standalone (not through Next.js)
+if (typeof process !== "undefined" && !process.env.NEXT_RUNTIME) {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  require("dotenv").config({ path: ".env.local" });
+}
+
 
 import fs from "node:fs";
 import path from "node:path";
 import * as yaml from "js-yaml";
 import { z } from "zod";
-import { docsUrl } from "@/lib/config";
+import {
+  docsUrl,
+  GITHUB_URL,
+  DOCS_GITHUB_URL,
+  DOCS_BASE_URL,
+  SITE_URL,
+} from "@/lib/config";
+
+// ----- Schemas -----
+
+// ----- Placeholder Interpolation -----
+
+/**
+ * Interpolate environment variable placeholders in strings.
+ * Supports: {GITHUB_URL}, {DOCS_GITHUB_URL}, {DOCS_BASE_URL}, {SITE_URL}
++ * Returns null if placeholder can't be resolved or result is empty.
+ */
+function interpolate(value: string | null | undefined): string | null {
+  if (!value || typeof value !== "string") return null;
+  
+  const result = value
+    .replace(/\{GITHUB_URL\}/g, GITHUB_URL || "")
+    .replace(/\{DOCS_GITHUB_URL\}/g, DOCS_GITHUB_URL || "")
+    .replace(/\{DOCS_BASE_URL\}/g, DOCS_BASE_URL || "")
+    .replace(/\{SITE_URL\}/g, SITE_URL || "");
+  
+  // Return null if result is empty or still contains unresolved placeholders
+  if (!result || result.trim() === "" || result.includes("{")) {
+    return null;
+  }
+  
+  return result;
+}
 
 // ----- Schemas -----
 
@@ -39,7 +77,7 @@ export const EvidenceLinksSchema = z
     runbooksPath: z.string().min(1).optional(),
     adr: z.array(EvidenceLinkItemSchema).optional(),
     runbooks: z.array(EvidenceLinkItemSchema).optional(),
-    github: z.string().url().optional(),
+    github: z.string().url().nullable().optional(),
   })
   .strict();
 
@@ -52,10 +90,18 @@ export const ProjectSchema = z
       .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/u, "slug must be lowercase, hyphenated, no spaces"),
     title: z.string().min(3),
     summary: z.string().min(10),
-    category: z.enum(["fullstack", "frontend", "backend", "devops", "data", "mobile", "other"]).optional(),
+    category: z
+      .enum(["fullstack", "frontend", "backend", "devops", "data", "mobile", "other"])
+      .optional(),
     tags: z.array(z.string().min(1)).min(1),
-    startDate: z.string().regex(/^\d{4}-\d{2}$/u, "startDate must be YYYY-MM format").optional(),
-    endDate: z.string().regex(/^\d{4}-\d{2}$/u, "endDate must be YYYY-MM format").optional(),
+    startDate: z
+      .string()
+      .regex(/^\d{4}-\d{2}$/u, "startDate must be YYYY-MM format")
+      .optional(),
+    endDate: z
+      .string()
+      .regex(/^\d{4}-\d{2}$/u, "endDate must be YYYY-MM format")
+      .optional(),
     ongoing: z.boolean().optional(),
     status: z.enum(["featured", "active", "archived", "planned"]).default("active"),
     techStack: z.array(TechStackItemSchema).min(1).optional(),
@@ -87,15 +133,21 @@ const RegistryWithMetaSchema = z
 
 type RegistryInput = z.infer<typeof RegistryArraySchema> | z.infer<typeof RegistryWithMetaSchema>;
 
-function parseRegistryInput(input: unknown): Project[] {
+function parseRegistryInput(input: unknown): unknown[] {
   // Accept either an array of projects or an object with { metadata, projects }
-  const asWithMeta = RegistryWithMetaSchema.safeParse(input);
-  if (asWithMeta.success) return asWithMeta.data.projects;
-  const asArray = RegistryArraySchema.safeParse(input);
-  if (asArray.success) return asArray.data;
-  // If neither schema matches, throw the more informative error message
-  const sample = JSON.stringify(input, null, 2).slice(0, 2000);
-  throw new Error(`Invalid registry format. Expected array or { metadata, projects } object.\nSample: ${sample}`);
+  // Extract raw projects without validation (validation happens after interpolation)
+  if (Array.isArray(input)) {
+    return input;
+  }
+  if (typeof input === "object" && input !== null && "projects" in input) {
+    const obj = input as { projects?: unknown };
+    if (Array.isArray(obj.projects)) {
+      return obj.projects;
+    }
+  }
+  throw new Error(
+    `Invalid registry format. Expected array or { metadata, projects } object.`,
+  );
 }
 
 // ----- Loader -----
@@ -119,7 +171,21 @@ export function loadProjectRegistry(): Project[] {
   }
   const raw = fs.readFileSync(filePath, "utf8");
   const parsed = yaml.load(raw) as RegistryInput;
-  const projects = parseRegistryInput(parsed).map((p) => ProjectSchema.parse(p));
+  const projects = parseRegistryInput(parsed).map((p) => {
+    // Interpolate placeholders before validation
+    const interpolated = {
+      ...p,
+      repoUrl: interpolate(p.repoUrl),
+      demoUrl: interpolate(p.demoUrl),
+      evidence: p.evidence
+        ? {
+            ...p.evidence,
+            github: interpolate(p.evidence.github),
+          }
+        : undefined,
+    };
+    return ProjectSchema.parse(interpolated);
+  });
 
   // Enforce slug uniqueness
   const seen = new Set<string>();
@@ -173,8 +239,14 @@ export function validateEvidenceLinks(project: Project): string[] {
   if (!e) return warnings;
 
   // Check dossier path pattern
-  if (e.dossierPath && !e.dossierPath.startsWith("projects/") && !e.dossierPath.startsWith("docs/60-projects/")) {
-    warnings.push(`[${project.slug}] dossierPath should start with 'projects/' or 'docs/60-projects/'`);
+  if (
+    e.dossierPath &&
+    !e.dossierPath.startsWith("projects/") &&
+    !e.dossierPath.startsWith("docs/60-projects/")
+  ) {
+    warnings.push(
+      `[${project.slug}] dossierPath should start with 'projects/' or 'docs/60-projects/'`,
+    );
   }
 
   // Check threat model pattern
@@ -186,7 +258,9 @@ export function validateEvidenceLinks(project: Project): string[] {
   if (e.adr) {
     for (const item of e.adr) {
       if (!item.url.startsWith("docs/") && !item.url.startsWith("http")) {
-        warnings.push(`[${project.slug}] ADR url '${item.url}' should start with 'docs/' or be absolute`);
+        warnings.push(
+          `[${project.slug}] ADR url '${item.url}' should start with 'docs/' or be absolute`,
+        );
       }
     }
   }
@@ -195,7 +269,9 @@ export function validateEvidenceLinks(project: Project): string[] {
   if (e.runbooks) {
     for (const item of e.runbooks) {
       if (!item.url.startsWith("docs/") && !item.url.startsWith("http")) {
-        warnings.push(`[${project.slug}] Runbook url '${item.url}' should start with 'docs/' or be absolute`);
+        warnings.push(
+          `[${project.slug}] Runbook url '${item.url}' should start with 'docs/' or be absolute`,
+        );
       }
     }
   }
@@ -232,7 +308,10 @@ if (require.main === module) {
     console.log(`Registry OK (projects: ${projects.length})`);
     process.exit(0);
   } catch (err) {
-    console.error("Registry validation failed:\n", err instanceof Error ? err.message : String(err));
+    console.error(
+      "Registry validation failed:\n",
+      err instanceof Error ? err.message : String(err),
+    );
     process.exit(1);
   }
 }
