@@ -230,16 +230,26 @@ if command -v trufflehog &> /dev/null; then
     fi
   else
     print_failure "Secret scan failed to complete"
-    print_troubleshooting "  1. Ensure TruffleHog is installed: brew install trufflesecurity/trufflehog/trufflehog
-  2. Or use pre-commit hook: pre-commit install
-  3. Check scan output for errors"
+    print_troubleshooting "  1. Ensure TruffleHog CLI binary is installed (see above for installation steps)
+  2. Verify it's in your PATH: which trufflehog
+  3. Or use pre-commit hook instead: pre-commit install
+  4. Check scan output for specific errors"
   fi
 else
   print_warning "TruffleHog not installed - skipping secret scan"
-  print_info "Install TruffleHog for secret scanning:"
-  echo "  - macOS: brew install trufflesecurity/trufflehog/trufflehog"
-  echo "  - Linux: Download from https://github.com/trufflesecurity/trufflehog/releases"
-  echo "  - Or use pre-commit: pre-commit install"
+  print_info "Install TruffleHog CLI binary for secret scanning:"
+  echo ""
+  echo "  macOS:"
+  echo "    brew install trufflesecurity/trufflehog/trufflehog"
+  echo ""
+  echo "  Linux:"
+  echo "    1. Download from: https://github.com/trufflesecurity/trufflehog/releases/"
+  echo "    2. Extract: tar -xzf trufflehog_*_linux_x86_64.tar.gz"
+  echo "    3. Install: sudo mv trufflehog /usr/local/bin/"
+  echo ""
+  echo "  Alternative (pre-commit hook - automatic scanning on commit):"
+  echo "    pip install pre-commit"
+  echo "    pre-commit install"
 fi
 
 # Step 6: Registry validation

@@ -157,8 +157,49 @@ pnpm test:debug        # Run tests in debug mode with inspector
 **Security:**
 ```bash
 pnpm secrets:scan      # Scan for accidentally committed secrets (TruffleHog)
-                       # Requires: brew install trufflesecurity/trufflehog/trufflehog
+                       # Requires TruffleHog CLI binary (see installation below)
 ```
+
+**TruffleHog installation:**
+```bash
+# macOS
+brew install trufflesecurity/trufflehog/trufflehog
+
+# Linux: Download binary from GitHub releases
+# https://github.com/trufflesecurity/trufflehog/releases/
+# Then add to PATH or /usr/local/bin
+
+# Alternative: Use pre-commit hook
+pip install pre-commit
+pre-commit install
+# This will scan automatically on commit
+```
+
+### Local secret scanning (recommended)
+
+To prevent accidental commits of secrets, configure the pre-commit hook for automatic scanning:
+
+```bash
+# Install pre-commit framework
+pip install pre-commit
+
+# Install hooks (runs TruffleHog on every commit attempt)
+pre-commit install
+
+# Verify setup
+pre-commit run --all-files
+```
+
+**How it works:**
+
+- `.pre-commit-config.yaml` defines a TruffleHog hook (v3.63.0)
+- Before each commit, TruffleHog scans for verified secrets
+- If secrets are found, the commit is blocked until they are removed
+- False positives can be ignored with inline comments (see TruffleHog docs)
+
+**If pre-commit is not set up:**
+
+Secrets will still be scanned in CI (GitHub Actions), but setting up the local hook catches issues earlier and prevents commits in the first place.
 
 **Registry management:**
 ```bash
