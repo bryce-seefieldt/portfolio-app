@@ -1,0 +1,29 @@
+metadata:
+  version: 1
+  lastUpdated: "2026-01-21"
+
+projects:
+  - slug: portfolio-app
+    title: "Portfolio App (Next.js + TypeScript)"
+    summary: "Production-quality portfolio application designed to be reviewed like a real service (CI gates, release governance, security posture)."
+    tags: ["TypeScript", "Next.js", "Vercel", "CI/CD", "Security", "Docs-as-code"]
+    status: featured
+    repoUrl: "https://github.com/bryce-seefieldt/portfolio-app"
+    demoUrl: null
+    evidence:
+      dossierPath: "projects/portfolio-app/"
+      threatModelPath: "security/threat-models/portfolio-app-threat-model"
+      adrIndexPath: "architecture/adr/"
+      runbooksPath: "operations/runbooks/"
+
+  - slug: portfolio-docs-app
+    title: "Portfolio Documentation App (Docusaurus Evidence Engine)"
+    summary: "Enterprise documentation platform hosting dossiers, ADRs, threat models, runbooks, and release notes for the portfolio program."
+    tags: ["Docusaurus", "Docs-as-code", "Vercel", "Governance", "Operations"]
+    status: featured
+    repoUrl: "https://github.com/bryce-seefieldt/portfolio-docs"
+    demoUrl: "https://portfolio-docs-seven30.vercel.app"
+    evidence:
+      dossierPath: "projects/portfolio-docs-app/"
+      adrIndexPath: "architecture/adr/"
+      runbooksPath: "operations/runbooks/"
