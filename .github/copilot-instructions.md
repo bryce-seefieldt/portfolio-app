@@ -148,6 +148,12 @@ All changes go through PRs (even solo). PRs must include:
 
 Use `.github/pull_request_template.md`.
 
+### 4.5 Issue closure via PRs
+- Include a closing keyword in the PR description when the PR should close an issue on merge to `main` (e.g., `Closes #123`, `Fixes #123`, `Resolves #123`).
+- For multiple issues: list each on its own line with a closing keyword.
+- If multiple PRs relate to the same issue: only the PR targeting `main` should auto-close; use non-closing phrasing (`Refs #123`) in supporting PRs.
+- After merge, verify the issue closed; otherwise close manually with a brief note.
+
 ---
 
 ## 5) Branch protection (GitHub Rulesets)

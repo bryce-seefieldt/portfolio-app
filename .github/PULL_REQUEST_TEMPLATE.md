@@ -13,6 +13,7 @@
 - [ ] `pnpm format:check`
 - [ ] `pnpm typecheck`
 - [ ] `pnpm build`
+- [ ] Includes closing keyword for linked issue (e.g., Closes #123)
 - Links/screenshots (optional):
 
 ## Risk and impact
