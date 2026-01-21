@@ -13,7 +13,7 @@ import fs from "node:fs";
 import path from "node:path";
 import * as yaml from "js-yaml";
 import { z } from "zod";
-import { docsUrl, GITHUB_URL, DOCS_GITHUB_URL, DOCS_BASE_URL, SITE_URL } from "@/lib/config";
+import { docsUrl } from "@/lib/config";
 
 // ----- Schemas -----
 
@@ -22,16 +22,23 @@ import { docsUrl, GITHUB_URL, DOCS_GITHUB_URL, DOCS_BASE_URL, SITE_URL } from "@
 /**
  * Interpolate environment variable placeholders in strings.
  * Supports: {GITHUB_URL}, {DOCS_GITHUB_URL}, {DOCS_BASE_URL}, {SITE_URL}
-+ * Returns null if placeholder can't be resolved or result is empty.
+ * Returns null if placeholder can't be resolved or result is empty.
  */
 function interpolate(value: string | null | undefined): string | null {
   if (!value || typeof value !== "string") return null;
 
+  // Read from process.env directly for better reliability with tsx/node
+  const DOCS_BASE_URL =
+    process.env.NEXT_PUBLIC_DOCS_BASE_URL?.trim()?.replace(/\/+$/, "") || "/docs";
+  const GITHUB_URL = process.env.NEXT_PUBLIC_GITHUB_URL?.trim()?.replace(/\/+$/, "") || "";
+  const DOCS_GITHUB_URL = process.env.NEXT_PUBLIC_DOCS_GITHUB_URL?.trim()?.replace(/\/+$/, "") || "";
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim()?.replace(/\/+$/, "") || "";
+
   const result = value
-    .replace(/\{GITHUB_URL\}/g, GITHUB_URL || "")
-    .replace(/\{DOCS_GITHUB_URL\}/g, DOCS_GITHUB_URL || "")
-    .replace(/\{DOCS_BASE_URL\}/g, DOCS_BASE_URL || "")
-    .replace(/\{SITE_URL\}/g, SITE_URL || "");
+    .replace(/\{GITHUB_URL\}/g, GITHUB_URL)
+    .replace(/\{DOCS_GITHUB_URL\}/g, DOCS_GITHUB_URL)
+    .replace(/\{DOCS_BASE_URL\}/g, DOCS_BASE_URL)
+    .replace(/\{SITE_URL\}/g, SITE_URL);
 
   // Return null if result is empty or still contains unresolved placeholders
   if (!result || result.trim() === "" || result.includes("{")) {
