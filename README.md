@@ -98,7 +98,22 @@ Phase 1 governance is enforced:
 
 ### Local quality contract
 
-Run locally before pushing:
+Run all checks with one command:
+
+```bash
+pnpm verify
+```
+
+This runs the comprehensive verification script (`./scripts/verify-local.sh`) which:
+
+- Auto-formats code (`format:write` then `format:check`)
+- Runs ESLint with zero-warning enforcement
+- Validates TypeScript types
+- Validates the project registry (YAML + Zod schema)
+- Builds the Next.js app
+- Provides detailed troubleshooting guidance for any failures
+
+Or run checks individually:
 
 ```bash
 pnpm lint

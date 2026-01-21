@@ -16,7 +16,8 @@
     "test:debug": "playwright test --debug",
     "secrets:scan": "trufflehog filesystem . --debug --only-verified",
     "registry:validate": "tsx src/lib/registry.ts --validate",
-    "registry:list": "tsx src/lib/registry.ts --list"
+    "registry:list": "tsx src/lib/registry.ts --list",
+    "verify": "./scripts/verify-local.sh"
   },
   "dependencies": {
     "js-yaml": "^4.1.0",
