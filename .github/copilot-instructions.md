@@ -157,6 +157,78 @@ Use `.github/pull_request_template.md`.
 - If multiple PRs relate to the same issue: only the PR targeting `main` should auto-close; use non-closing phrasing (`Refs #123`) in supporting PRs.
 - After merge, verify the issue closed; otherwise close manually with a brief note.
 
+### 4.6 Documentation updates required when CI or verification changes
+
+**Mandatory:** When making changes to CI workflows or local verification processes, you MUST update the following files in the same PR:
+
+**README.md updates required when:**
+
+- Adding/removing/renaming CI jobs (`.github/workflows/ci.yml` or `.github/workflows/*.yml`)
+  - Update: "Governance (Implemented)" section → Required CI checks list
+  - Update: "Deployment" section → GitHub Deployment Checks list
+- Adding/removing/changing local verification steps (`scripts/verify-local.sh` or `pnpm verify` behavior)
+  - Update: "Full verification" step-by-step list (steps 1-10)
+  - Update: "Quick verification" description
+- Adding/removing pnpm scripts related to quality/testing/validation
+  - Update: "Available scripts reference" section → appropriate subsection
+  - Update: "Pre-deploy checklist" if script is part of verification
+- Changing verification command names or parameters
+  - Update: All references to the command throughout README.md
+
+**scripts/verify-local.sh updates required when:**
+
+- Adding/removing/changing verification steps in the local development workflow
+  - Add: New step section with appropriate print_section, command execution, success/failure handling
+  - Remove: Obsolete step sections
+  - Update: Step numbers and descriptions to maintain sequential flow (Step 1, Step 2, etc.)
+- Adding/removing pnpm scripts that should be run during local verification
+  - Add: Execution block with appropriate error handling and troubleshooting guidance
+  - Update: Summary section to reflect new check count
+- Changing verification tools or their invocation (e.g., new linter, test framework)
+  - Update: Tool version checks in "Environment Check" section
+  - Update: Troubleshooting guidance for the affected step
+- Adding new validation gates (e.g., new registry validation, link checking)
+  - Add: Dedicated step section with detailed output parsing and error messages
+  - Update: "Next steps" guidance in summary if gate is pre-commit requirement
+
+**PULL_REQUEST_TEMPLATE.md updates required when:**
+
+- Adding/removing/renaming CI jobs or changing job names displayed in GitHub UI
+  - Update: "CI Status" checklist section → add/remove/rename checkbox with job description
+- Changing CI job dependencies or execution order
+  - Update: Job descriptions in parentheses (e.g., "depends on quality, test, link-validation")
+- Adding new CI-only gates (like `secrets-scan` being PR-only)
+  - Update: Add note about when job runs (e.g., "PR-only gate")
+
+**Validation before merge:**
+
+- Verify README.md "Governance" section lists all current required CI jobs
+- Verify README.md verification steps match actual `pnpm verify` behavior
+- Verify PULL_REQUEST_TEMPLATE.md CI Status checklist matches `.github/workflows/ci.yml` jobs
+- Confirm script references in README match `package.json` scripts
+- Verify scripts/verify-local.sh steps match README.md "Full verification" list and `pnpm verify` execution
+
+**Failure to update these files will cause:**
+
+- Contributor confusion (documentation doesn't match reality)
+- PR template checklist drift (missing/outdated CI jobs)
+- Onboarding friction (new contributors follow outdated steps)
+- Evidence gaps in PRs (checklist doesn't cover all required checks)
+- Local verification script drift (developers run outdated checks)
+
+**Example:** If you add a new `ci / security-scan` job:
+
+1. Update README.md:
+   - Add `ci / security-scan` to "Required CI checks" list in Governance section
+   - Add to Deployment "GitHub Deployment Checks" list
+   - Add to "Full verification" step list (e.g., "Step 6: Security scan")
+2. Update PULL_REQUEST_TEMPLATE.md:
+   - Add `- [ ] \`ci / security-scan\` passed (description)` to CI Status section
+3. Update scripts/verify-local.sh:
+   - Add Step 6 section with `pnpm security:scan` execution
+   - Add error handling and troubleshooting guidance
+   - Update step numbers for subsequent steps (old Step 6 → Step 7, etc.)
+
 ---
 
 ## 5) Issue and planning templates

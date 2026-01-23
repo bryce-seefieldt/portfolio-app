@@ -88,11 +88,12 @@ All variables prefixed with `NEXT_PUBLIC_` are exposed to the browser. Do not pl
 
 ## Governance (Implemented)
 
-Phase 1 governance is enforced:
+Phase 1–3 governance is enforced:
 
 - Required CI checks with stable names:
   - `ci / quality` (lint, format:check, typecheck)
-  - `ci / build` (Next.js build; depends on quality)
+  - `ci / link-validation` (registry validation + evidence link checks; Stage 3.5)
+  - `ci / build` (Next.js build; depends on quality and link-validation)
 - Deterministic installs in CI: `pnpm install --frozen-lockfile`
 - Supply chain and static analysis: CodeQL (JS/TS) and Dependabot (weekly; majors excluded)
 
@@ -123,12 +124,12 @@ pnpm format:write && pnpm lint && pnpm typecheck && pnpm registry:validate && pn
 6. Validates the project registry (YAML + Zod schema)
 7. Builds the Next.js app
 8. Runs Vitest unit tests (70+ tests: registry validation, slug helpers, link construction)
-9. Runs Playwright E2E tests (12 tests: evidence link resolution, route coverage)
+9. Runs Playwright link validation (12 checks: evidence link resolution, route coverage) — Stage 3.5
 10. Provides detailed troubleshooting guidance for any failures
 
 **Quick verification** (`pnpm verify:quick`) — Fast iteration during development (~60-90s):
 
-- Runs steps 1-7 above, **skips unit and E2E tests** (steps 8-9)
+- Runs steps 1-7 above, **skips unit and link validation tests** (steps 8-9)
 - Use when making frequent small changes and need rapid feedback
 - Run full `pnpm verify` before final commit/push
 
@@ -229,11 +230,12 @@ pre-commit run --all-files
 
 Secrets will still be scanned in CI (GitHub Actions), but setting up the local hook catches issues earlier and prevents commits in the first place.
 
-**Registry management:**
+**Registry and link validation (Stage 3.5):**
 
 ```bash
 pnpm registry:validate # Validate projects.yml schema and integrity
 pnpm registry:list     # List all projects with interpolated values
+pnpm links:check       # Run Playwright link validation (evidence URL smoke tests)
 ```
 
 **Comprehensive validation:**
@@ -261,14 +263,14 @@ pnpm typecheck         # TypeScript must have no errors
 # 4. Validate data integrity
 pnpm registry:validate # Projects YAML must be valid
 
-# 5. Ensure production build works
+# 5. Validate evidence links (Stage 3.5)
+pnpm links:check       # Playwright link validation (must connect to /docs)
+
+# 6. Ensure production build works
 pnpm build
 
-# 6. Run unit tests
+# 7. Run unit tests
 pnpm test:unit
-
-# 7. Run E2E tests
-pnpm playwright test
 
 # 8. Security scan (recommended if TruffleHog installed)
 pnpm secrets:scan || echo "TruffleHog not installed - skipping secret scan"
@@ -286,7 +288,7 @@ pnpm verify    # Runs all above steps with detailed error reporting
 
 - PR → preview deployments (Vercel auto-generates preview URLs)
 - `main` → production deployment at `https://portfolio-app.vercel.app`
-- Production promotion gated by GitHub Deployment Checks (`ci / quality`, `ci / build`)
+- Production promotion gated by GitHub Deployment Checks (`ci / quality`, `ci / link-validation`, `ci / build`)
 - GitHub Ruleset protects `main` branch
 
 For Phase 1 setup details, see [Vercel Setup Runbook](/docs/50-operations/runbooks/rbk-vercel-setup-and-promotion-validation.md) in the documentation app.

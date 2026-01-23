@@ -376,16 +376,16 @@ else
   print_warning "Fix build errors before running tests"
 fi
 
-# Step 9: E2E tests
-print_section "Step 9: E2E Tests - Evidence Links (e2e/evidence-links.spec.ts)"
+# Step 9: Link Validation (links:check / Playwright)
+print_section "Step 9: Link Validation (links:check / Playwright)"
 
 if [ "$SKIP_TESTS" = true ]; then
-  print_warning "E2E tests skipped (--skip-tests flag)"
-  print_info "Run: pnpm playwright test to execute E2E tests locally"
+  print_warning "Link validation skipped (--skip-tests flag)"
+  print_info "Run: pnpm links:check to execute link validation locally"
 elif [ $BUILD_EXIT_CODE -eq 0 ]; then
   # Check if Playwright is installed
   if [ ! -d "node_modules/@playwright/test" ]; then
-    print_warning "Playwright not installed - skipping E2E tests"
+    print_warning "Playwright not installed - skipping link validation"
     print_info "Install with: pnpm install && npx playwright install --with-deps"
   else
     # Check if browsers are installed
@@ -396,7 +396,7 @@ elif [ $BUILD_EXIT_CODE -eq 0 ]; then
       print_success "Playwright installed"
       
       # Start dev server in background
-      print_info "Starting dev server for E2E tests..."
+      print_info "Starting dev server for link validation..."
       pnpm dev > /dev/null 2>&1 &
       DEV_SERVER_PID=$!
       
@@ -405,11 +405,11 @@ elif [ $BUILD_EXIT_CODE -eq 0 ]; then
       if npx wait-on http://localhost:3000 -t 30000 2>/dev/null; then
         print_success "Dev server ready"
         
-        # Run E2E tests
-        print_info "Running Playwright E2E tests (evidence link resolution)..."
+        # Run link validation
+        print_info "Running Playwright link checks (pnpm links:check)..."
         echo ""
         
-        E2E_TEST_OUTPUT=$(pnpm playwright test 2>&1 || true)
+        E2E_TEST_OUTPUT=$(pnpm links:check 2>&1 || true)
         E2E_TEST_EXIT_CODE=$?
         
         # Kill dev server
@@ -417,33 +417,32 @@ elif [ $BUILD_EXIT_CODE -eq 0 ]; then
         wait $DEV_SERVER_PID 2>/dev/null || true
         
         if [ $E2E_TEST_EXIT_CODE -eq 0 ]; then
-          print_success "All E2E tests passed"
+          print_success "Link validation passed"
           
           # Extract test results
           if echo "$E2E_TEST_OUTPUT" | grep -q "passed"; then
             E2E_TEST_COUNT=$(echo "$E2E_TEST_OUTPUT" | grep -o "[0-9]* passed" | grep -o "^[0-9]*" | head -1)
-            print_info "Tests passed: ${E2E_TEST_COUNT:-12} (multi-browser)"
+            print_info "Checks passed: ${E2E_TEST_COUNT:-12} (multi-browser)"
           fi
         else
-          print_failure "E2E tests failed"
+          print_failure "Link validation failed"
           echo ""
           echo "$E2E_TEST_OUTPUT" | tail -50
           echo ""
-          print_troubleshooting "  1. Review test failures above
+          print_troubleshooting "  1. Review failures above (see playwright-report for details)
   2. Run tests in UI mode for debugging: pnpm playwright test --ui
   3. Run tests in debug mode: pnpm playwright test --debug
-  4. E2E test file: e2e/evidence-links.spec.ts
+  4. Link validation file: e2e/evidence-links.spec.ts (via links:check)
   5. Tests verify:
-     - All routes render correctly
-     - Evidence links resolve to correct URLs
-     - BadgeGroup displays correct badges
-     - Responsive design works (mobile/tablet/desktop)
+     - Routes render correctly
+     - Evidence links resolve to docs and GitHub targets
+     - Badges render correctly
+     - Responsive layouts work (mobile/tablet/desktop)
   6. View detailed HTML report: npx playwright show-report
   7. Common issues:
-     - Routes not rendering (check build errors)
-     - Navigation broken (check route configuration)
-     - Timeouts (increase in playwright.config.ts)
-     - Slow network (reduce wait timeouts in tests)"
+     - Missing or invalid env vars
+     - Registry entries with bad URLs
+     - Slow network causing timeouts"
         fi
       else
         print_failure "Dev server failed to start"
@@ -457,8 +456,8 @@ elif [ $BUILD_EXIT_CODE -eq 0 ]; then
     fi
   fi
 else
-  print_section "Step 9: E2E Tests (skipped - build failed)"
-  print_warning "Fix build errors before running E2E tests"
+  print_section "Step 9: Link Validation (skipped - build failed)"
+  print_warning "Fix build errors before running link validation"
 fi
 
 # Summary
@@ -473,10 +472,10 @@ if [ $FAILURES -eq 0 ]; then
   echo "Test Coverage:"
   if [ "$SKIP_TESTS" = false ]; then
     echo "  ✓ Unit tests: 70+ tests (registry, slug helpers, link construction)"
-    echo "  ✓ E2E tests: 12 tests (evidence link resolution, route coverage)"
+    echo "  ✓ Link validation: 12 checks (Playwright evidence link coverage)"
   else
     echo "  ⊗ Unit tests: skipped (use 'pnpm verify' to run)"
-    echo "  ⊗ E2E tests: skipped (use 'pnpm verify' to run)"
+    echo "  ⊗ Link validation: skipped (use 'pnpm verify' to run)"
   fi
   echo ""
   echo "Next steps:"
