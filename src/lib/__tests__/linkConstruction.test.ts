@@ -3,70 +3,81 @@
 // Unit tests for link construction helpers (docsUrl, githubUrl, docsGithubUrl, mailtoUrl).
 
 import { describe, it, expect } from "vitest";
-import { docsUrl, githubUrl, docsGithubUrl, mailtoUrl } from "../config";
+import {
+  DOCS_BASE_URL,
+  GITHUB_URL,
+  DOCS_GITHUB_URL,
+  docsUrl,
+  githubUrl,
+  docsGithubUrl,
+  mailtoUrl,
+} from "../config";
 
 describe("Link Construction Helpers", () => {
   describe("docsUrl", () => {
     it("should build URL with default base path", () => {
-      // Default: NEXT_PUBLIC_DOCS_BASE_URL not set = "/docs"
       const result = docsUrl("/portfolio/roadmap");
-      expect(result).toBe("/docs/portfolio/roadmap");
+      expect(result).toBe(`${DOCS_BASE_URL}/portfolio/roadmap`);
     });
 
     it("should strip leading slashes from pathname", () => {
       const result = docsUrl("portfolio/roadmap");
-      expect(result).toBe("/docs/portfolio/roadmap");
+      expect(result).toBe(`${DOCS_BASE_URL}/portfolio/roadmap`);
     });
 
     it("should handle empty pathname", () => {
       const result = docsUrl("");
-      expect(result).toBe("/docs");
+      expect(result).toBe(DOCS_BASE_URL);
     });
 
     it("should handle nested paths", () => {
       const result = docsUrl("portfolio/roadmap/issues/stage-3-1");
-      expect(result).toBe("/docs/portfolio/roadmap/issues/stage-3-1");
+      expect(result).toBe(`${DOCS_BASE_URL}/portfolio/roadmap/issues/stage-3-1`);
     });
 
     it("should work with leading slash", () => {
       const result = docsUrl("/docs/portfolio/roadmap");
-      expect(result).toBe("/docs/docs/portfolio/roadmap");
+      expect(result).toBe(`${DOCS_BASE_URL}/docs/portfolio/roadmap`);
     });
   });
 
   describe("githubUrl", () => {
     it("should return placeholder when GITHUB_URL not configured", () => {
       const result = githubUrl("portfolio-app");
-      // When NEXT_PUBLIC_GITHUB_URL not configured, returns "#"
-      expect(result).toBe("#");
+      const base = GITHUB_URL;
+      expect(result).toBe(base ? `${base}/portfolio-app` : "#");
     });
 
     it("should handle empty pathname", () => {
       const result = githubUrl("");
-      expect(result).toBe("#");
+      const base = GITHUB_URL;
+      expect(result).toBe(base || "#");
     });
 
     it("should strip leading slashes from pathname", () => {
       const result = githubUrl("/portfolio-app");
-      expect(result).toBe("#");
+      const base = GITHUB_URL;
+      expect(result).toBe(base ? `${base}/portfolio-app` : "#");
     });
   });
 
   describe("docsGithubUrl", () => {
     it("should return placeholder when DOCS_GITHUB_URL not configured", () => {
       const result = docsGithubUrl("blob/main/docs/portfolio/readme.md");
-      // When NEXT_PUBLIC_DOCS_GITHUB_URL not configured, returns "#"
-      expect(result).toBe("#");
+      const base = DOCS_GITHUB_URL;
+      expect(result).toBe(base ? `${base}/blob/main/docs/portfolio/readme.md` : "#");
     });
 
     it("should handle empty pathname", () => {
       const result = docsGithubUrl("");
-      expect(result).toBe("#");
+      const base = DOCS_GITHUB_URL;
+      expect(result).toBe(base || "#");
     });
 
     it("should strip leading slashes from pathname", () => {
       const result = docsGithubUrl("/blob/main/docs/portfolio/readme.md");
-      expect(result).toBe("#");
+      const base = DOCS_GITHUB_URL;
+      expect(result).toBe(base ? `${base}/blob/main/docs/portfolio/readme.md` : "#");
     });
   });
 
