@@ -1,4 +1,5 @@
 // src/app/projects/[slug]/page.tsx
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Section } from "@/components/Section";
@@ -6,7 +7,42 @@ import { Callout } from "@/components/Callout";
 import { BadgeGroup } from "@/components/BadgeGroup";
 import { EvidenceBlock } from "@/components/EvidenceBlock";
 import { getProjectBySlug } from "@/data/projects";
-import { docsUrl, githubUrl } from "@/lib/config";
+import { docsUrl, githubUrl, SITE_URL } from "@/lib/config";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const project = getProjectBySlug(slug);
+
+  if (!project) {
+    return {
+      title: "Project Not Found",
+      description: "The requested project could not be found.",
+    };
+  }
+
+  const projectUrl = SITE_URL ? `${SITE_URL}/projects/${slug}` : `/projects/${slug}`;
+
+  return {
+    title: project.title,
+    description: project.summary,
+    openGraph: {
+      title: project.title,
+      description: project.summary,
+      type: "website",
+      url: projectUrl,
+      siteName: "Portfolio",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: project.title,
+      description: project.summary,
+    },
+  };
+}
 
 export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

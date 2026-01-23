@@ -1,9 +1,10 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
-import { DOCS_BASE_URL, GITHUB_URL, LINKEDIN_URL } from "@/lib/config";
+import { DOCS_BASE_URL, GITHUB_URL, LINKEDIN_URL, SITE_URL } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: {
@@ -12,7 +13,22 @@ export const metadata: Metadata = {
   },
   description:
     "Enterprise-grade full-stack portfolio: interactive CV, verified projects, and engineering evidence (ADRs, threat models, runbooks).",
-  metadataBase: undefined, // Intentionally not guessing SITE_URL at this stage
+  metadataBase: SITE_URL ? new URL(SITE_URL) : undefined,
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: SITE_URL || "/",
+    siteName: "Portfolio",
+    title: "Portfolio",
+    description:
+      "Enterprise-grade full-stack portfolio: interactive CV, verified projects, and engineering evidence (ADRs, threat models, runbooks).",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Portfolio",
+    description:
+      "Enterprise-grade full-stack portfolio: interactive CV, verified projects, and engineering evidence (ADRs, threat models, runbooks).",
+  },
 };
 
 function TopNavLink({ href, children }: { href: string; children: React.ReactNode }) {
@@ -75,6 +91,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </div>
         </footer>
+        <Analytics />
       </body>
     </html>
   );
