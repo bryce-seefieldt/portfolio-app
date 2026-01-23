@@ -70,6 +70,8 @@ Before proposing changes, review and internalize the existing architecture and c
 - Keep route pages simple and reviewer-focused. Deep technical details belong in the Documentation App.
 - Prefer small, composable components under `src/components/`.
 
+**Phase status:** Phase 3 Stages 3.1–3.3 are complete (registry, evidence components, unit/E2E coverage integrated into CI); Stage 3.4 documentation alignment is next.
+
 ---
 
 ## 3) Public-safe security rules (non-negotiable)
@@ -552,28 +554,188 @@ Cross-repo linking reminders:
 
 ---
 
-## 9) Testing strategy (current state and planned evolution)
+## 9) Testing Patterns (Stage 3.3)
 
-### 9.1 Current baseline
+### 9.1 Unit Test File Naming & Location
 
-At this stage, the app uses CI gates focused on:
+**File naming convention:**
 
-- lint
-- format check
-- typecheck
-- build
+- Location: `src/lib/__tests__/`
+- Pattern: `[module].test.ts`
+- Examples:
+  - `src/lib/__tests__/registry.test.ts` — Tests for `src/lib/registry.ts`
+  - `src/lib/__tests__/config.test.ts` — Tests for `src/lib/config.ts`
+  - `src/lib/__tests__/slugHelpers.test.ts` — Tests for slug validation
 
-### 9.2 Planned next steps (do not implement unless requested)
+### 9.2 Unit Test Template (Vitest)
 
-- Unit tests with Vitest for registry validation and utility functions
-- E2E smoke tests with Playwright for critical routes (`/`, `/cv`, `/projects`, one project detail)
-- Performance and accessibility validation gates (phased)
+```typescript
+import { describe, it, expect } from "vitest";
+import { functionToTest } from "../module";
 
-If asked to add tests, propose an ADR-level rationale and ensure CI remains fast and stable.
+describe("Module Name", () => {
+  describe("functionToTest", () => {
+    it("should [expected behavior]", () => {
+      // Arrange: Set up test inputs
+      const input = {
+        /* test data */
+      };
+
+      // Act: Call the function
+      const result = functionToTest(input);
+
+      // Assert: Verify the output
+      expect(result).toBe(expectedValue);
+    });
+
+    it("should handle edge cases", () => {
+      expect(functionToTest(null)).toThrow();
+      expect(functionToTest(undefined)).toThrow();
+    });
+  });
+});
+```
+
+### 9.3 E2E Test File Naming & Location
+
+**File naming convention:**
+
+- Location: `e2e/`
+- Pattern: `[feature].spec.ts`
+- Examples:
+  - `e2e/evidence-links.spec.ts` — Evidence link resolution tests
+  - `e2e/smoke.spec.ts` — Smoke tests for all routes
+
+### 9.4 E2E Test Template (Playwright)
+
+```typescript
+import { test, expect } from "@playwright/test";
+
+test.describe("Feature Name", () => {
+  test("should [user-facing behavior]", async ({ page }) => {
+    // Navigate to the page
+    await page.goto("/projects/portfolio-app");
+
+    // Interact with the page
+    await page.locator("button").click();
+
+    // Verify expected outcome
+    await expect(page.locator("text=Success")).toBeVisible();
+  });
+
+  test("should handle error case", async ({ page }) => {
+    await page.goto("/projects/invalid-slug");
+    await expect(page.locator("text=Not Found")).toBeVisible();
+  });
+});
+```
+
+### 9.5 Testing Best Practices
+
+**Do:**
+
+1. Use descriptive test names that explain expected behavior
+   - ✅ `should accept valid project entries`
+   - ❌ `test validation`
+
+2. Follow arrange/act/assert pattern
+
+   ```typescript
+   // Arrange
+   const input = "/portfolio/roadmap";
+   // Act
+   const result = docsUrl(input);
+   // Assert
+   expect(result).toBe("/docs/portfolio/roadmap");
+   ```
+
+3. Test behavior, not implementation
+   - ✅ `expect(result).toBe('/docs/portfolio/roadmap')`
+   - ❌ `expect(docsUrl).toHaveBeenCalledWith(...)`
+
+4. Use specific assertions
+   - ✅ `expect(result).toBe('/docs/portfolio/roadmap')`
+   - ❌ `expect(result).toBeTruthy()`
+
+5. Test edge cases: null, undefined, empty strings
+   ```typescript
+   it("should handle empty pathname", () => {
+     expect(docsUrl("")).toBe("/docs");
+   });
+   ```
+
+**Don't:**
+
+1. Skip tests in CI (all tests must run and pass)
+2. Mock more than necessary (prefer integration over isolated unit tests)
+3. Test implementation details or private functions
+4. Leave `.only()` or `.skip()` in committed code
+
+### 9.6 Running Tests Locally
+
+```bash
+# All unit tests in watch mode (development)
+pnpm test
+
+# Unit tests once (for CI verification)
+pnpm test:unit
+
+# With coverage report
+pnpm test:coverage
+
+# Visual UI dashboard
+pnpm test:ui
+
+# All E2E tests
+pnpm playwright test
+
+# E2E tests interactive UI (recommended for development)
+pnpm playwright test --ui
+
+# E2E tests debug mode
+pnpm playwright test --debug
+```
+
+### 9.7 Coverage Expectations
+
+**Unit tests:**
+
+- ≥80% for all `src/lib/` modules
+- Coverage report: `coverage/index.html` after running `pnpm test:coverage`
+- Required for CI to pass
+
+**E2E tests:**
+
+- 100% route coverage for all project pages
+- Tests run across Chromium, Firefox, WebKit
+- 2 retries in CI for flaky test resilience
+
+### 9.8 When to Add Tests
+
+Add or update tests when:
+
+1. Adding new utility functions in `src/lib/`
+2. Modifying registry schema or validation rules
+3. Changing link construction helpers
+4. Adding new routes that should have E2E coverage
+5. Fixing a bug (add regression test first)
+
+Do NOT add tests for:
+
+1. React components rendering (unless testing business logic)
+2. Re-exports or simple pass-through code
+3. Configuration that's verified in CI (e.g., build-time validation)
+
+### 9.9 Test Reference Documentation
+
+- **Comprehensive Testing Guide:** [docs/70-reference/testing-guide.md](https://bns-portfolio-docs.vercel.app/docs/reference/testing-guide)
+- **Vitest Documentation:** https://vitest.dev
+- **Playwright Documentation:** https://playwright.dev
+- **Implementation Issue:** [stage-3-3-app-issue.md](https://bns-portfolio-docs.vercel.app/docs/portfolio/roadmap/issues/stage-3-3-app-issue)
 
 ---
 
-## 10) Known failure modes and how to respond
+## 10) Current baseline and planned evolution
 
 ### 10.1 Prettier ESM plugin errors
 
