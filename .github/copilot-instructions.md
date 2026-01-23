@@ -346,9 +346,304 @@ Every major claim should have an evidence path:
 
 ---
 
-## 8) Phase 3 Stage 3.2 — EvidenceBlock Components
+## 8) Phase 3 Implementation Patterns
 
-### 8.1 Component Library Overview
+This section documents architectural and code patterns established in Phase 3 Stages 3.1–3.3. Use these as reference for all subsequent feature work in Portfolio App.
+
+### 8.1 Data-Driven Registry Pattern (Stage 3.1)
+
+**Decision reference:** [ADR-0011: Data-Driven Project Registry](/docs/10-architecture/adr/adr-0011-data-driven-project-registry.md)
+
+**Core pattern:**
+
+- Projects are defined in `src/data/projects.yml` (YAML format)
+- Schema is validated by Zod in `src/lib/registry.ts` at build time
+- Typing is exported via `src/data/projects.ts` for use in components
+- Environment variables interpolate URLs at build time: `{GITHUB_URL}`, `{DOCS_BASE_URL}`, `{DOCS_GITHUB_URL}`, `{SITE_URL}`
+
+**When to use this pattern:**
+
+- Adding a new project? Edit `projects.yml` and add dossier links. Do not modify code.
+- Extending project schema? Update Zod schema in `registry.ts`, add tests, update schema guide in docs.
+- Adding new evidence category? Update schema, add placeholder in `projects.yml`, reference in components.
+
+**Schema validation (non-negotiable):**
+
+```yaml
+- slug: lowercase-hyphenated-id (required, unique across all projects)
+  title: Human-readable title (required)
+  summary: Proof-focused summary (required, ≥10 chars)
+  category: [fullstack | frontend | backend | devops | data | mobile | other] (optional)
+  tags: [Technology1, Technology2] (required, array)
+  status: [featured | active | archived | planned] (required)
+  evidence:
+    dossierPath: projects/example/  (optional, path in /docs/)
+    threatModelPath: security/threat-models/example  (optional)
+    adrIndexPath: architecture/adr/  (optional)
+    runbooksPath: operations/runbooks/  (optional)
+    github: "{GITHUB_URL}/repo-name"  (optional, supports placeholders)
+```
+
+**Examples:**
+
+```yaml
+# Minimal project
+- slug: sample
+  title: Sample
+  summary: A sample project demonstrating evidence-first methodology.
+  tags: [Next.js]
+  status: active
+
+# Gold standard project (portfolio-app itself)
+- slug: portfolio-app
+  title: Portfolio App
+  summary: Production-quality TypeScript portfolio with CI gates and evidence-first architecture.
+  category: fullstack
+  tags: [Next.js, TypeScript, CI/CD]
+  status: featured
+  evidence:
+    dossierPath: projects/portfolio-app/
+    threatModelPath: security/threat-models/portfolio-app-threat-model
+    adrIndexPath: architecture/adr/
+    runbooksPath: operations/runbooks/
+    github: "{GITHUB_URL}"
+  isGoldStandard: true
+  goldStandardReason: Comprehensive testing, threat model, CI gates, and operational runbooks.
+```
+
+**Testing the registry:**
+
+```bash
+# Validate schema locally
+pnpm registry:validate
+
+# List all projects
+pnpm registry:list
+
+# Full verification (included in pnpm verify)
+pnpm verify
+```
+
+**Build-time contract:**
+
+When `pnpm build` runs:
+
+1. `src/data/projects.ts` imports `projects.yml`
+2. YAML parsed and placeholders interpolated
+3. Zod schema validates all entries
+4. Invalid entries → build failure with clear error message
+5. Valid entries → typed export available to components
+
+### 8.2 Environment-First URL Construction (Stage 3.1)
+
+**Decision reference:** [ADR-0012: Cross-Repo Documentation Linking Strategy](/docs/10-architecture/adr/adr-0012-cross-repo-documentation-linking.md)
+
+**Core pattern:**
+
+URLs to external services (docs, GitHub, etc.) are resolved from environment variables at build time. This keeps the app portable across local dev, CI, staging, and production.
+
+**Helper functions in `src/lib/config.ts`:**
+
+```typescript
+// Documentation base URL (default: /docs)
+export const DOCS_BASE_URL: string;
+
+// Constructs link to docs page
+export function docsUrl(path: string): string;
+// Usage: docsUrl("projects/portfolio-app") → https://docs.example.com/projects/portfolio-app
+
+// GitHub organization URL
+export const GITHUB_URL: string | null;
+
+// Constructs link to GitHub repository
+export function githubUrl(path: string): string;
+// Usage: githubUrl("portfolio-app") → https://github.com/yourname/portfolio-app
+
+// Docs repository GitHub URL
+export const DOCS_GITHUB_URL: string | null;
+
+// Constructs link to docs repo files
+export function docsGithubUrl(path: string): string;
+// Usage: docsGithubUrl("blob/main/package.json") → https://github.com/yourname/portfolio-docs/blob/main/package.json
+
+// Site URL (optional)
+export const SITE_URL: string | null;
+```
+
+**Environment variables (public-safe):**
+
+```
+NEXT_PUBLIC_DOCS_BASE_URL=https://docs.yourdomain.com     (or /docs for local)
+NEXT_PUBLIC_GITHUB_URL=https://github.com/yourname
+NEXT_PUBLIC_DOCS_GITHUB_URL=https://github.com/yourname/portfolio-docs
+NEXT_PUBLIC_SITE_URL=https://yourdomain.com
+```
+
+**When to use these helpers:**
+
+- Linking to documentation pages? Use `docsUrl("path")`
+- Linking to GitHub repos? Use `githubUrl("repo-name")`
+- Linking to docs GitHub files? Use `docsGithubUrl("blob/main/file")`
+- Hardcoding URLs? **Never**—always use helpers for portability
+
+**Registry placeholders:**
+
+The registry loader automatically interpolates these placeholders in `projects.yml`:
+
+```yaml
+github: "{GITHUB_URL}"
+repoUrl: "{GITHUB_URL}/my-repo"
+demoUrl: "{SITE_URL}/feature"
+```
+
+**Testing with environment variables:**
+
+```bash
+# Local dev (unset env vars)
+NEXT_PUBLIC_DOCS_BASE_URL="" npm run build
+# docsUrl() falls back to "/docs"
+
+# Staging
+NEXT_PUBLIC_DOCS_BASE_URL=https://staging-docs.example.com npm run build
+
+# Production
+NEXT_PUBLIC_DOCS_BASE_URL=https://docs.example.com npm run build
+```
+
+**Fallback behavior:**
+
+When environment variables are unset:
+
+- `DOCS_BASE_URL` defaults to `"/docs"` (relative path)
+- `GITHUB_URL`, `DOCS_GITHUB_URL`, `SITE_URL` return `null`
+- Links using these values fail gracefully in tests (placeholder `"#"`)
+
+### 8.3 Evidence Link Construction & Testing
+
+**Testing strategy:**
+
+All evidence links are validated at build time AND in E2E tests:
+
+```bash
+# Build-time validation
+pnpm build  # Zod validates all URLs in registry
+
+# Unit tests (Vitest)
+pnpm test:unit  # Tests link helpers with env vars set/unset
+
+# E2E tests (Playwright)
+pnpm test:e2e  # Tests that evidence links render and resolve correctly
+```
+
+**Unit test patterns:**
+
+```typescript
+import { docsUrl, githubUrl } from "@/lib/config";
+
+describe("Link helpers", () => {
+  beforeEach(() => {
+    // Mock env vars for test
+    process.env.NEXT_PUBLIC_DOCS_BASE_URL = "https://docs.example.com";
+    process.env.NEXT_PUBLIC_GITHUB_URL = "https://github.com/testuser";
+  });
+
+  it("constructs docs URLs correctly", () => {
+    expect(docsUrl("projects/portfolio")).toBe("https://docs.example.com/projects/portfolio");
+  });
+
+  it("returns placeholder when env unset", () => {
+    delete process.env.NEXT_PUBLIC_GITHUB_URL;
+    expect(githubUrl("repo")).toBe("#"); // Fallback for undefined env
+  });
+});
+```
+
+**E2E test patterns:**
+
+```typescript
+import { test, expect } from "@playwright/test";
+
+test("evidence links resolve to docs", async ({ page }) => {
+  await page.goto("/projects/portfolio-app");
+
+  // Find evidence link
+  const docLink = page.locator('a[href*="docs.example.com"]');
+  await expect(docLink).toBeVisible();
+
+  // Verify link target
+  const href = await docLink.getAttribute("href");
+  expect(href).toMatch(/https:\/\/docs\.example\.com\/docs\//);
+});
+```
+
+### 8.4 Registry Schema Reference
+
+Complete schema documentation: [Registry Schema Guide](/docs/70-reference/registry-schema-guide.md)
+
+Key validation rules enforced:
+
+- **slug:** Required; format `^[a-z0-9]+(?:-[a-z0-9]+)*$` (lowercase, hyphenated)
+- **slug uniqueness:** Two projects cannot have the same slug (enforced by Zod)
+- **title:** Required; minimum 3 characters
+- **summary:** Required; minimum 10 characters (proof-focused, not marketing)
+- **tags:** Required; at least one tag; each tag ≥1 character
+- **status:** Required enum: `featured | active | archived | planned`
+- **URLs:** Must be valid absolute URLs or null
+- **Strict mode:** Schema rejects unknown fields (prevents typos)
+
+When adding new fields to the registry schema:
+
+1. Update Zod schema in `src/lib/registry.ts`
+2. Add tests in `src/lib/__tests__/registry.test.ts`
+3. Document field in [Registry Schema Guide](/docs/70-reference/registry-schema-guide.md)
+4. Update dossier pages if field affects evidence/proof model
+5. Reference ADRs if field changes validation semantics
+
+### 8.5 Cross-Repository Link Examples
+
+**Reference:** [ADR-0012: Cross-Repo Documentation Linking](/docs/10-architecture/adr/adr-0012-cross-repo-documentation-linking.md)
+
+Linking to documentation pages:
+
+```typescript
+// Docs pages (rendered Docusaurus content)
+docsUrl("portfolio/roadmap"); // → https://docs.example.com/portfolio/roadmap
+docsUrl("projects/portfolio-app"); // → https://docs.example.com/projects/portfolio-app
+docsUrl("security/threat-models/portfolio-app-threat-model");
+docsUrl("architecture/adr/adr-0011-data-driven-project-registry");
+
+// GitHub files in portfolio-docs repo
+docsGithubUrl("blob/main/package.json");
+docsGithubUrl("blob/main/.github/workflows/ci.yml");
+docsGithubUrl("blob/main/docusaurus.config.ts");
+
+// GitHub files/repos in portfolio-app repo
+githubUrl("portfolio-app"); // → https://github.com/yourname/portfolio-app
+githubUrl("portfolio-app/blob/main/.env.example");
+githubUrl("portfolio-app/tree/main/src/lib");
+```
+
+Storing in registry:
+
+```yaml
+evidence:
+  dossierPath: projects/portfolio-app/ # Rendered docs path
+  threatModelPath: security/threat-models/portfolio-app-threat-model
+  adrIndexPath: architecture/adr/
+  adr:
+    - title: "ADR-0011: Data-Driven Registry"
+      url: "architecture/adr/adr-0011-data-driven-project-registry" # Relative to DOCS_BASE_URL
+  runbooks:
+    - title: "Deploy to Vercel"
+      url: "operations/runbooks/rbk-portfolio-app-deploy"
+  github: "{GITHUB_URL}/portfolio-app" # Interpolated at build time
+```
+
+---
+
+## 9) Phase 3 Stage 3.2 — EvidenceBlock Components
+
+### 9.1 Component Library Overview
 
 Stage 3.2 introduces three reusable React components for standardized evidence visualization:
 
@@ -373,7 +668,7 @@ Stage 3.2 introduces three reusable React components for standardized evidence v
 - Behavior: Analyzes project's evidence links and renders appropriate badges; responsive flex wrapping
 - Example output for portfolio-app: [Gold Standard badge] [Docs Available] [Threat Model Complete]
 
-### 8.2 Component Architecture
+### 9.2 Component Architecture
 
 **File Structure:**
 
@@ -400,7 +695,7 @@ src/components/
 - Place `EvidenceBlock` after "What This Project Proves" section
 - Use responsive class names for mobile-first design
 
-### 8.3 Component Specifications
+### 9.3 Component Specifications
 
 **EvidenceBlock Component:**
 
@@ -455,7 +750,7 @@ interface BadgeGroupProps {
 // - ADR complete: show if adrIndexPath exists
 ```
 
-### 8.4 Styling Guidelines
+### 9.4 Styling Guidelines
 
 **Color Scheme (Tailwind 4):**
 
@@ -476,7 +771,7 @@ interface BadgeGroupProps {
 - Use `dark:` modifier for all color classes
 - Example: `border-blue-500 dark:border-blue-400 bg-blue-50 dark:bg-blue-950`
 
-### 8.5 Testing Strategy (for PR)
+### 9.5 Testing Strategy (for PR)
 
 **Manual testing:**
 
@@ -496,7 +791,7 @@ interface BadgeGroupProps {
 
 ---
 
-## 8) Implementation protocols (how you should work)
+## 10) Implementation protocols (how you should work)
 
 - `package.json` scripts and `packageManager`
 - `src/lib/config.ts` contract and usage
@@ -554,7 +849,7 @@ Cross-repo linking reminders:
 
 ---
 
-## 9) Testing Patterns (Stage 3.3)
+## 11) Testing Patterns (Stage 3.3)
 
 ### 9.1 Unit Test File Naming & Location
 
@@ -735,7 +1030,7 @@ Do NOT add tests for:
 
 ---
 
-## 10) Current baseline and planned evolution
+## 12) Current baseline and planned evolution
 
 ### 10.1 Prettier ESM plugin errors
 
@@ -768,7 +1063,7 @@ Symptoms:
 
 ---
 
-## 11) What to produce in PRs (required format)
+## 13) What to produce in PRs (required format)
 
 Every PR must include:
 
