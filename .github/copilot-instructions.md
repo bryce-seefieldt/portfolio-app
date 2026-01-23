@@ -446,28 +446,28 @@ URLs to external services (docs, GitHub, etc.) are resolved from environment var
 
 ```typescript
 // Documentation base URL (default: /docs)
-export const DOCS_BASE_URL: string
+export const DOCS_BASE_URL: string;
 
 // Constructs link to docs page
-export function docsUrl(path: string): string
+export function docsUrl(path: string): string;
 // Usage: docsUrl("projects/portfolio-app") → https://docs.example.com/projects/portfolio-app
 
 // GitHub organization URL
-export const GITHUB_URL: string | null
+export const GITHUB_URL: string | null;
 
 // Constructs link to GitHub repository
-export function githubUrl(path: string): string
+export function githubUrl(path: string): string;
 // Usage: githubUrl("portfolio-app") → https://github.com/yourname/portfolio-app
 
 // Docs repository GitHub URL
-export const DOCS_GITHUB_URL: string | null
+export const DOCS_GITHUB_URL: string | null;
 
 // Constructs link to docs repo files
-export function docsGithubUrl(path: string): string
+export function docsGithubUrl(path: string): string;
 // Usage: docsGithubUrl("blob/main/package.json") → https://github.com/yourname/portfolio-docs/blob/main/package.json
 
 // Site URL (optional)
-export const SITE_URL: string | null
+export const SITE_URL: string | null;
 ```
 
 **Environment variables (public-safe):**
@@ -548,14 +548,12 @@ describe("Link helpers", () => {
   });
 
   it("constructs docs URLs correctly", () => {
-    expect(docsUrl("projects/portfolio")).toBe(
-      "https://docs.example.com/projects/portfolio"
-    );
+    expect(docsUrl("projects/portfolio")).toBe("https://docs.example.com/projects/portfolio");
   });
 
   it("returns placeholder when env unset", () => {
     delete process.env.NEXT_PUBLIC_GITHUB_URL;
-    expect(githubUrl("repo")).toBe("#");  // Fallback for undefined env
+    expect(githubUrl("repo")).toBe("#"); // Fallback for undefined env
   });
 });
 ```
@@ -609,36 +607,36 @@ Linking to documentation pages:
 
 ```typescript
 // Docs pages (rendered Docusaurus content)
-docsUrl("portfolio/roadmap")           // → https://docs.example.com/portfolio/roadmap
-docsUrl("projects/portfolio-app")      // → https://docs.example.com/projects/portfolio-app
-docsUrl("security/threat-models/portfolio-app-threat-model")
-docsUrl("architecture/adr/adr-0011-data-driven-project-registry")
+docsUrl("portfolio/roadmap"); // → https://docs.example.com/portfolio/roadmap
+docsUrl("projects/portfolio-app"); // → https://docs.example.com/projects/portfolio-app
+docsUrl("security/threat-models/portfolio-app-threat-model");
+docsUrl("architecture/adr/adr-0011-data-driven-project-registry");
 
 // GitHub files in portfolio-docs repo
-docsGithubUrl("blob/main/package.json")
-docsGithubUrl("blob/main/.github/workflows/ci.yml")
-docsGithubUrl("blob/main/docusaurus.config.ts")
+docsGithubUrl("blob/main/package.json");
+docsGithubUrl("blob/main/.github/workflows/ci.yml");
+docsGithubUrl("blob/main/docusaurus.config.ts");
 
 // GitHub files/repos in portfolio-app repo
-githubUrl("portfolio-app")                    // → https://github.com/yourname/portfolio-app
-githubUrl("portfolio-app/blob/main/.env.example")
-githubUrl("portfolio-app/tree/main/src/lib")
+githubUrl("portfolio-app"); // → https://github.com/yourname/portfolio-app
+githubUrl("portfolio-app/blob/main/.env.example");
+githubUrl("portfolio-app/tree/main/src/lib");
 ```
 
 Storing in registry:
 
 ```yaml
 evidence:
-  dossierPath: projects/portfolio-app/            # Rendered docs path
+  dossierPath: projects/portfolio-app/ # Rendered docs path
   threatModelPath: security/threat-models/portfolio-app-threat-model
   adrIndexPath: architecture/adr/
   adr:
     - title: "ADR-0011: Data-Driven Registry"
-      url: "architecture/adr/adr-0011-data-driven-project-registry"  # Relative to DOCS_BASE_URL
+      url: "architecture/adr/adr-0011-data-driven-project-registry" # Relative to DOCS_BASE_URL
   runbooks:
     - title: "Deploy to Vercel"
       url: "operations/runbooks/rbk-portfolio-app-deploy"
-  github: "{GITHUB_URL}/portfolio-app"           # Interpolated at build time
+  github: "{GITHUB_URL}/portfolio-app" # Interpolated at build time
 ```
 
 ---
