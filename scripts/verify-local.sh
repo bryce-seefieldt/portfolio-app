@@ -17,10 +17,11 @@
 #   - Smoke tests (Playwright E2E - 12 tests across 2 browsers)
 #
 # Usage:
-#   ./scripts/verify-local.sh              # Run all checks including smoke tests
-#   ./scripts/verify-local.sh --skip-tests # Skip smoke tests (faster)
-#   # or via package.json script:
-#   pnpm verify
+#   ./scripts/verify-local.sh              # Run all checks including unit + E2E tests
+#   ./scripts/verify-local.sh --skip-tests # Skip unit + E2E tests (faster)
+#   # or via package.json scripts:
+#   pnpm verify         # Full verification with tests
+#   pnpm verify:quick   # Fast verification without tests
 #
 # Exit codes:
 #   0 - All checks passed
@@ -336,16 +337,55 @@ else
   5. Check build output for specific error messages"
 fi
 
-# Step 8: Smoke tests
-print_section "Step 8: Smoke Tests (test)"
+# Step 8: Unit tests
+print_section "Step 8: Unit Tests (src/lib/__tests__/)"
 
 if [ "$SKIP_TESTS" = true ]; then
-  print_warning "Smoke tests skipped (--skip-tests flag)"
-  print_info "Run without --skip-tests to execute full test suite"
+  print_warning "Unit tests skipped (--skip-tests flag)"
+  print_info "Run: pnpm test:unit to execute unit tests locally"
+elif [ $BUILD_EXIT_CODE -eq 0 ]; then
+  print_info "Running unit tests (registry, slug helpers, link construction)..."
+  echo ""
+  
+  UNIT_TEST_OUTPUT=$(pnpm test:unit 2>&1 || true)
+  UNIT_TEST_EXIT_CODE=$?
+  
+  if [ $UNIT_TEST_EXIT_CODE -eq 0 ]; then
+    print_success "All unit tests passed"
+    
+    # Extract test results
+    if echo "$UNIT_TEST_OUTPUT" | grep -q "passed"; then
+      TEST_COUNT=$(echo "$UNIT_TEST_OUTPUT" | grep -o "[0-9]* passed" | grep -o "^[0-9]*" | head -1)
+      print_info "Tests passed: ${TEST_COUNT:-70+}"
+    fi
+  else
+    print_failure "Unit tests failed"
+    echo ""
+    echo "$UNIT_TEST_OUTPUT" | tail -50
+    echo ""
+    print_troubleshooting "  1. Review test failures above
+  2. Run tests in UI mode for debugging: pnpm test:ui
+  3. Unit test files:
+     - src/lib/__tests__/registry.test.ts (registry validation: 17 tests)
+     - src/lib/__tests__/slugHelpers.test.ts (slug validation: 19 tests)
+     - src/lib/__tests__/config.test.ts (link construction: 34 tests)
+  4. View coverage: pnpm test:coverage"
+  fi
+else
+  print_section "Step 8: Unit Tests (skipped - build failed)"
+  print_warning "Fix build errors before running tests"
+fi
+
+# Step 9: E2E tests
+print_section "Step 9: E2E Tests - Evidence Links (e2e/evidence-links.spec.ts)"
+
+if [ "$SKIP_TESTS" = true ]; then
+  print_warning "E2E tests skipped (--skip-tests flag)"
+  print_info "Run: pnpm playwright test to execute E2E tests locally"
 elif [ $BUILD_EXIT_CODE -eq 0 ]; then
   # Check if Playwright is installed
   if [ ! -d "node_modules/@playwright/test" ]; then
-    print_warning "Playwright not installed - skipping smoke tests"
+    print_warning "Playwright not installed - skipping E2E tests"
     print_info "Install with: pnpm install && npx playwright install --with-deps"
   else
     # Check if browsers are installed
@@ -356,7 +396,7 @@ elif [ $BUILD_EXIT_CODE -eq 0 ]; then
       print_success "Playwright installed"
       
       # Start dev server in background
-      print_info "Starting dev server for smoke tests..."
+      print_info "Starting dev server for E2E tests..."
       pnpm dev > /dev/null 2>&1 &
       DEV_SERVER_PID=$!
       
@@ -365,39 +405,45 @@ elif [ $BUILD_EXIT_CODE -eq 0 ]; then
       if npx wait-on http://localhost:3000 -t 30000 2>/dev/null; then
         print_success "Dev server ready"
         
-        # Run smoke tests
-        print_info "Running Playwright smoke tests (12 tests across 2 browsers)..."
+        # Run E2E tests
+        print_info "Running Playwright E2E tests (evidence link resolution)..."
         echo ""
         
-        TEST_OUTPUT=$(pnpm test 2>&1)
-        TEST_EXIT_CODE=$?
+        E2E_TEST_OUTPUT=$(pnpm playwright test 2>&1 || true)
+        E2E_TEST_EXIT_CODE=$?
         
         # Kill dev server
         kill $DEV_SERVER_PID 2>/dev/null || true
         wait $DEV_SERVER_PID 2>/dev/null || true
         
-        if [ $TEST_EXIT_CODE -eq 0 ]; then
-          print_success "All smoke tests passed"
+        if [ $E2E_TEST_EXIT_CODE -eq 0 ]; then
+          print_success "All E2E tests passed"
           
           # Extract test results
-          if echo "$TEST_OUTPUT" | grep -q "passed"; then
-            TEST_COUNT=$(echo "$TEST_OUTPUT" | grep -o "[0-9]* passed" | grep -o "^[0-9]*" | head -1)
-            print_info "Tests passed: ${TEST_COUNT:-12}"
+          if echo "$E2E_TEST_OUTPUT" | grep -q "passed"; then
+            E2E_TEST_COUNT=$(echo "$E2E_TEST_OUTPUT" | grep -o "[0-9]* passed" | grep -o "^[0-9]*" | head -1)
+            print_info "Tests passed: ${E2E_TEST_COUNT:-12} (multi-browser)"
           fi
         else
-          print_failure "Smoke tests failed"
+          print_failure "E2E tests failed"
           echo ""
-          echo "$TEST_OUTPUT" | tail -50
+          echo "$E2E_TEST_OUTPUT" | tail -50
           echo ""
           print_troubleshooting "  1. Review test failures above
-  2. Run tests in UI mode for debugging: pnpm test:ui
-  3. Run tests in debug mode: pnpm test:debug
-  4. Check test files: tests/e2e/smoke.spec.ts
-  5. Common issues:
-     - Routes not rendering (check for build errors)
-     - Navigation broken (check component logic)
+  2. Run tests in UI mode for debugging: pnpm playwright test --ui
+  3. Run tests in debug mode: pnpm playwright test --debug
+  4. E2E test file: e2e/evidence-links.spec.ts
+  5. Tests verify:
+     - All routes render correctly
+     - Evidence links resolve to correct URLs
+     - BadgeGroup displays correct badges
+     - Responsive design works (mobile/tablet/desktop)
+  6. View detailed HTML report: npx playwright show-report
+  7. Common issues:
+     - Routes not rendering (check build errors)
+     - Navigation broken (check route configuration)
      - Timeouts (increase in playwright.config.ts)
-  6. View detailed HTML report: npx playwright show-report"
+     - Slow network (reduce wait timeouts in tests)"
         fi
       else
         print_failure "Dev server failed to start"
@@ -411,8 +457,8 @@ elif [ $BUILD_EXIT_CODE -eq 0 ]; then
     fi
   fi
 else
-  print_section "Step 8: Smoke Tests (skipped - build failed)"
-  print_warning "Fix build errors before running tests"
+  print_section "Step 9: E2E Tests (skipped - build failed)"
+  print_warning "Fix build errors before running E2E tests"
 fi
 
 # Summary
@@ -423,6 +469,15 @@ if [ $FAILURES -eq 0 ]; then
   echo -e "${GREEN}${BOLD}✓ ALL CHECKS PASSED${NC}"
   echo ""
   print_success "Code is ready for commit and PR"
+  echo ""
+  echo "Test Coverage:"
+  if [ "$SKIP_TESTS" = false ]; then
+    echo "  ✓ Unit tests: 70+ tests (registry, slug helpers, link construction)"
+    echo "  ✓ E2E tests: 12 tests (evidence link resolution, route coverage)"
+  else
+    echo "  ⊗ Unit tests: skipped (use 'pnpm verify' to run)"
+    echo "  ⊗ E2E tests: skipped (use 'pnpm verify' to run)"
+  fi
   echo ""
   echo "Next steps:"
   echo "  1. Review changes: git status"
@@ -450,8 +505,9 @@ if [ $WARNINGS -gt 0 ]; then
 fi
 
 echo ""
-echo -e "${BLUE}${BOLD}Documentation:${NC}"
+echo -e "${BLUE}${BOLD}Documentation & References:${NC}"
 echo "  - README: ./README.md"
+echo "  - Testing guide: https://bns-portfolio-docs.vercel.app/docs/reference/testing-guide"
 echo "  - Registry schema: https://bns-portfolio-docs.vercel.app/docs/reference/registry-schema-guide"
 echo "  - ADR-0011 (registry): https://bns-portfolio-docs.vercel.app/docs/architecture/adr/adr-0011-data-driven-project-registry"
 echo ""

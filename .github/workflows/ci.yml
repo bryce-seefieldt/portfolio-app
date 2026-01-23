@@ -96,10 +96,10 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    # Require quality job; secrets-scan is optional (only on PRs)
-    needs: [quality]
+    # Require quality and test jobs
+    needs: [quality, test]
     # Allow skipping when secrets-scan is conditional (not run on push events)
-    if: always() && needs.quality.result == 'success'
+    if: always() && needs.quality.result == 'success' && needs.test.result == 'success'
     # Phase 2 Enhancement: Least-privilege permissions (contents: read only)
     permissions:
       contents: read
@@ -134,5 +134,56 @@ jobs:
       - name: Wait for server to be ready
         run: npx wait-on http://localhost:3000
 
-      - name: Run smoke tests
-        run: pnpm test
+      - name: Run E2E tests
+        run: pnpm test:e2e
+
+  # Stage 3.3: Unit & E2E tests
+  # Run before build to enforce quality gates
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [quality]
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "10.0.0"
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install deps (frozen)
+        run: pnpm install --frozen-lockfile
+
+      - name: Run unit tests
+        run: pnpm test:unit
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Start dev server (for E2E tests)
+        run: pnpm dev &
+
+      - name: Wait for server to be ready
+        run: npx wait-on http://localhost:3000
+
+      - name: Run E2E tests
+        run: pnpm test:e2e
+
+      - name: Upload coverage reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7

@@ -113,7 +113,7 @@ pnpm format:write && pnpm lint && pnpm typecheck && pnpm registry:validate && pn
 
 **What each verification command does:**
 
-**Full verification** (`pnpm verify`) — Complete pre-deploy validation (~90-120s):
+**Full verification** (`pnpm verify`) — Complete pre-deploy validation (~2-3 minutes):
 
 1. Environment validation (Node, pnpm, .env.local, required vars)
 2. Auto-formats code (`format:write` then `format:check`)
@@ -122,13 +122,15 @@ pnpm format:write && pnpm lint && pnpm typecheck && pnpm registry:validate && pn
 5. Scans for secrets (TruffleHog - warns if not installed)
 6. Validates the project registry (YAML + Zod schema)
 7. Builds the Next.js app
-8. Runs Playwright smoke tests (12 tests across 2 browsers)
-9. Provides detailed troubleshooting guidance for any failures
+8. Runs Vitest unit tests (70+ tests: registry validation, slug helpers, link construction)
+9. Runs Playwright E2E tests (12 tests: evidence link resolution, route coverage)
+10. Provides detailed troubleshooting guidance for any failures
 
-**Quick verification** (`pnpm verify:quick`) — Fast iteration during development (~30-60s):
+**Quick verification** (`pnpm verify:quick`) — Fast iteration during development (~60-90s):
 
-- Runs steps 1-7 above, **skips smoke tests** (step 8)
+- Runs steps 1-7 above, **skips unit and E2E tests** (steps 8-9)
 - Use when making frequent small changes and need rapid feedback
+- Run full `pnpm verify` before final commit/push
 
 ### Available scripts reference
 
@@ -150,12 +152,32 @@ pnpm format:write      # Auto-format all files with Prettier
 pnpm quality           # Combined: lint + format:check + typecheck
 ```
 
+**Unit tests (Vitest):**
+
+```bash
+pnpm test:unit         # Run all unit tests (70+ tests)
+pnpm test:coverage     # Run tests with coverage report (80% target)
+pnpm test:ui           # Visual UI dashboard for test debugging
+pnpm test:debug        # Debug mode with inspector
+```
+
+**E2E tests (Playwright):**
+
+```bash
+pnpm playwright test   # Run all E2E tests (12 tests)
+pnpm playwright test --ui # Run tests in interactive UI mode
+pnpm playwright test --debug # Debug mode with inspector
+npx playwright show-report # View HTML test report
+```
+
 **Testing:**
 
 ```bash
-pnpm test              # Run Playwright smoke tests (headless)
-pnpm test:ui           # Run tests in Playwright UI mode
-pnpm test:debug        # Run tests in debug mode with inspector
+pnpm test:unit         # Run Vitest unit tests (registry, slug, links)
+pnpm test:coverage     # Run unit tests with coverage report
+pnpm test:ui           # Run unit tests in Playwright UI mode (debugging)
+pnpm test:debug        # Run unit tests in debug mode with inspector
+pnpm playwright test   # Run Playwright E2E tests (evidence links)
 ```
 
 **Security:**
@@ -242,10 +264,13 @@ pnpm registry:validate # Projects YAML must be valid
 # 5. Ensure production build works
 pnpm build
 
-# 6. Run smoke tests (optional but recommended)
-pnpm test
+# 6. Run unit tests
+pnpm test:unit
 
-# 7. Security scan (recommended if TruffleHog installed)
+# 7. Run E2E tests
+pnpm playwright test
+
+# 8. Security scan (recommended if TruffleHog installed)
 pnpm secrets:scan || echo "TruffleHog not installed - skipping secret scan"
 ```
 
