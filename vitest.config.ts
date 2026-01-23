@@ -20,7 +20,10 @@ export default defineConfig({
         statements: 80,
       },
     },
-    include: ["src/lib/__tests__/**/*.test.ts"],
+    include: [
+      "src/lib/__tests__/**/*.test.ts",
+      "src/app/**/__tests__/**/*.test.ts",
+    ],
   },
   resolve: {
     alias: {
