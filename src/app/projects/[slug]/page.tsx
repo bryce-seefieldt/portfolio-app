@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Section } from "@/components/Section";
 import { Callout } from "@/components/Callout";
-import { GoldStandardBadge } from "@/components/GoldStandardBadge";
+import { BadgeGroup } from "@/components/BadgeGroup";
+import { EvidenceBlock } from "@/components/EvidenceBlock";
 import { getProjectBySlug } from "@/data/projects";
 import { docsUrl, githubUrl } from "@/lib/config";
 
@@ -12,7 +13,6 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
   const project = getProjectBySlug(slug);
   if (!project) return notFound();
 
-  const evidence = project.evidence;
   const isGoldStandard = slug === "portfolio-app";
 
   return (
@@ -25,7 +25,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
           <span className="text-zinc-400 dark:text-zinc-600">/</span> {project.title}
         </div>
 
-        {isGoldStandard && <GoldStandardBadge />}
+        <BadgeGroup project={project} />
 
         <h1 className="text-3xl font-semibold tracking-tight">{project.title}</h1>
         <p className="max-w-3xl text-zinc-700 dark:text-zinc-300">{project.summary}</p>
@@ -96,6 +96,10 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             </div>
           </Section>
 
+          <Section title="Evidence Artifacts">
+            <EvidenceBlock project={project} />
+          </Section>
+
           <Section title="Verification Checklist">
             <Callout type="info">
               The following checklist allows a reviewer to verify gold standard claims in &lt; 5
@@ -150,45 +154,6 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             </div>
           </Section>
 
-          <Section title="Deep Evidence">
-            <div className="flex flex-col gap-2 text-sm text-zinc-700 dark:text-zinc-300">
-              <div>
-                <strong>Dossier:</strong>{" "}
-                <a className="underline" href={docsUrl("/docs/projects/portfolio-app")}>
-                  Portfolio App Index
-                </a>{" "}
-                → comprehensive overview, architecture, security controls, phase roadmap.
-              </div>
-
-              <div>
-                <strong>Threat model:</strong>{" "}
-                <a
-                  className="underline"
-                  href={docsUrl("/docs/security/threat-models/portfolio-app")}
-                >
-                  Portfolio App Threat Model
-                </a>{" "}
-                → STRIDE analysis with 6 identified threats and mitigations.
-              </div>
-
-              <div>
-                <strong>Operations:</strong>{" "}
-                <a className="underline" href={docsUrl("/docs/operations/runbooks")}>
-                  Runbooks Index
-                </a>{" "}
-                → deploy, rollback, CI triage, secrets incident response procedures.
-              </div>
-
-              <div>
-                <strong>Architecture decisions:</strong>{" "}
-                <a className="underline" href={docsUrl("/docs/architecture/adr")}>
-                  ADR Index
-                </a>{" "}
-                → lightweight ADRs for key technical choices (Next.js App Router, Tailwind 4, etc.).
-              </div>
-            </div>
-          </Section>
-
           <Section title="Tech Stack">
             <div className="flex flex-wrap gap-2">
               {[
@@ -226,47 +191,8 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             </ul>
           </Section>
 
-          <Section
-            title="Evidence links"
-            subtitle="Deep artifacts live in the Documentation App (Docusaurus)."
-          >
-            <ul className="flex flex-col gap-2 text-sm text-zinc-700 dark:text-zinc-300">
-              {evidence?.dossierPath ? (
-                <li>
-                  Dossier:{" "}
-                  <a className="underline" href={docsUrl(evidence.dossierPath)}>
-                    open full dossier
-                  </a>
-                </li>
-              ) : null}
-
-              {evidence?.threatModelPath ? (
-                <li>
-                  Threat Model:{" "}
-                  <a className="underline" href={docsUrl(evidence.threatModelPath)}>
-                    open threat model
-                  </a>
-                </li>
-              ) : null}
-
-              {evidence?.adrIndexPath ? (
-                <li>
-                  ADRs:{" "}
-                  <a className="underline" href={docsUrl(evidence.adrIndexPath)}>
-                    open ADR index
-                  </a>
-                </li>
-              ) : null}
-
-              {evidence?.runbooksPath ? (
-                <li>
-                  Runbooks:{" "}
-                  <a className="underline" href={docsUrl(evidence.runbooksPath)}>
-                    open runbooks
-                  </a>
-                </li>
-              ) : null}
-            </ul>
+          <Section title="Evidence Artifacts">
+            <EvidenceBlock project={project} />
           </Section>
 
           <Section
