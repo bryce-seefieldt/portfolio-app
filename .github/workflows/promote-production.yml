@@ -69,7 +69,7 @@ jobs:
 
       - name: Run E2E tests
         run: pnpm test:e2e
-        
+
       - name: Promotion summary
         run: |
           echo "## Production Promotion" >> $GITHUB_STEP_SUMMARY
