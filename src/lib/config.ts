@@ -17,7 +17,7 @@ type Env = {
   NEXT_PUBLIC_CONTACT_EMAIL?: string;
 
   // Environment hint (Vercel commonly provides this)
-  VERCEL_ENV?: "production" | "preview" | "development";
+  VERCEL_ENV?: "production" | "preview" | "development" | "staging";
 };
 
 const env = process.env as Env;
@@ -82,6 +82,30 @@ export const CONTACT_EMAIL: string | null = env.NEXT_PUBLIC_CONTACT_EMAIL?.trim(
  * Runtime environment hint. Useful for showing non-sensitive banners or diagnostics.
  */
 export const DEPLOY_ENV: Env["VERCEL_ENV"] = env.VERCEL_ENV;
+
+/**
+ * Canonical environment name. Defaults to 'development' locally.
+ * Recognizes 'preview', 'staging', and 'production' when provided by the host.
+ */
+export const ENVIRONMENT: NonNullable<Env["VERCEL_ENV"]> = (DEPLOY_ENV ||
+  "development") as NonNullable<Env["VERCEL_ENV"]>;
+
+/** Environment helpers (non-sensitive; for display/diagnostics only) */
+export function isProduction(): boolean {
+  return ENVIRONMENT === "production";
+}
+
+export function isPreview(): boolean {
+  return ENVIRONMENT === "preview";
+}
+
+export function isStaging(): boolean {
+  return ENVIRONMENT === "staging";
+}
+
+export function isDevelopment(): boolean {
+  return ENVIRONMENT === "development";
+}
 
 /**
  * Convenience builders

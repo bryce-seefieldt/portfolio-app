@@ -21,6 +21,7 @@
     "secrets:scan": "trufflehog filesystem . --debug --only-verified",
     "registry:validate": "tsx src/lib/registry.ts --validate",
     "registry:list": "tsx src/lib/registry.ts --list",
+    "env:validate": "tsx scripts/env-validate.ts",
     "links:check": "pnpm test:e2e",
     "verify": "./scripts/verify-local.sh",
     "verify:quick": "./scripts/verify-local.sh --skip-tests"
