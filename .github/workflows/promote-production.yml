@@ -61,8 +61,24 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
+      - name: Start app server
+        run: |
+          pnpm start -- --hostname 0.0.0.0 --port 3000 &
+          echo $! > /tmp/app_pid
+
+      - name: Wait for app readiness
+        run: npx wait-on http://localhost:3000
+
       - name: Smoke tests (local)
         run: pnpm test:e2e
+
+      - name: Stop app server
+        if: always()
+        run: |
+          if [ -f /tmp/app_pid ]; then
+            kill $(cat /tmp/app_pid) || true
+            rm /tmp/app_pid
+          fi
 
       - name: Promotion summary
         run: |
