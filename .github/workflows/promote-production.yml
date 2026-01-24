@@ -1,0 +1,71 @@
+name: promote-production
+
+on:
+  workflow_dispatch:
+    inputs:
+      notes:
+        description: "Release notes / context for production promotion"
+        required: false
+        type: string
+      ref:
+        description: "Git ref to promote (default: main)"
+        required: false
+        type: string
+
+jobs:
+  promote:
+    name: Promote to Production (manual gate)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions: {}
+
+    env:
+      NEXT_PUBLIC_DOCS_BASE_URL: ${{ vars.NEXT_PUBLIC_DOCS_BASE_URL }}
+      NEXT_PUBLIC_GITHUB_URL: ${{ vars.NEXT_PUBLIC_GITHUB_URL }}
+      NEXT_PUBLIC_DOCS_GITHUB_URL: ${{ vars.NEXT_PUBLIC_DOCS_GITHUB_URL }}
+      NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+      VERCEL_ENV: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || 'main' }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "10.0.0"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install (frozen)
+        run: pnpm install --frozen-lockfile
+
+      - name: Environment validation
+        run: pnpm env:validate
+
+      - name: Registry validation
+        run: pnpm registry:validate
+
+      - name: Build (immutability check)
+        run: pnpm build
+
+      - name: Unit tests
+        run: pnpm test:unit
+
+      - name: Smoke tests (local)
+        run: pnpm test:e2e
+
+      - name: Promotion summary
+        run: |
+          echo "## Production Promotion" >> $GITHUB_STEP_SUMMARY
+          echo "**Ref:** ${{ inputs.ref || 'main' }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** production" >> $GITHUB_STEP_SUMMARY
+          echo "**Notes:** ${{ inputs.notes }}" >> $GITHUB_STEP_SUMMARY
+          echo "\nValidation gates passed: env, registry, build, unit + smoke tests." >> $GITHUB_STEP_SUMMARY
+          echo "Manual deployment to production target should be executed in Vercel UI with the same build artifact (immutable)." >> $GITHUB_STEP_SUMMARY

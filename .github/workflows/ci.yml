@@ -48,6 +48,9 @@ jobs:
       - name: Install (frozen)
         run: pnpm install --frozen-lockfile
 
+      - name: Environment validation
+        run: pnpm env:validate
+
       - name: Auto-format for Dependabot PRs
         if: ${{ github.actor == 'dependabot[bot]' }}
         run: |
