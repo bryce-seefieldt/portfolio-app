@@ -11,12 +11,6 @@ on:
         description: "Git ref to promote (default: main)"
         required: false
         type: string
-# Public, non-secret env needed for registry interpolation during CI builds
-env:
-  NEXT_PUBLIC_DOCS_BASE_URL: https://bns-portfolio-docs.vercel.app
-  NEXT_PUBLIC_GITHUB_URL: https://github.com/bryce-seefieldt/portfolio-app
-  NEXT_PUBLIC_DOCS_GITHUB_URL: https://github.com/bryce-seefieldt/portfolio-docs
-  NEXT_PUBLIC_SITE_URL: https://staging-bns-portfolio.vercel.app
 
 jobs:
   promote:
@@ -25,11 +19,12 @@ jobs:
     timeout-minutes: 15
     permissions: {}
 
+    # Public, non-secret env needed for registry interpolation during CI builds
     env:
-      NEXT_PUBLIC_DOCS_BASE_URL: ${{ vars.NEXT_PUBLIC_DOCS_BASE_URL }}
-      NEXT_PUBLIC_GITHUB_URL: ${{ vars.NEXT_PUBLIC_GITHUB_URL }}
-      NEXT_PUBLIC_DOCS_GITHUB_URL: ${{ vars.NEXT_PUBLIC_DOCS_GITHUB_URL }}
-      NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+      NEXT_PUBLIC_DOCS_BASE_URL: https://bns-portfolio-docs.vercel.app
+      NEXT_PUBLIC_GITHUB_URL: https://github.com/bryce-seefieldt/portfolio-app
+      NEXT_PUBLIC_DOCS_GITHUB_URL: https://github.com/bryce-seefieldt/portfolio-docs
+      NEXT_PUBLIC_SITE_URL: https://staging-bns-portfolio.vercel.app
       VERCEL_ENV: staging
 
     steps:
