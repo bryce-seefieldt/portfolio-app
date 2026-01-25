@@ -67,4 +67,5 @@ next-env.d.ts
 notes.md
 
 # Temporary files
-/tmp/
+/tmp
+PR.md

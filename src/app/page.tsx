@@ -32,7 +32,7 @@ export default function HomePage() {
       {/* HERO */}
       <header className="flex flex-col gap-4">
         <p className="text-sm text-zinc-600 dark:text-zinc-400">
-          Full-stack engineering • Enterprise DevOps discipline • Security-minded delivery
+          STAGING TEST: Full-stack engineering • Enterprise DevOps discipline • Security-minded delivery
         </p>
 
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
