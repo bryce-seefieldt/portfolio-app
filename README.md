@@ -312,7 +312,7 @@ git push origin feat/your-feature
 #   1. Click "New Pull Request" on GitHub
 #   2. Set base branch: 'staging' (NOT 'main')
 #   3. Set compare branch: 'feat/your-feature'
-# 
+#
 # This triggers:
 # - Vercel creates preview deployment automatically
 # - CI runs quality gates (lint, format, typecheck, tests)
