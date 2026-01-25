@@ -308,10 +308,16 @@ git push origin feat/your-feature
 
 ```bash
 # Open PR targeting STAGING branch (via GitHub UI)
+# IMPORTANT: Change the base branch from 'main' to 'staging'
+#   1. Click "New Pull Request" on GitHub
+#   2. Set base branch: 'staging' (NOT 'main')
+#   3. Set compare branch: 'feat/your-feature'
+# 
+# This triggers:
 # - Vercel creates preview deployment automatically
 # - CI runs quality gates (lint, format, typecheck, tests)
 # - Review preview URL and validate changes
-# - Ensure all CI checks pass
+# - Ensure all CI checks pass before merging
 ```
 
 #### Step 3: Merge to Staging
@@ -346,7 +352,7 @@ This triggers:
 3. **Run smoke tests** (optional but recommended):
    ```bash
    # Point tests at staging domain
-   PLAYWRIGHT_TEST_BASE_URL=https://staging-bns-portfolio.vercel.app pnpm playwright test
+   PLAYWRIGHT_TEST_BASE_URL=https://staging-bns-portfolio.vercel.app/ pnpm playwright test
    ```
 
 #### Step 5: Promote to Production
