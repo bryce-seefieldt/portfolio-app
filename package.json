@@ -24,6 +24,7 @@
     "env:validate": "tsx scripts/env-validate.ts",
     "links:check": "pnpm test:e2e",
     "analyze:bundle": "ANALYZE=true pnpm build",
+    "analyze:build": "node -e \"const { execSync } = require('node:child_process'); const start = Date.now(); execSync('next build', { stdio: 'inherit' }); console.log('Build time (s):', ((Date.now() - start) / 1000).toFixed(2));\"",
     "verify": "./scripts/verify-local.sh",
     "verify:quick": "./scripts/verify-local.sh --skip-tests"
   },
