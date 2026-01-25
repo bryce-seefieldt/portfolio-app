@@ -128,6 +128,23 @@ jobs:
       - name: Build
         run: pnpm build
 
+      # Stage 4.2: Bundle size tracking for performance regression detection
+      - name: Bundle size analysis
+        id: bundle-check
+        run: |
+          BUILD_SIZE=$(du -sh .next | awk '{print $1}')
+          JS_BYTES=$(find .next -name "*.js" -type f | xargs wc -c 2>/dev/null | tail -1 | awk '{print $1}')
+          JS_MB=$(echo "scale=2; $JS_BYTES / 1048576" | bc)
+          echo "build-size=$BUILD_SIZE" >> $GITHUB_OUTPUT
+          echo "js-size=${JS_MB}MB" >> $GITHUB_OUTPUT
+          BASELINE_JS_MB=27.8
+          THRESHOLD=$(echo "$BASELINE_JS_MB * 1.10" | bc)
+          echo "✓ Build size: $BUILD_SIZE | JavaScript: ${JS_MB}MB (baseline: ${BASELINE_JS_MB}MB, threshold: ${THRESHOLD}MB)"
+          if (( $(echo "$JS_MB > $THRESHOLD" | bc -l) )); then
+            echo "✗ Bundle size regression: ${JS_MB}MB > ${THRESHOLD}MB"
+            exit 1
+          fi
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
