@@ -6,8 +6,27 @@ import { Section } from "@/components/Section";
 import { Callout } from "@/components/Callout";
 import { BadgeGroup } from "@/components/BadgeGroup";
 import { EvidenceBlock } from "@/components/EvidenceBlock";
-import { getProjectBySlug } from "@/data/projects";
+import { getProjectBySlug, PROJECTS } from "@/data/projects";
 import { docsUrl, githubUrl, SITE_URL } from "@/lib/config";
+
+/**
+ * ISR (Incremental Static Regeneration) Strategy:
+ * - generateStaticParams() pre-renders all project pages at build time
+ * - revalidate: 3600 enables background revalidation every 1 hour
+ * - Benefits: Fast initial loads, SEO-friendly, updates without full rebuild
+ * - Cache-Control: max-age=3600, stale-while-revalidate=86400 (browser cache 1hr, serve stale 24hr)
+ */
+export const revalidate = 3600; // Revalidate every 1 hour (ISR)
+
+/**
+ * Pre-render all project pages at build time.
+ * Extracts all project slugs from the registry and generates static HTML.
+ */
+export async function generateStaticParams() {
+  return PROJECTS.map((project) => ({
+    slug: project.slug,
+  }));
+}
 
 export async function generateMetadata({
   params,
