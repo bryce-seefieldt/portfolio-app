@@ -120,11 +120,11 @@ pnpm format:write && pnpm lint && pnpm typecheck && pnpm registry:validate && pn
 2. Auto-formats code (`format:write` then `format:check`)
 3. Runs ESLint with zero-warning enforcement
 4. Validates TypeScript types
-5. Scans for secrets (TruffleHog - warns if not installed)
+5. Quick scan for secrets
 6. Validates the project registry (YAML + Zod schema)
 7. Builds the Next.js app
 8. Runs Vitest unit tests (70+ tests: registry validation, slug helpers, link construction)
-9. Runs Playwright link validation (12 checks: evidence link resolution, route coverage) — Stage 3.5
+9. Runs Playwright link validation (12 checks: evidence link resolution, route coverage)
 10. Provides detailed troubleshooting guidance for any failures
 
 **Quick verification** (`pnpm verify:quick`) — Fast iteration during development (~60-90s):
@@ -171,16 +171,6 @@ pnpm playwright test --debug # Debug mode with inspector
 npx playwright show-report # View HTML test report
 ```
 
-**Testing:**
-
-```bash
-pnpm test:unit         # Run Vitest unit tests (registry, slug, links)
-pnpm test:coverage     # Run unit tests with coverage report
-pnpm test:ui           # Run unit tests in Playwright UI mode (debugging)
-pnpm test:debug        # Run unit tests in debug mode with inspector
-pnpm playwright test   # Run Playwright E2E tests (evidence links)
-```
-
 **Security:**
 
 ```bash
@@ -188,7 +178,7 @@ pnpm secrets:scan      # Scan for accidentally committed secrets (TruffleHog)
                        # Requires TruffleHog CLI binary (see installation below)
 ```
 
-**TruffleHog installation:**
+**TruffleHog installation (Optional, Runs in CI Workdlow):**
 
 ```bash
 # macOS
@@ -282,16 +272,134 @@ pnpm secrets:scan || echo "TruffleHog not installed - skipping secret scan"
 pnpm verify    # Runs all above steps with detailed error reporting
 ```
 
-## Deployment (Live — Phase 1 Complete)
+## Deployment Workflow (Live — Phase 4 Enhanced)
 
-✅ **Production is live on Vercel:**
+✅ **Three-tier deployment model:**
 
-- PR → preview deployments (Vercel auto-generates preview URLs)
-- `main` → production deployment at `https://portfolio-app.vercel.app`
-- Production promotion gated by GitHub Deployment Checks (`ci / quality`, `ci / link-validation`, `ci / build`)
-- GitHub Ruleset protects `main` branch
+The Portfolio App uses a **staging-first deployment workflow** to ensure changes are validated in a production-like environment before reaching end users.
 
-For Phase 1 setup details, see [Vercel Setup Runbook](/docs/50-operations/runbooks/rbk-vercel-setup-and-promotion-validation.md) in the documentation app.
+### Environments
+
+| Environment | Branch      | Domain                                     | Purpose                                   |
+| ----------- | ----------- | ------------------------------------------ | ----------------------------------------- |
+| Preview     | PR branches | Auto-generated (`*.vercel.app`)            | PR review and feature validation          |
+| Staging     | `staging`   | `https://staging-bns-portfolio.vercel.app` | Pre-production validation and smoke tests |
+| Production  | `main`      | `https://bns-portfolio.vercel.app`         | Live public site                          |
+
+### Local Development → Staging → Production Workflow
+
+#### Step 1: Local Development and Testing
+
+```bash
+# Create feature branch from main
+git checkout main && git pull
+git checkout -b feat/your-feature
+
+# Make changes, validate locally
+pnpm verify  # Comprehensive validation (all checks + tests)
+
+# Commit and push
+git add . # Adding specific filenames is recommended over `.` wildcard
+git commit -m "feat: your feature description"
+git push origin feat/your-feature
+```
+
+#### Step 2: PR Review with Preview
+
+```bash
+# Open PR targeting STAGING branch (via GitHub UI)
+# - Vercel creates preview deployment automatically
+# - CI runs quality gates (lint, format, typecheck, tests)
+# - Review preview URL and validate changes
+# - Ensure all CI checks pass
+```
+
+#### Step 3: Merge to Staging
+
+After PR approval and CI passing:
+
+```bash
+# Merge PR to staging (via GitHub UI or CLI)
+# This automatically triggers staging deployment
+
+# If merging via CLI:
+git checkout staging
+git pull origin staging
+git merge feat/your-feature  # Merge your feature branch
+git push origin staging
+```
+
+This triggers:
+
+- Vercel deployment to `staging-bns-portfolio.vercel.app`
+- CI quality gates run again on staging branch
+
+#### Step 4: Validate on Staging
+
+1. **Open staging domain**: `https://staging-bns-portfolio.vercel.app`
+2. **Validate critical flows**:
+   - [ ] Home page loads (`/`)
+   - [ ] Navigation works (`/cv`, `/projects`, `/contact`)
+   - [ ] Project detail pages render (`/projects/[slug]`)
+   - [ ] Evidence links to Documentation App resolve correctly
+   - [ ] No console errors or broken links
+3. **Run smoke tests** (optional but recommended):
+   ```bash
+   # Point tests at staging domain
+   PLAYWRIGHT_TEST_BASE_URL=https://staging-bns-portfolio.vercel.app pnpm playwright test
+   ```
+
+#### Step 5: Promote to Production
+
+Only after staging validation passes:
+
+```bash
+# Promote staging to production by merging to main
+git checkout main
+git pull origin main
+git merge staging
+git push origin main
+```
+
+**Production deployment happens automatically** when:
+
+- Staging changes are merged to `main`
+- GitHub Deployment Checks pass (`ci / quality`, `ci / link-validation`, `ci / build`)
+- Vercel promotes main branch to production domain
+
+### Quick Reference Commands
+
+```bash
+# Full local validation before commit
+pnpm verify
+
+# Fast validation during development
+pnpm verify:quick
+
+# Manual step-by-step validation
+pnpm format:write && pnpm lint && pnpm typecheck && pnpm build && pnpm test
+
+# Deploy to staging (merge feature branch to staging)
+git checkout staging && git pull && git merge feat/your-feature && git push
+
+# Promote to production (merge staging to main)
+git checkout main && git pull && git merge staging && git push
+
+# Validate staging deployment
+open https://staging-bns-portfolio.vercel.app
+```
+
+### Governance and Protection
+
+- **GitHub Ruleset** protects `main` and `staging` branches
+- **Required CI checks** before merge: `ci / quality`, `ci / test`, `ci / link-validation`, `ci / build`
+- **Vercel Deployment Checks** gate production promotion
+- **Staging validation** required before production deployment
+
+For detailed setup and troubleshooting, see:
+
+- [Vercel Setup Runbook](/docs/50-operations/runbooks/rbk-vercel-setup-and-promotion-validation.md)
+- [Deployment Runbook](/docs/50-operations/runbooks/rbk-portfolio-deploy.md)
 
 ## Security note
 
