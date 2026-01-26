@@ -120,16 +120,17 @@ pnpm format:write && pnpm lint && pnpm typecheck && pnpm registry:validate && pn
 2. Auto-formats code (`format:write` then `format:check`)
 3. Runs ESLint with zero-warning enforcement
 4. Validates TypeScript types
-5. Quick scan for secrets
+5. Lightweight pattern-based secret scan (local-only; CI runs TruffleHog)
 6. Validates the project registry (YAML + Zod schema)
 7. Builds the Next.js app
-8. Runs Vitest unit tests (70+ tests: registry validation, slug helpers, link construction)
-9. Runs Playwright link validation (12 checks: evidence link resolution, route coverage)
-10. Provides detailed troubleshooting guidance for any failures
+8. Performance verification (bundle size + cache headers; uses docs/performance-baseline.yml)
+9. Runs Vitest unit tests (70+ tests: registry validation, slug helpers, link construction)
+10. Runs Playwright link validation (12 checks: evidence link resolution, route coverage)
+11. Provides detailed troubleshooting guidance for any failures
 
 **Quick verification** (`pnpm verify:quick`) — Fast iteration during development (~60-90s):
 
-- Runs steps 1-7 above, **skips unit and link validation tests** (steps 8-9)
+- Runs steps 1-7 above, **skips performance checks and all tests** (steps 8-10)
 - Use when making frequent small changes and need rapid feedback
 - Run full `pnpm verify` before final commit/push
 
@@ -151,6 +152,8 @@ pnpm typecheck         # TypeScript type checking
 pnpm format:check      # Check if files are formatted
 pnpm format:write      # Auto-format all files with Prettier
 pnpm quality           # Combined: lint + format:check + typecheck
+pnpm analyze:bundle    # Run Next.js bundle analyzer (ANALYZE=true pnpm build)
+pnpm analyze:build     # Time the production build locally with duration summary
 ```
 
 **Unit tests (Vitest):**
@@ -232,7 +235,7 @@ pnpm links:check       # Run Playwright link validation (evidence URL smoke test
 
 ```bash
 pnpm verify            # Full pre-deploy validation (all checks + tests)
-pnpm verify:quick      # Fast validation (all checks, skip tests)
+pnpm verify:quick      # Fast validation (skip performance checks and tests; still builds)
 ```
 
 ### Pre-deploy checklist (step-by-step)
@@ -253,11 +256,14 @@ pnpm typecheck         # TypeScript must have no errors
 # 4. Validate data integrity
 pnpm registry:validate # Projects YAML must be valid
 
-# 5. Validate evidence links (Stage 3.5)
-pnpm links:check       # Playwright link validation (must connect to /docs)
-
-# 6. Ensure production build works
+# 5. Ensure production build works
 pnpm build
+
+# 6. Run unit tests
+pnpm test:unit
+
+# 7. Validate evidence links (Stage 3.5)
+pnpm links:check       # Playwright link validation (must connect to /docs)
 
 # 7. Run unit tests
 pnpm test:unit
