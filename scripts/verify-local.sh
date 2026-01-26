@@ -17,11 +17,12 @@
 #   - Smoke tests (Playwright E2E - 12 tests across 2 browsers)
 #
 # Usage:
-#   ./scripts/verify-local.sh              # Run all checks including unit + E2E tests
+#   ./scripts/verify-local.sh              # Run all checks including tests & performance
 #   ./scripts/verify-local.sh --skip-tests # Skip unit + E2E tests (faster)
+#   ./scripts/verify-local.sh --skip-performance # Skip performance verification
 #   # or via package.json scripts:
-#   pnpm verify         # Full verification with tests
-#   pnpm verify:quick   # Fast verification without tests
+#   pnpm verify         # Full verification with tests & performance
+#   pnpm verify:quick   # Fast verification without tests or performance
 #
 # Exit codes:
 #   0 - All checks passed
@@ -31,10 +32,15 @@ set -euo pipefail
 
 # Parse command line arguments
 SKIP_TESTS=false
+SKIP_PERFORMANCE=false
 for arg in "$@"; do
   case $arg in
     --skip-tests)
       SKIP_TESTS=true
+      shift
+      ;;
+    --skip-performance)
+      SKIP_PERFORMANCE=true
       shift
       ;;
   esac
@@ -52,6 +58,53 @@ BOLD='\033[1m'
 # Track overall status
 FAILURES=0
 WARNINGS=0
+
+# Performance metrics tracking
+BUILD_TIME_SECONDS=0
+BUNDLE_SIZE_MB=0
+BUNDLE_SIZE_BYTES=0
+NEXT_DIR_SIZE_MB=0
+CACHE_CONTROL_HEADER=""
+ROUTE_COUNT=0
+
+# Load performance baselines from YAML configuration
+# Single source of truth: docs/performance-baseline.yml
+BASELINE_CONFIG="./docs/performance-baseline.yml"
+
+if [ ! -f "$BASELINE_CONFIG" ]; then
+  echo -e "${YELLOW}⚠ Warning: Performance baseline config not found at $BASELINE_CONFIG${NC}"
+  echo -e "${YELLOW}  Performance verification will be skipped${NC}"
+  SKIP_PERFORMANCE=true
+  # Fallback values (should never be used in practice)
+  BASELINE_BUILD_TIME=3.5
+  BASELINE_BUNDLE_MB=27.8
+  BASELINE_BUNDLE_BYTES=29176884
+  BASELINE_NEXT_DIR_MB=337
+  BASELINE_CACHE_CONTROL="public, max-age=3600, stale-while-revalidate=86400"
+  BUILD_TIME_WARNING_THRESHOLD=4.2
+  BUNDLE_SIZE_WARNING_THRESHOLD=30.6
+  BUNDLE_SIZE_FAILURE_THRESHOLD=33.4
+else
+  # Parse YAML file using grep and sed (no external dependencies required)
+  # Extract numeric values: "key: value" -> value
+  BASELINE_BUILD_TIME=$(grep "^  time_seconds:" "$BASELINE_CONFIG" | sed 's/.*: //')
+  BUILD_TIME_WARNING_THRESHOLD=$(grep "^  time_warning_threshold_seconds:" "$BASELINE_CONFIG" | sed 's/.*: //')
+  BASELINE_BUNDLE_MB=$(grep "^  total_js_mb:" "$BASELINE_CONFIG" | sed 's/.*: //')
+  BASELINE_BUNDLE_BYTES=$(grep "^  total_js_bytes:" "$BASELINE_CONFIG" | sed 's/.*: //')
+  BASELINE_NEXT_DIR_MB=$(grep "^  next_dir_mb:" "$BASELINE_CONFIG" | sed 's/.*: //')
+  BUNDLE_SIZE_WARNING_THRESHOLD=$(grep "^  size_warning_threshold_mb:" "$BASELINE_CONFIG" | sed 's/.*: //')
+  BUNDLE_SIZE_FAILURE_THRESHOLD=$(grep "^  size_failure_threshold_mb:" "$BASELINE_CONFIG" | sed 's/.*: //')
+  
+  # Extract cache header (string value with quotes)
+  BASELINE_CACHE_CONTROL=$(grep "^  control_header:" "$BASELINE_CONFIG" | sed 's/.*: "//' | sed 's/"$//')
+  
+  # Validate that we successfully loaded all values
+  if [ -z "$BASELINE_BUILD_TIME" ] || [ -z "$BASELINE_BUNDLE_MB" ] || [ -z "$BASELINE_CACHE_CONTROL" ]; then
+    echo -e "${YELLOW}⚠ Warning: Failed to parse performance baseline config${NC}"
+    echo -e "${YELLOW}  Some performance checks may not work correctly${NC}"
+    SKIP_PERFORMANCE=true
+  fi
+fi
 
 # Helper functions
 print_header() {
@@ -302,14 +355,21 @@ fi
 # Step 7: Next.js build
 print_section "Step 7: Next.js Build (build)"
 
-print_info "Starting production build (this may take 30-60 seconds)..."
+print_info "Starting production build with performance tracking..."
 echo ""
+
+# Capture build start time
+BUILD_START=$(date +%s)
 
 BUILD_OUTPUT=$(pnpm build 2>&1)
 BUILD_EXIT_CODE=$?
 
+# Capture build end time and calculate duration
+BUILD_END=$(date +%s)
+BUILD_TIME_SECONDS=$((BUILD_END - BUILD_START))
+
 if [ $BUILD_EXIT_CODE -eq 0 ]; then
-  print_success "Next.js build completed successfully"
+  print_success "Next.js build completed successfully in ${BUILD_TIME_SECONDS}s"
   
   # Extract build stats
   if echo "$BUILD_OUTPUT" | grep -q "Compiled successfully"; then
@@ -320,6 +380,14 @@ if [ $BUILD_EXIT_CODE -eq 0 ]; then
   if echo "$BUILD_OUTPUT" | grep -q "Route (app)"; then
     ROUTE_COUNT=$(echo "$BUILD_OUTPUT" | grep -E "^(├|└)" | wc -l)
     print_info "Routes generated: $ROUTE_COUNT"
+  fi
+  
+  # Performance comparison
+  BUILD_TIME_FLOAT=$(echo "scale=1; $BUILD_TIME_SECONDS / 1" | bc)
+  if (( $(echo "$BUILD_TIME_FLOAT > $BUILD_TIME_WARNING_THRESHOLD" | bc -l) )); then
+    print_warning "Build time (${BUILD_TIME_FLOAT}s) exceeds warning threshold (${BUILD_TIME_WARNING_THRESHOLD}s)"
+  elif (( $(echo "$BUILD_TIME_FLOAT > $BASELINE_BUILD_TIME" | bc -l) )); then
+    print_info "Build time (${BUILD_TIME_FLOAT}s) slightly above baseline (${BASELINE_BUILD_TIME}s) but within acceptable range"
   fi
 else
   print_failure "Next.js build failed"
@@ -335,6 +403,127 @@ else
   3. Clean build cache: rm -rf .next
   4. Reinstall dependencies: rm -rf node_modules && pnpm install
   5. Check build output for specific error messages"
+fi
+
+# Step 7a: Bundle Size Verification (only if build succeeded)
+if [ $BUILD_EXIT_CODE -eq 0 ] && [ "$SKIP_PERFORMANCE" = false ]; then
+  print_section "Step 7a: Bundle Size Verification"
+  
+  if [ ! -d ".next" ]; then
+    print_warning ".next directory not found - build may have failed"
+  else
+    # Get .next directory size
+    NEXT_DIR_SIZE_KB=$(du -sk .next | cut -f1)
+    NEXT_DIR_SIZE_MB=$(echo "scale=1; $NEXT_DIR_SIZE_KB / 1024" | bc)
+    print_info ".next directory size: ${NEXT_DIR_SIZE_MB} MB (baseline: ${BASELINE_NEXT_DIR_MB} MB)"
+    
+    # Get JavaScript bundle size
+    if find .next -name "*.js" -type f 2>/dev/null | head -1 | grep -q .; then
+      BUNDLE_SIZE_BYTES=$(find .next -name "*.js" -type f -exec wc -c {} + 2>/dev/null | tail -1 | awk '{print $1}')
+      BUNDLE_SIZE_MB=$(echo "scale=1; $BUNDLE_SIZE_BYTES / 1048576" | bc)
+      
+      print_info "Total JavaScript: ${BUNDLE_SIZE_MB} MB (${BUNDLE_SIZE_BYTES} bytes)"
+      print_info "Baseline: ${BASELINE_BUNDLE_MB} MB (${BASELINE_BUNDLE_BYTES} bytes)"
+      
+      # Compare to thresholds
+      if (( $(echo "$BUNDLE_SIZE_MB > $BUNDLE_SIZE_FAILURE_THRESHOLD" | bc -l) )); then
+        print_failure "Bundle size (${BUNDLE_SIZE_MB} MB) EXCEEDS failure threshold (${BUNDLE_SIZE_FAILURE_THRESHOLD} MB)"
+        print_troubleshooting "  Bundle size has grown significantly. This would fail CI checks.
+  
+  Immediate actions:
+  1. Review recent dependency additions: git diff HEAD~1 package.json
+  2. Run bundle analyzer to identify large dependencies: ANALYZE=true pnpm build
+  3. Check for duplicate dependencies: pnpm dedupe
+  4. Consider code splitting or lazy loading for large components
+  
+  For detailed guidance, see:
+  https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#bundle-size-regression"
+      elif (( $(echo "$BUNDLE_SIZE_MB > $BUNDLE_SIZE_WARNING_THRESHOLD" | bc -l) )); then
+        print_warning "Bundle size (${BUNDLE_SIZE_MB} MB) exceeds warning threshold (${BUNDLE_SIZE_WARNING_THRESHOLD} MB)"
+        print_info "Growth: +$(echo "scale=1; (($BUNDLE_SIZE_MB - $BASELINE_BUNDLE_MB) / $BASELINE_BUNDLE_MB) * 100" | bc)%"
+        print_troubleshooting "  Bundle size approaching 10% growth limit. Review before committing.
+  
+  Suggested actions:
+  1. Run bundle analyzer: ANALYZE=true pnpm build
+  2. Review recent changes for unnecessary imports
+  3. Check if tree-shaking is working correctly
+  
+  Documentation:
+  https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#bundle-size-regression"
+      elif (( $(echo "$BUNDLE_SIZE_MB > $BASELINE_BUNDLE_MB" | bc -l) )); then
+        print_success "Bundle size (${BUNDLE_SIZE_MB} MB) within acceptable range (+$(echo "scale=1; $BUNDLE_SIZE_MB - $BASELINE_BUNDLE_MB" | bc) MB)"
+      else
+        print_success "Bundle size (${BUNDLE_SIZE_MB} MB) at or below baseline"
+      fi
+    else
+      print_warning "No JavaScript files found in .next directory"
+    fi
+  fi
+fi
+
+# Step 7b: Cache-Control Header Verification (only if build succeeded)
+if [ $BUILD_EXIT_CODE -eq 0 ] && [ "$SKIP_PERFORMANCE" = false ]; then
+  print_section "Step 7b: Cache-Control Header Verification"
+  
+  print_info "Starting dev server to verify Cache-Control headers..."
+  
+  # Start dev server in background
+  pnpm dev > /dev/null 2>&1 &
+  DEV_SERVER_PID=$!
+  
+  # Wait for server to start (max 30 seconds)
+  WAIT_COUNT=0
+  while [ $WAIT_COUNT -lt 30 ]; do
+    if curl -s http://localhost:3000 > /dev/null 2>&1; then
+      break
+    fi
+    sleep 1
+    WAIT_COUNT=$((WAIT_COUNT + 1))
+  done
+  
+  if [ $WAIT_COUNT -ge 30 ]; then
+    print_warning "Dev server did not start within 30 seconds - skipping cache header check"
+    kill $DEV_SERVER_PID 2>/dev/null || true
+  else
+    print_success "Dev server started on port 3000"
+    
+    # Check cache headers
+    CACHE_CONTROL_HEADER=$(curl -sI http://localhost:3000/projects/portfolio-app 2>/dev/null | grep -i "cache-control:" | cut -d' ' -f2- | tr -d '\r')
+    
+    # Stop dev server
+    kill $DEV_SERVER_PID 2>/dev/null || true
+    sleep 2
+    
+    if [ -z "$CACHE_CONTROL_HEADER" ]; then
+      print_failure "Cache-Control header not found"
+      print_troubleshooting "  Cache-Control headers are missing. This affects browser caching performance.
+  
+  Actions required:
+  1. Verify next.config.ts has headers configuration
+  2. Check if headers are being set in middleware
+  3. Ensure route is not dynamically rendered (should be static/SSG)
+  
+  Expected header: ${BASELINE_CACHE_CONTROL}
+  
+  Documentation:
+  https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#cache-headers-missing"
+    elif echo "$CACHE_CONTROL_HEADER" | grep -q "$BASELINE_CACHE_CONTROL"; then
+      print_success "Cache-Control header correct: $CACHE_CONTROL_HEADER"
+    else
+      print_warning "Cache-Control header differs from baseline"
+      print_info "  Found:    $CACHE_CONTROL_HEADER"
+      print_info "  Expected: $BASELINE_CACHE_CONTROL"
+      print_troubleshooting "  Cache-Control header found but doesn't match baseline configuration.
+  
+  Review actions:
+  1. Check next.config.ts headers configuration
+  2. Verify if this is intentional (e.g., route-specific caching)
+  3. Update baseline if new caching strategy is intended
+  
+  Documentation:
+  https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#cache-headers-mismatch"
+    fi
+  fi
 fi
 
 # Step 8: Unit tests
@@ -503,12 +692,246 @@ if [ $WARNINGS -gt 0 ]; then
   echo "Review warnings above - they may not block commit but should be addressed"
 fi
 
+# Performance Verification Report
+if [ $BUILD_EXIT_CODE -eq 0 ] && [ "$SKIP_PERFORMANCE" = false ]; then
+  print_header "Performance Verification Report"
+  
+  echo ""
+  echo -e "${BOLD}Stage 4.2 Performance Baseline Comparison${NC}"
+  echo ""
+  echo -e "${BLUE}ℹ Baseline source: $BASELINE_CONFIG${NC}"
+  BASELINE_DATE=$(grep "^  baseline_date:" "$BASELINE_CONFIG" | sed 's/.*: "//' | sed 's/"$//')
+  if [ -n "$BASELINE_DATE" ]; then
+    echo -e "${BLUE}ℹ Last updated: $BASELINE_DATE${NC}"
+  fi
+  echo ""
+  
+  # Build Time Report
+  echo -e "${BOLD}${CYAN}Build Performance${NC}"
+  echo "─────────────────────────────────────────────────────────────────"
+  
+  printf "%-30s %10s %12s %10s\n" "Metric" "Current" "Baseline" "Status"
+  echo "─────────────────────────────────────────────────────────────────"
+  
+  # Build Time
+  BUILD_STATUS=""
+  if (( $(echo "$BUILD_TIME_SECONDS > $BUILD_TIME_WARNING_THRESHOLD" | bc -l) )); then
+    BUILD_STATUS="${RED}⚠ SLOW${NC}"
+  elif (( $(echo "$BUILD_TIME_SECONDS > $BASELINE_BUILD_TIME" | bc -l) )); then
+    BUILD_STATUS="${YELLOW}○ OK${NC}"
+  else
+    BUILD_STATUS="${GREEN}✓ FAST${NC}"
+  fi
+  printf "%-30s %9.1fs %11.1fs  %b\n" "Total Build Time" "$BUILD_TIME_SECONDS" "$BASELINE_BUILD_TIME" "$BUILD_STATUS"
+  
+  echo ""
+  echo -e "${BOLD}${CYAN}Bundle Size Analysis${NC}"
+  echo "─────────────────────────────────────────────────────────────────"
+  
+  printf "%-30s %10s %12s %10s\n" "Metric" "Current" "Baseline" "Status"
+  echo "─────────────────────────────────────────────────────────────────"
+  
+  # .next directory size
+  if [ -n "$NEXT_DIR_SIZE_MB" ] && [ "$NEXT_DIR_SIZE_MB" != "0" ]; then
+    printf "%-30s %9s MB %11s MB  ${GREEN}✓${NC}\n" ".next Directory" "$NEXT_DIR_SIZE_MB" "$BASELINE_NEXT_DIR_MB"
+  fi
+  
+  # JavaScript bundle size
+  if [ -n "$BUNDLE_SIZE_MB" ] && [ "$BUNDLE_SIZE_MB" != "0" ]; then
+    BUNDLE_STATUS=""
+    BUNDLE_GROWTH=""
+    
+    if (( $(echo "$BUNDLE_SIZE_MB > $BUNDLE_SIZE_FAILURE_THRESHOLD" | bc -l) )); then
+      BUNDLE_STATUS="${RED}✗ FAIL${NC}"
+      BUNDLE_GROWTH=$(echo "scale=1; (($BUNDLE_SIZE_MB - $BASELINE_BUNDLE_MB) / $BASELINE_BUNDLE_MB) * 100" | bc)
+      BUNDLE_GROWTH=" (+${BUNDLE_GROWTH}%)"
+    elif (( $(echo "$BUNDLE_SIZE_MB > $BUNDLE_SIZE_WARNING_THRESHOLD" | bc -l) )); then
+      BUNDLE_STATUS="${YELLOW}⚠ WARN${NC}"
+      BUNDLE_GROWTH=$(echo "scale=1; (($BUNDLE_SIZE_MB - $BASELINE_BUNDLE_MB) / $BASELINE_BUNDLE_MB) * 100" | bc)
+      BUNDLE_GROWTH=" (+${BUNDLE_GROWTH}%)"
+    elif (( $(echo "$BUNDLE_SIZE_MB > $BASELINE_BUNDLE_MB" | bc -l) )); then
+      BUNDLE_STATUS="${GREEN}○ OK${NC}"
+      BUNDLE_GROWTH=$(echo "scale=1; $BUNDLE_SIZE_MB - $BASELINE_BUNDLE_MB" | bc)
+      BUNDLE_GROWTH=" (+${BUNDLE_GROWTH} MB)"
+    else
+      BUNDLE_STATUS="${GREEN}✓ GOOD${NC}"
+    fi
+    
+    printf "%-30s %9s MB %11s MB  %b%s\n" "Total JavaScript" "$BUNDLE_SIZE_MB" "$BASELINE_BUNDLE_MB" "$BUNDLE_STATUS" "$BUNDLE_GROWTH"
+    
+    # Threshold indicators
+    echo "─────────────────────────────────────────────────────────────────"
+    printf "%-30s %9s MB  ${YELLOW}(Warning)${NC}\n" "10% Growth Threshold" "$BUNDLE_SIZE_WARNING_THRESHOLD"
+    printf "%-30s %9s MB  ${RED}(CI Failure)${NC}\n" "20% Growth Threshold" "$BUNDLE_SIZE_FAILURE_THRESHOLD"
+  fi
+  
+  echo ""
+  echo -e "${BOLD}${CYAN}Caching Configuration${NC}"
+  echo "─────────────────────────────────────────────────────────────────"
+  
+  if [ -n "$CACHE_CONTROL_HEADER" ]; then
+    if echo "$CACHE_CONTROL_HEADER" | grep -q "$BASELINE_CACHE_CONTROL"; then
+      printf "%-30s %b\n" "Cache-Control Header" "${GREEN}✓ Configured${NC}"
+      echo "  Value: $CACHE_CONTROL_HEADER"
+    else
+      printf "%-30s %b\n" "Cache-Control Header" "${YELLOW}⚠ Mismatch${NC}"
+      echo "  Found:    $CACHE_CONTROL_HEADER"
+      echo "  Expected: $BASELINE_CACHE_CONTROL"
+    fi
+  else
+    if [ "$SKIP_PERFORMANCE" = false ]; then
+      printf "%-30s %b\n" "Cache-Control Header" "${RED}✗ Missing${NC}"
+    else
+      printf "%-30s %b\n" "Cache-Control Header" "${BLUE}○ Skipped${NC}"
+    fi
+  fi
+  
+  echo ""
+  echo -e "${BOLD}${CYAN}Static Generation${NC}"
+  echo "─────────────────────────────────────────────────────────────────"
+  
+  if [ "$ROUTE_COUNT" -gt 0 ]; then
+    printf "%-30s %10d  ${GREEN}✓ Generated${NC}\n" "Routes Pre-rendered" "$ROUTE_COUNT"
+  else
+    printf "%-30s %10s  ${YELLOW}⚠ Unknown${NC}\n" "Routes Pre-rendered" "N/A"
+  fi
+  
+  echo ""
+  echo -e "${BOLD}Performance Status Summary${NC}"
+  echo "─────────────────────────────────────────────────────────────────"
+  
+  PERF_PASS=0
+  PERF_WARN=0
+  PERF_FAIL=0
+  
+  # Count statuses
+  if (( $(echo "$BUILD_TIME_SECONDS > $BUILD_TIME_WARNING_THRESHOLD" | bc -l) )); then
+    PERF_WARN=$((PERF_WARN + 1))
+  else
+    PERF_PASS=$((PERF_PASS + 1))
+  fi
+  
+  if [ -n "$BUNDLE_SIZE_MB" ] && [ "$BUNDLE_SIZE_MB" != "0" ]; then
+    if (( $(echo "$BUNDLE_SIZE_MB > $BUNDLE_SIZE_FAILURE_THRESHOLD" | bc -l) )); then
+      PERF_FAIL=$((PERF_FAIL + 1))
+    elif (( $(echo "$BUNDLE_SIZE_MB > $BUNDLE_SIZE_WARNING_THRESHOLD" | bc -l) )); then
+      PERF_WARN=$((PERF_WARN + 1))
+    else
+      PERF_PASS=$((PERF_PASS + 1))
+    fi
+  fi
+  
+  if [ -n "$CACHE_CONTROL_HEADER" ]; then
+    if echo "$CACHE_CONTROL_HEADER" | grep -q "$BASELINE_CACHE_CONTROL"; then
+      PERF_PASS=$((PERF_PASS + 1))
+    else
+      PERF_WARN=$((PERF_WARN + 1))
+    fi
+  fi
+  
+  echo ""
+  if [ $PERF_FAIL -gt 0 ]; then
+    echo -e "${RED}${BOLD}✗ PERFORMANCE REGRESSION DETECTED${NC}"
+    echo ""
+    echo "  $PERF_FAIL metric(s) exceed acceptable thresholds"
+    echo "  $PERF_WARN metric(s) approaching limits"
+    echo "  $PERF_PASS metric(s) within baseline"
+    echo ""
+    echo "  ${RED}Action Required:${NC} Review and address failures before committing"
+  elif [ $PERF_WARN -gt 0 ]; then
+    echo -e "${YELLOW}${BOLD}⚠ PERFORMANCE WARNINGS${NC}"
+    echo ""
+    echo "  $PERF_WARN metric(s) approaching thresholds"
+    echo "  $PERF_PASS metric(s) within baseline"
+    echo ""
+    echo -e "  ${YELLOW}Recommended:${NC} Review warnings and consider optimization"
+  else
+    echo -e "${GREEN}${BOLD}✓ ALL PERFORMANCE METRICS WITHIN BASELINE${NC}"
+    echo ""
+    echo "  $PERF_PASS/$PERF_PASS metrics passed"
+  fi
+  
+  echo ""
+  echo -e "${BOLD}CI Bundle Check Prediction${NC}"
+  echo "─────────────────────────────────────────────────────────────────"
+  
+  if [ -n "$BUNDLE_SIZE_MB" ] && [ "$BUNDLE_SIZE_MB" != "0" ]; then
+    if (( $(echo "$BUNDLE_SIZE_MB > $BUNDLE_SIZE_WARNING_THRESHOLD" | bc -l) )); then
+      echo -e "${RED}  ✗ CI build will FAIL - bundle size exceeds 10% growth threshold${NC}"
+      echo "    Current: $BUNDLE_SIZE_MB MB | Threshold: $BUNDLE_SIZE_WARNING_THRESHOLD MB"
+      echo ""
+      echo "    Required actions before pushing:"
+      echo "    1. Review bundle composition: ANALYZE=true pnpm build"
+      echo "    2. Identify and remove/optimize large dependencies"
+      echo "    3. Update docs/performance-baseline.md if growth is justified"
+    else
+      echo -e "${GREEN}  ✓ CI build will PASS - bundle size within acceptable range${NC}"
+    fi
+  else
+    echo -e "${YELLOW}  ○ CI prediction unavailable - bundle size not measured${NC}"
+  fi
+  
+  echo ""
+  echo -e "${BOLD}Optimization Recommendations${NC}"
+  echo "─────────────────────────────────────────────────────────────────"
+  echo ""
+  
+  if (( $(echo "$BUILD_TIME_SECONDS > $BUILD_TIME_WARNING_THRESHOLD" | bc -l) )); then
+    echo -e "  ${YELLOW}⚠${NC} Build Time Optimization:"
+    echo "     - Review TypeScript compilation performance"
+    echo "     - Check for slow static page generation"
+    echo "     - Consider incremental builds (Turbopack caching)"
+    echo ""
+  fi
+  
+  if [ -n "$BUNDLE_SIZE_MB" ] && (( $(echo "$BUNDLE_SIZE_MB > $BUNDLE_SIZE_WARNING_THRESHOLD" | bc -l) )); then
+    echo -e "  ${RED}✗${NC} Bundle Size Optimization (CRITICAL):"
+    echo "     - Run bundle analyzer: ANALYZE=true pnpm build"
+    echo "     - Remove unused dependencies: pnpm dedupe"
+    echo "     - Implement code splitting for large components"
+    echo "     - Use dynamic imports for non-critical code"
+    echo ""
+  elif [ -n "$BUNDLE_SIZE_MB" ] && (( $(echo "$BUNDLE_SIZE_MB > $BASELINE_BUNDLE_MB" | bc -l) )); then
+    echo -e "  ${YELLOW}○${NC} Bundle Size Monitoring:"
+    echo "     - Growth detected but within acceptable range"
+    echo "     - Monitor future changes to avoid exceeding threshold"
+    echo "     - Consider running analyzer periodically"
+    echo ""
+  fi
+  
+  if [ -z "$CACHE_CONTROL_HEADER" ] || ! echo "$CACHE_CONTROL_HEADER" | grep -q "$BASELINE_CACHE_CONTROL"; then
+    echo -e "  ${YELLOW}⚠${NC} Caching Configuration:"
+    echo "     - Verify next.config.ts headers configuration"
+    echo "     - Ensure routes are statically generated"
+    echo "     - Test headers in production deployment"
+    echo ""
+  fi
+  
+  echo -e "${BOLD}Troubleshooting Resources${NC}"
+  echo "─────────────────────────────────────────────────────────────────"
+  echo ""
+  echo "  Performance Troubleshooting Guide:"
+  echo -e "  ${BLUE}https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting${NC}"
+  echo ""
+  echo "  Specific Issues:"
+  echo "  • Bundle Size Regression:"
+  echo -e "    ${BLUE}https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#bundle-size-regression${NC}"
+  echo "  • Build Time Issues:"
+  echo -e "    ${BLUE}https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#slow-build-time${NC}"
+  echo "  • Cache Headers:"
+  echo -e "    ${BLUE}https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#cache-headers-missing${NC}"
+  echo ""
+fi
+
 echo ""
 echo -e "${BLUE}${BOLD}Documentation & References:${NC}"
 echo "  - README: ./README.md"
 echo "  - Testing guide: https://bns-portfolio-docs.vercel.app/docs/reference/testing-guide"
 echo "  - Registry schema: https://bns-portfolio-docs.vercel.app/docs/reference/registry-schema-guide"
 echo "  - ADR-0011 (registry): https://bns-portfolio-docs.vercel.app/docs/architecture/adr/adr-0011-data-driven-project-registry"
+echo "  - Performance baseline (YAML): ./docs/performance-baseline.yml"
+echo "  - Performance baseline (docs): ./docs/performance-baseline.md"
+echo "  - Performance optimization: https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-performance-optimization"
 echo ""
 
 # Exit with failure code if any checks failed

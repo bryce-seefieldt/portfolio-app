@@ -1,0 +1,77 @@
+# Performance Baseline Configuration
+# Single source of truth for performance metrics and thresholds
+# Used by: scripts/verify-local.sh, CI workflows, documentation
+#
+# Last Updated: 2026-01-24
+# Next.js Version: 16.1.3 (Turbopack)
+# Environment: Local production build
+
+# Build Performance Baselines
+build:
+  # Total build time in seconds (from pnpm build start to completion)
+  time_seconds: 3.5
+
+  # Warning threshold: build time that triggers a warning (20% above baseline)
+  time_warning_threshold_seconds: 4.2
+
+# Bundle Size Baselines
+bundle:
+  # Total JavaScript size in megabytes (all .js files in .next directory)
+  total_js_mb: 27.8
+
+  # Total JavaScript size in bytes (exact value for precise comparisons)
+  total_js_bytes: 29176884
+
+  # Total .next directory size in megabytes
+  next_dir_mb: 337
+
+  # Warning threshold: bundle size that triggers CI warning (10% above baseline)
+  size_warning_threshold_mb: 30.6
+
+  # Failure threshold: bundle size that fails CI build (20% above baseline)
+  size_failure_threshold_mb: 33.4
+
+# HTTP Caching Configuration
+# Note: Next.js App Router returns "no-store, must-revalidate" for HTML responses
+# Actual caching is controlled by route segment config (revalidate) and Vercel Edge Network
+cache:
+  # Expected Cache-Control header value for App Router pages
+  # App Router ignores next.config.ts headers and uses its own caching strategy
+  control_header: "no-store, must-revalidate"
+
+  # ISR revalidation interval in seconds (1 hour)
+  # Configured via: export const revalidate = 3600
+  revalidate_seconds: 3600
+
+  # Note: Static assets (JS, CSS, images) still use aggressive caching
+  # Only HTML responses use no-store to ensure fresh navigation
+# Core Web Vitals Targets (for reference - not used by verify-local.sh)
+# These are validated post-deployment via Vercel Speed Insights dashboard
+web_vitals:
+  # Largest Contentful Paint (loading performance)
+  lcp_target_ms: 2500 # < 2.5s
+
+  # Interaction to Next Paint (responsiveness)
+  inp_target_ms: 200 # < 200ms
+
+  # Cumulative Layout Shift (visual stability)
+  cls_target: 0.1 # < 0.1
+
+  # First Contentful Paint (initial rendering)
+  fcp_target_ms: 1800 # < 1.8s
+
+  # First Input Delay (legacy responsiveness metric)
+  fid_target_ms: 100 # < 100ms
+
+  # Time to First Byte (server response time)
+  ttfb_target_ms: 800 # < 800ms
+
+  # Total Blocking Time (main thread blocking)
+  tbt_target_ms: 800 # < 800ms
+
+# Metadata
+metadata:
+  baseline_date: "2026-01-24"
+  nextjs_version: "16.1.3"
+  environment: "local production build"
+  status: "established"
