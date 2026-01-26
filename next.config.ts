@@ -28,6 +28,12 @@ const nextConfig: NextConfig = {
   // Security: Remove X-Powered-By header
   poweredByHeader: false,
 
+  // Observability: Health check and structured logging
+  // - Health endpoint: /api/health (GET) returns status, environment, commit, build time
+  // - Structured logging: src/lib/observability.ts provides JSON logging for monitoring
+  // - Environment variables used: VERCEL_ENV, VERCEL_GIT_COMMIT_SHA, BUILD_TIME
+  // See: docs/60-projects/portfolio-app/08-observability.md
+
   // Caching: Configure HTTP Cache-Control headers
   headers: async () => [
     {
