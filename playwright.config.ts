@@ -29,10 +29,10 @@ export default defineConfig({
     // Record trace (video/screenshots) for debugging
     // In debug mode, always record traces; otherwise only on first retry
     trace: process.env.DEBUG ? "on" : "on-first-retry",
-    
+
     // Screenshot on failure for easier debugging
     screenshot: process.env.DEBUG ? "only-on-failure" : "off",
-    
+
     // Video on failure for debugging
     video: process.env.DEBUG ? "retain-on-failure" : "off",
   },

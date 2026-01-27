@@ -14,6 +14,10 @@ const eslintConfig = defineConfig([
     "coverage/**",
     ".vercel/**",
     "next-env.d.ts",
+    // Test/build artifacts
+    "playwright-report/**",
+    ".playwright/**",
+    "test-results/**",
   ]),
 ]);
 

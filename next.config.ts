@@ -24,7 +24,7 @@ const nextConfig: NextConfig = {
   ],*/
   // Performance: Enable React Compiler for optimized rendering
   reactCompiler: true,
-  
+
   // Build: Use Turbopack (Next.js 16+ default) - empty config to use defaults
   // Bundle analyzer plugin uses webpack-compatible API that works with Turbopack
   turbopack: {},
