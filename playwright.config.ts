@@ -15,8 +15,8 @@ export default defineConfig({
   // Retry failed tests: 2 times in CI, 0 times locally
   retries: process.env.CI ? 2 : 0,
 
-  // Number of parallel workers: 1 in CI (for stability), unlimited locally
-  workers: process.env.CI ? 1 : undefined,
+  // Number of parallel workers: 1 in CI (for stability) or debug mode, unlimited locally
+  workers: process.env.CI || process.env.DEBUG ? 1 : undefined,
 
   // Generate HTML test report after test run
   reporter: "html",
@@ -26,8 +26,15 @@ export default defineConfig({
     // Base URL for tests (use env variable or default to localhost)
     baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || "http://localhost:3000",
 
-    // Record trace (video/screenshots) only on first retry of failed tests
-    trace: "on-first-retry",
+    // Record trace (video/screenshots) for debugging
+    // In debug mode, always record traces; otherwise only on first retry
+    trace: process.env.DEBUG ? "on" : "on-first-retry",
+    
+    // Screenshot on failure for easier debugging
+    screenshot: process.env.DEBUG ? "only-on-failure" : "off",
+    
+    // Video on failure for debugging
+    video: process.env.DEBUG ? "retain-on-failure" : "off",
   },
 
   // Define browser projects to test against

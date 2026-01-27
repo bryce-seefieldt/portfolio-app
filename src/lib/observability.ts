@@ -5,7 +5,7 @@
  * All logs are output as JSON to console for integration with Vercel Logs
  * and external monitoring systems (Datadog, New Relic, etc.).
  *
- * @see docs/60-projects/portfolio-app/08-observability.md for usage guidelines
+ * @see `docs/60-projects/portfolio-app/08-observability.md` for usage guidelines
  */
 
 /**

@@ -18,6 +18,8 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
+    "test:e2e:trace": "DEBUG=1 playwright test --headed",
+    "test:e2e:single": "playwright test tests/e2e/smoke.spec.ts --headed",
     "secrets:scan": "trufflehog filesystem . --debug --only-verified",
     "registry:validate": "tsx src/lib/registry.ts --validate",
     "registry:list": "tsx src/lib/registry.ts --list",
