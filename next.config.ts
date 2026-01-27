@@ -7,6 +7,24 @@ const withBundleAnalyzerConfig = withBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
+const securityHeaders = [
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "X-XSS-Protection", value: "1; mode=block" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "Permissions-Policy", value: "geolocation=(), microphone=(), camera=()" },
+  {
+    key: "Content-Security-Policy",
+    value:
+      "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.vercel-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; font-src 'self'; connect-src 'self' https://vitals.vercel-analytics.com;",
+  },
+];
+
+const cacheHeader = {
+  key: "Cache-Control",
+  value: "public, max-age=3600, stale-while-revalidate=86400",
+};
+
 const nextConfig: NextConfig = {
   // Dev: Configure allowed origins for WSL2/Docker environments
   // IP 172.19.254.176 is from Docker/WSL2 internal network
@@ -52,12 +70,7 @@ const nextConfig: NextConfig = {
   headers: async () => [
     {
       source: "/:path*",
-      headers: [
-        {
-          key: "Cache-Control",
-          value: "public, max-age=3600, stale-while-revalidate=86400",
-        },
-      ],
+      headers: [...securityHeaders, cacheHeader],
     },
   ],
 };
