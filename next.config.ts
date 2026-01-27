@@ -8,6 +8,20 @@ const withBundleAnalyzerConfig = withBundleAnalyzer({
 });
 
 const nextConfig: NextConfig = {
+  // Dev: Configure allowed origins for WSL2/Docker environments
+  // IP 172.19.254.176 is from Docker/WSL2 internal network
+  // This typically happens when accessing the dev server from Windows host through WSL2
+  // See: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+  /*
+  allowedDevOrigins: [
+    "localhost",
+    "127.0.0.1",
+    "*.local",
+    "host.docker.internal",
+    "*.docker.internal",
+    // WSL2/Docker subnet - typically 172.16.0.0/12, but you can be more specific
+    // if you know your exact range (e.g., "172.19.*" if supported)
+  ],*/
   // Performance: Enable React Compiler for optimized rendering
   reactCompiler: true,
 
@@ -32,7 +46,7 @@ const nextConfig: NextConfig = {
   // - Health endpoint: /api/health (GET) returns status, environment, commit, build time
   // - Structured logging: src/lib/observability.ts provides JSON logging for monitoring
   // - Environment variables used: VERCEL_ENV, VERCEL_GIT_COMMIT_SHA, BUILD_TIME
-  // See: docs/60-projects/portfolio-app/08-observability.md
+  // See: `docs/60-projects/portfolio-app/08-observability.md`
 
   // Caching: Configure HTTP Cache-Control headers
   headers: async () => [
