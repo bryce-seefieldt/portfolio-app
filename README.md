@@ -97,6 +97,13 @@ Phase 1–3 governance is enforced:
 - Deterministic installs in CI: `pnpm install --frozen-lockfile`
 - Supply chain and static analysis: CodeQL (JS/TS) and Dependabot (weekly; majors excluded)
 
+## Security (Stage 4.4)
+
+- OWASP security headers and CSP configured in [next.config.ts](next.config.ts) (DENY framing, nosniff, strict referrer policy, restricted permissions, CSP with analytics exception)
+- Public-safe environment contract documented in [.env.example](.env.example); all `NEXT_PUBLIC_*` values are client-visible
+- Threat model and security posture documented in [docs/60-projects/portfolio-app/04-security.md](https://bns-portfolio-docs.vercel.app/docs/60-projects/portfolio-app/04-security.md) and [docs/40-security/threat-models/portfolio-app-threat-model-v2.md](https://bns-portfolio-docs.vercel.app/docs/40-security/threat-models/portfolio-app-threat-model-v2.md)
+- Dependency vulnerability response handled via [docs/50-operations/runbooks/rbk-portfolio-dependency-vulnerability.md](https://bns-portfolio-docs.vercel.app/docs/50-operations/runbooks/rbk-portfolio-dependency-vulnerability.md); secrets incidents via [docs/50-operations/runbooks/rbk-portfolio-secrets-incident.md](https://bns-portfolio-docs.vercel.app/docs/50-operations/runbooks/rbk-portfolio-secrets-incident.md)
+
 ### Local quality contract
 
 **Pre-deploy validation (required before every commit/PR):**
