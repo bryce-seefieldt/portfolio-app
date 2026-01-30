@@ -1,29 +1,172 @@
 @import "tailwindcss";
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities; */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/**
+ * CSS Variables Theme System
+ *
+ * Light theme is the default (:root).
+ * Dark theme overrides variables when 'dark' class is present on <html> element.
+ *
+ * All color and theme properties use CSS variables for maintainability and performance.
+ * Smooth transitions are applied for theme switching.
+ */
+
+/* ============================================================================
+   Light Theme (Default)
+   ========================================================================= */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Primary Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9f9f9;
+  --bg-tertiary: #f0f0f0;
+
+  /* Text Colors */
+  --text-primary: #000000;
+  --text-secondary: #595959;
+  --text-tertiary: #8c8c8c;
+  --text-muted: #a8a8a8;
+
+  /* Border & Divider */
+  --border-primary: #e5e5e5;
+  --border-secondary: #d9d9d9;
+  --divider: #f0f0f0;
+
+  /* Interactive Elements */
+  --accent-primary: #0066cc;
+  --accent-hover: #0052a3;
+  --accent-light: #e6f2ff;
+
+  /* UI Components */
+  --button-bg: #f5f5f5;
+  --button-hover: #e6e6e6;
+  --button-text: #000000;
+
+  --input-bg: #ffffff;
+  --input-border: #d9d9d9;
+  --input-text: #000000;
+
+  /* Shadow */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+  /* Effects */
+  --backdrop: rgba(0, 0, 0, 0.5);
+  --overlay: rgba(255, 255, 255, 0.8);
+
+  /* Animation */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 350ms ease;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ============================================================================
+   Dark Theme
+   ========================================================================= */
+
+html.dark {
+  /* Primary Colors */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #272727;
+
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --text-tertiary: #808080;
+  --text-muted: #606060;
+
+  /* Border & Divider */
+  --border-primary: #2d2d2d;
+  --border-secondary: #404040;
+  --divider: #1f1f1f;
+
+  /* Interactive Elements */
+  --accent-primary: #3d9eff;
+  --accent-hover: #2a85db;
+  --accent-light: #1a3a52;
+
+  /* UI Components */
+  --button-bg: #2d2d2d;
+  --button-hover: #3d3d3d;
+  --button-text: #ffffff;
+
+  --input-bg: #1a1a1a;
+  --input-border: #404040;
+  --input-text: #ffffff;
+
+  /* Shadow (darker, more subtle) */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+
+  /* Effects */
+  --backdrop: rgba(0, 0, 0, 0.8);
+  --overlay: rgba(10, 10, 10, 0.9);
+
+  /* Animation */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 350ms ease;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ============================================================================
+   Global Styles
+   ========================================================================= */
+
+* {
+  /* Smooth color transitions when theme changes */
+  @apply transition-colors duration-300;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================= */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
+.fade-in-on-scroll {
+  opacity: 0;
+  transition: opacity 250ms ease-out;
+}
+
+.fade-in-on-scroll.is-visible {
+  opacity: 1;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================================
+   Accessibility & Reduced Motion
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
