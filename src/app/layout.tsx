@@ -1,11 +1,16 @@
-// src/app/layout.tsx
 import type { Metadata, Viewport } from "next";
-import Link from "next/link";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { NavigationEnhanced } from "@/components/NavigationEnhanced";
+import { BackToTop } from "@/components/BackToTop";
 import "./globals.css";
 
 import { DOCS_BASE_URL, GITHUB_URL, LINKEDIN_URL, SITE_URL } from "@/lib/config";
+import {
+  generatePersonSchema,
+  generateWebsiteSchema,
+  formatSchemaAsScript,
+} from "@/lib/structured-data";
 
 /**
  * Viewport configuration for responsive rendering optimization.
@@ -24,6 +29,29 @@ export const metadata: Metadata = {
   description:
     "Enterprise-grade full-stack portfolio: interactive CV, verified projects, and engineering evidence (ADRs, threat models, runbooks).",
   metadataBase: SITE_URL ? new URL(SITE_URL) : undefined,
+  alternates: {
+    canonical: SITE_URL || "/",
+  },
+  keywords: [
+    "full-stack engineer",
+    "portfolio",
+    "Next.js",
+    "TypeScript",
+    "DevOps",
+    "software engineering",
+    "enterprise architecture",
+  ],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -32,49 +60,64 @@ export const metadata: Metadata = {
     title: "Portfolio",
     description:
       "Enterprise-grade full-stack portfolio: interactive CV, verified projects, and engineering evidence (ADRs, threat models, runbooks).",
+    images: [
+      {
+        url: "/og-image.svg",
+        width: 1200,
+        height: 630,
+        alt: "Portfolio — enterprise-grade full-stack engineering",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Portfolio",
     description:
       "Enterprise-grade full-stack portfolio: interactive CV, verified projects, and engineering evidence (ADRs, threat models, runbooks).",
+    images: ["/og-image.svg"],
   },
 };
 
-function TopNavLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <Link
-      href={href}
-      className="text-sm text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
-    >
-      {children}
-    </Link>
-  );
-}
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="min-h-dvh bg-white text-zinc-950 dark:bg-zinc-950 dark:text-zinc-50">
-        <header className="border-b border-zinc-200 dark:border-zinc-800">
-          <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
-            <Link href="/" className="font-semibold tracking-tight">
-              Portfolio
-            </Link>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Theme initialization script: runs before paint to prevent flash of wrong theme.
+            This ensures the correct theme is applied immediately on page load,
+            preventing a visible flash when the page loads in the wrong theme.
+            Uses stored preference or system preference as fallback. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  const saved = localStorage.getItem('theme');
+                  const isDark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  if (isDark) {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
 
-            <nav className="flex items-center gap-4">
-              <TopNavLink href="/cv">CV</TopNavLink>
-              <TopNavLink href="/projects">Projects</TopNavLink>
-              <a
-                href={DOCS_BASE_URL}
-                className="text-sm text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
-              >
-                Evidence (Docs)
-              </a>
-              <TopNavLink href="/contact">Contact</TopNavLink>
-            </nav>
-          </div>
-        </header>
+        {/* JSON-LD Structured Data for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: formatSchemaAsScript(generatePersonSchema()),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: formatSchemaAsScript(generateWebsiteSchema()),
+          }}
+        />
+      </head>
+      <body className="min-h-dvh bg-white text-zinc-950 dark:bg-zinc-950 dark:text-zinc-50">
+        <NavigationEnhanced />
 
         <main className="mx-auto max-w-5xl px-4 py-10">{children}</main>
 
@@ -101,6 +144,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </div>
         </footer>
+        <BackToTop />
         <Analytics />
         <SpeedInsights />
       </body>
