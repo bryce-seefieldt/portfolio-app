@@ -18,6 +18,11 @@ The Portfolio App provides:
 
 The design goal is for reviewers to evaluate the portfolio like a real service: clear UX, stable routes, and verifiable evidence trails.
 
+## Reviewer quickstart
+
+- Reviewer guide: https://bns-portfolio-docs.vercel.app/docs/portfolio/reviewer-guide
+- Portfolio App dossier: https://bns-portfolio-docs.vercel.app/docs/projects/portfolio-app/
+
 ## Documentation App (Evidence Engine)
 
 Enterprise-grade documentation is hosted separately to preserve a clean product surface and maintain governance discipline.
@@ -132,7 +137,7 @@ pnpm format:write && pnpm lint && pnpm typecheck && pnpm registry:validate && pn
 7. Builds the Next.js app
 8. Performance verification (bundle size + cache headers; uses docs/performance-baseline.yml)
 9. Runs Vitest unit tests (70+ tests: registry validation, slug helpers, link construction)
-10. Runs Playwright link validation (12 checks: evidence link resolution, route coverage)
+10. Runs Playwright link validation (58 checks: evidence links, routes, metadata)
 11. Provides detailed troubleshooting guidance for any failures
 
 **Quick verification** (`pnpm verify:quick`) — Fast iteration during development (~60-90s):
@@ -175,9 +180,9 @@ pnpm test:debug        # Debug mode with inspector
 **E2E tests (Playwright):**
 
 ```bash
-pnpm playwright test   # Run all E2E tests (12 tests)
-pnpm playwright test --ui # Run tests in interactive UI mode
-pnpm playwright test --debug # Debug mode with inspector
+pnpm test:e2e        # Run all E2E tests
+pnpm test:e2e:ui     # Run tests in interactive UI mode
+pnpm test:e2e:debug  # Debug mode with inspector
 npx playwright show-report # View HTML test report
 ```
 
