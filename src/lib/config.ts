@@ -58,12 +58,25 @@ export const SITE_URL: string | null = asAbsoluteUrl(env.NEXT_PUBLIC_SITE_URL);
  * Supports either:
  * - docs path on same domain (e.g., https://yourdomain.com/docs)
  * - docs subdomain (e.g., https://docs.yourdomain.com)
+ * - local path (e.g., /docs)
  *
  * For local dev, you may leave this unset and it will default to "/docs".
  */
-export const DOCS_BASE_URL: string = normalizeBaseUrl(
-  env.NEXT_PUBLIC_DOCS_BASE_URL?.trim() || "/docs",
-);
+function normalizeDocsBaseUrl(value?: string): string {
+  const trimmed = value?.trim();
+  if (!trimmed) return "/docs";
+
+  const absolute = asAbsoluteUrl(trimmed);
+  if (absolute) return normalizeBaseUrl(absolute);
+
+  if (trimmed.startsWith("/")) {
+    return normalizeBaseUrl(trimmed);
+  }
+
+  return "/docs";
+}
+
+export const DOCS_BASE_URL: string = normalizeDocsBaseUrl(env.NEXT_PUBLIC_DOCS_BASE_URL);
 
 /**
  * Public profile links (optional). Prefer these over hardcoding URLs in components.

@@ -34,17 +34,16 @@ export default function HomePage() {
       <ScrollFadeIn>
         <header className="flex flex-col gap-4">
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            Full-stack engineering • Enterprise DevOps discipline • Security-minded delivery
+            Full-stack engineering • Enterprise SDLC • Evidence-first delivery
           </p>
 
           <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            A verification-first portfolio for modern full-stack delivery.
+            A reviewer-ready portfolio with traceable engineering evidence.
           </h1>
 
           <p className="max-w-3xl text-base text-zinc-700 dark:text-zinc-300">
-            This site is the front-of-house portfolio experience. The engineering evidence—decision
-            records (ADRs), threat models, runbooks, and release notes—lives in a companion
-            Documentation App.
+            This site is the portfolio front door. The proof—ADRs, threat models, runbooks, and
+            release notes—lives in the companion Documentation App for fast validation.
           </p>
 
           {/* PRIMARY CTA ROW */}
@@ -100,7 +99,7 @@ export default function HomePage() {
                 <a className="underline" href={docsUrl("projects/portfolio-app/")}>
                   Portfolio App dossier
                 </a>{" "}
-                and at least one ADR and runbook.
+                plus at least one ADR and runbook.
               </li>
             </ol>
           </div>
@@ -161,8 +160,8 @@ export default function HomePage() {
 
         <ScrollFadeIn delay={200}>
           <Section
-            title="Featured work (initial stub)"
-            subtitle="This section becomes data-driven once the project registry is added."
+            title="Featured work"
+            subtitle="Data-driven projects with evidence links and reviewer-ready dossiers."
           >
             <div className="flex flex-col gap-3 text-sm text-zinc-700 dark:text-zinc-300">
               <div className="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
@@ -205,15 +204,14 @@ export default function HomePage() {
         </ScrollFadeIn>
 
         <ScrollFadeIn delay={300}>
-          <Section title="Next steps" subtitle="Where this program goes from here.">
+          <Section
+            title="Phase 5 focus"
+            subtitle="Professionalization, validation, and release readiness."
+          >
             <ul className="list-disc pl-5 text-sm text-zinc-700 dark:text-zinc-300">
-              <li>
-                Implement CI quality gates and promotion checks (mirroring the docs platform).
-              </li>
-              <li>Create one “gold standard” project page with a complete evidence trail.</li>
-              <li>
-                Convert projects to a data-driven registry (scales cleanly as the portfolio grows).
-              </li>
+              <li>Refine narrative clarity and reviewer entry points.</li>
+              <li>Audit evidence and remove unsupported claims.</li>
+              <li>Finalize a v1.0 release with known limitations documented.</li>
             </ul>
             <div className="mt-4">
               <a className="underline" href={docsUrl("00-portfolio/roadmap")}>

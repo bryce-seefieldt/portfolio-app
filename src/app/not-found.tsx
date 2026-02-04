@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ScrollFadeIn } from "@/components/ScrollFadeIn";
-import { DOCS_BASE_URL } from "@/lib/config";
+import { DOCS_BASE_URL, docsUrl } from "@/lib/config";
 import { log } from "@/lib/observability";
 
 /**
@@ -79,6 +79,13 @@ export default function NotFound() {
           >
             <div className="font-semibold">Docs</div>
             <div className="text-zinc-600 dark:text-zinc-400">Evidence documentation</div>
+          </a>
+          <a
+            href={docsUrl("portfolio/reviewer-guide")}
+            className="rounded-lg p-4 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-900"
+          >
+            <div className="font-semibold">Reviewer guide</div>
+            <div className="text-zinc-600 dark:text-zinc-400">Fast validation path</div>
           </a>
         </div>
       </div>
