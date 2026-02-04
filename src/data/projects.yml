@@ -5,7 +5,7 @@ metadata:
 projects:
   - slug: portfolio-app
     title: "Portfolio App (Next.js + TypeScript)"
-    summary: "Production-quality portfolio application designed to be reviewed like a real service (CI gates, release governance, security posture)."
+    summary: "Reviewer-ready portfolio application with evidence-first links, CI gates, and production-grade governance."
     category: fullstack
     tags: ["TypeScript", "Next.js", "Vercel", "CI/CD", "Security", "Docs-as-code"]
     startDate: "2026-01"
@@ -60,7 +60,7 @@ projects:
 
   - slug: portfolio-docs-app
     title: "Portfolio Documentation App (Docusaurus Evidence Engine)"
-    summary: "Enterprise documentation platform hosting dossiers, ADRs, threat models, runbooks, and release notes for the portfolio program."
+    summary: "Evidence engine for dossiers, ADRs, threat models, runbooks, and release notes with CI-enforced doc integrity."
     category: devops
     tags: ["Docusaurus", "Docs-as-code", "Vercel", "Governance", "Operations"]
     startDate: "2026-01"
