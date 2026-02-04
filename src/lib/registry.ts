@@ -281,22 +281,31 @@ export function validateEvidenceLinks(project: Project): string[] {
 
 // ----- CLI entrypoint -----
 
-if (require.main === module) {
-  const arg = process.argv[2] || "";
+export function runRegistryCli(
+  arg: string = "",
+  overrides?: {
+    loadProjectRegistry?: typeof loadProjectRegistry;
+    evidenceLinks?: typeof evidenceLinks;
+    validateEvidenceLinks?: typeof validateEvidenceLinks;
+  },
+): number {
   try {
-    const projects = loadProjectRegistry();
+    const loader = overrides?.loadProjectRegistry ?? loadProjectRegistry;
+    const buildLinks = overrides?.evidenceLinks ?? evidenceLinks;
+    const validator = overrides?.validateEvidenceLinks ?? validateEvidenceLinks;
+    const projects = loader();
     if (arg === "--list") {
       for (const p of projects) {
         console.log(`${p.slug}\t${p.title}`);
       }
-      process.exit(0);
+      return 0;
     }
     // Default / --validate
     // Do a shallow evidence link materialization check
     const allWarnings: string[] = [];
     for (const p of projects) {
-      void evidenceLinks(p); // Ensure no throw
-      const warnings = validateEvidenceLinks(p);
+      void buildLinks(p); // Ensure no throw
+      const warnings = validator(p);
       allWarnings.push(...warnings);
     }
     if (allWarnings.length > 0) {
@@ -306,12 +315,17 @@ if (require.main === module) {
       }
     }
     console.log(`Registry OK (projects: ${projects.length})`);
-    process.exit(0);
+    return 0;
   } catch (err) {
     console.error(
       "Registry validation failed:\n",
       err instanceof Error ? err.message : String(err),
     );
-    process.exit(1);
+    return 1;
   }
+}
+
+if (require.main === module) {
+  const arg = process.argv[2] || "";
+  process.exit(runRegistryCli(arg));
 }
