@@ -5,6 +5,7 @@
 import { describe, it, expect } from "vitest";
 
 // Slug validation regex from registry.ts
+// eslint-disable-next-line security/detect-unsafe-regex -- bounded, linear slug matcher.
 const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 
 function isValidSlug(slug: string): boolean {

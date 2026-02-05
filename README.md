@@ -105,6 +105,8 @@ Phase 1–3 governance is enforced:
 ## Security (Stage 4.4)
 
 - OWASP security headers and CSP configured in [next.config.ts](next.config.ts) (DENY framing, nosniff, strict referrer policy, restricted permissions, CSP with analytics exception)
+- CSP is enforced with per-request nonces (proxy) and applied to inline scripts
+- Mutation endpoints require Zod validation, CSRF checks, and rate limiting
 - Public-safe environment contract documented in [.env.example](.env.example); all `NEXT_PUBLIC_*` values are client-visible
 - Threat model and security posture documented in [docs/60-projects/portfolio-app/04-security.md](https://bns-portfolio-docs.vercel.app/docs/60-projects/portfolio-app/04-security.md) and [docs/40-security/threat-models/portfolio-app-threat-model-v2.md](https://bns-portfolio-docs.vercel.app/docs/40-security/threat-models/portfolio-app-threat-model-v2.md)
 - Dependency vulnerability response handled via [docs/50-operations/runbooks/rbk-portfolio-dependency-vulnerability.md](https://bns-portfolio-docs.vercel.app/docs/50-operations/runbooks/rbk-portfolio-dependency-vulnerability.md); secrets incidents via [docs/50-operations/runbooks/rbk-portfolio-secrets-incident.md](https://bns-portfolio-docs.vercel.app/docs/50-operations/runbooks/rbk-portfolio-secrets-incident.md)
@@ -121,7 +123,7 @@ pnpm verify
 pnpm verify:quick
 
 # Manual sequence (if verify script unavailable):
-pnpm format:write && pnpm lint && pnpm typecheck && pnpm registry:validate && pnpm build && pnpm test
+pnpm format:write && pnpm lint && pnpm typecheck && pnpm audit && pnpm registry:validate && pnpm build && pnpm test
 ```
 
 **What each verification command does:**
@@ -132,17 +134,18 @@ pnpm format:write && pnpm lint && pnpm typecheck && pnpm registry:validate && pn
 2. Auto-formats code (`format:write` then `format:check`)
 3. Runs ESLint with zero-warning enforcement
 4. Validates TypeScript types
-5. Lightweight pattern-based secret scan (local-only; CI runs TruffleHog)
-6. Validates the project registry (YAML + Zod schema)
-7. Builds the Next.js app
-8. Performance verification (bundle size + cache headers; uses docs/performance-baseline.yml)
-9. Runs Vitest unit tests (70+ tests: registry validation, slug helpers, link construction)
-10. Runs Playwright link validation (58 checks: evidence links, routes, metadata)
-11. Provides detailed troubleshooting guidance for any failures
+5. Runs dependency audit (`pnpm audit --audit-level=high`)
+6. Lightweight pattern-based secret scan (local-only; CI runs TruffleHog)
+7. Validates the project registry (YAML + Zod schema)
+8. Builds the Next.js app
+9. Performance verification (bundle size + cache headers; uses docs/performance-baseline.yml)
+10. Runs Vitest unit tests (70+ tests: registry validation, slug helpers, link construction)
+11. Runs Playwright link validation (58 checks: evidence links, routes, metadata)
+12. Provides detailed troubleshooting guidance for any failures
 
 **Quick verification** (`pnpm verify:quick`) — Fast iteration during development (~60-90s):
 
-- Runs steps 1-7 above, **skips performance checks and all tests** (steps 8-10)
+- Runs steps 1-8 above, **skips performance checks and all tests** (steps 9-11)
 - Use when making frequent small changes and need rapid feedback
 - Run full `pnpm verify` before final commit/push
 
@@ -164,6 +167,7 @@ pnpm typecheck         # TypeScript type checking
 pnpm format:check      # Check if files are formatted
 pnpm format:write      # Auto-format all files with Prettier
 pnpm quality           # Combined: lint + format:check + typecheck
+pnpm audit             # Dependency audit (high severity)
 pnpm analyze:bundle    # Run Next.js bundle analyzer (ANALYZE=true pnpm build)
 pnpm analyze:build     # Time the production build locally with duration summary
 ```
@@ -191,6 +195,7 @@ npx playwright show-report # View HTML test report
 ```bash
 pnpm secrets:scan      # Scan for accidentally committed secrets (TruffleHog)
                        # Requires TruffleHog CLI binary (see installation below)
+pnpm audit             # Dependency audit (high severity)
 ```
 
 **TruffleHog installation (Optional, Runs in CI Workdlow):**

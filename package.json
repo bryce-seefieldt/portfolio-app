@@ -1,6 +1,6 @@
 {
   "name": "portfolio-app",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,6 +9,7 @@
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
     "quality": "pnpm lint && pnpm format:check && pnpm typecheck",
+    "audit": "pnpm audit --audit-level=high",
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",
     "test": "vitest",
@@ -53,6 +54,7 @@
     "dotenv": "^17.2.3",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "eslint-plugin-security": "^3.0.1",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4",

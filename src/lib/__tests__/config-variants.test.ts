@@ -28,6 +28,14 @@ describe("config variants", () => {
     expect(config.docsUrl("")).toBe("/docs");
   });
 
+  it("should fall back to /docs when base URL is invalid", async () => {
+    process.env.NEXT_PUBLIC_DOCS_BASE_URL = "docs";
+    vi.resetModules();
+
+    const config = await import("../config");
+    expect(config.DOCS_BASE_URL).toBe("/docs");
+  });
+
   it("should build mailto URL with subject", async () => {
     const config = await import("../config");
     expect(config.mailtoUrl("hello@example.com", "Hello World")).toBe(
@@ -43,6 +51,26 @@ describe("config variants", () => {
     const config = await import("../config");
     expect(config.githubUrl("")).toBe("https://github.com/example");
     expect(config.docsGithubUrl("")).toBe("https://github.com/example/docs");
+  });
+
+  it("should build GitHub URLs when base is configured", async () => {
+    process.env.NEXT_PUBLIC_GITHUB_URL = "https://github.com/example";
+    process.env.NEXT_PUBLIC_DOCS_GITHUB_URL = "https://github.com/example/docs";
+    vi.resetModules();
+
+    const config = await import("../config");
+    expect(config.githubUrl("portfolio-app")).toBe("https://github.com/example/portfolio-app");
+    expect(config.docsGithubUrl("blob/main/readme.md")).toBe(
+      "https://github.com/example/docs/blob/main/readme.md",
+    );
+  });
+
+  it("should trim contact email when configured", async () => {
+    process.env.NEXT_PUBLIC_CONTACT_EMAIL = "  hello@example.com  ";
+    vi.resetModules();
+
+    const config = await import("../config");
+    expect(config.CONTACT_EMAIL).toBe("hello@example.com");
   });
 
   it("should resolve environment helpers from VERCEL_ENV", async () => {

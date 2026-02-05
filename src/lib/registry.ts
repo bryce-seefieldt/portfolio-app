@@ -88,6 +88,7 @@ export const ProjectSchema = z
   .object({
     slug: z
       .string()
+      // eslint-disable-next-line security/detect-unsafe-regex -- bounded, linear slug matcher.
       .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/u, "slug must be lowercase, hyphenated, no spaces"),
     title: z.string().min(3),
     summary: z.string().min(10),
@@ -159,9 +160,11 @@ function registryPath(): string {
 export function loadProjectRegistry(): Project[] {
   if (cachedProjects) return cachedProjects;
   const filePath = registryPath();
+  // eslint-disable-next-line security/detect-non-literal-fs-filename -- path is fixed within repo.
   if (!fs.existsSync(filePath)) {
     throw new Error(`Project registry not found at ${filePath}`);
   }
+  // eslint-disable-next-line security/detect-non-literal-fs-filename -- path is fixed within repo.
   const raw = fs.readFileSync(filePath, "utf8");
   const parsed = yaml.load(raw) as RegistryInput;
   const projects = parseRegistryInput(parsed).map((p) => {
@@ -325,7 +328,9 @@ export function runRegistryCli(
   }
 }
 
+/* c8 ignore start */
 if (require.main === module) {
   const arg = process.argv[2] || "";
   process.exit(runRegistryCli(arg));
 }
+/* c8 ignore stop */
