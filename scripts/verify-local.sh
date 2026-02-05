@@ -20,6 +20,8 @@
 #   ./scripts/verify-local.sh              # Run all checks including tests & performance
 #   ./scripts/verify-local.sh --skip-tests # Skip unit + E2E tests (faster)
 #   ./scripts/verify-local.sh --skip-performance # Skip performance verification
+#   ./scripts/verify-local.sh --audit-all  # Audit all severities (low+)
+#   ./scripts/verify-local.sh --audit-level=critical # Customize audit threshold
 #   # or via package.json scripts:
 #   pnpm verify         # Full verification with tests & performance
 #   pnpm verify:quick   # Fast verification without tests or performance
@@ -33,6 +35,7 @@ set -euo pipefail
 # Parse command line arguments
 SKIP_TESTS=false
 SKIP_PERFORMANCE=false
+AUDIT_LEVEL="high"
 for arg in "$@"; do
   case $arg in
     --skip-tests)
@@ -41,6 +44,14 @@ for arg in "$@"; do
       ;;
     --skip-performance)
       SKIP_PERFORMANCE=true
+      shift
+      ;;
+    --audit-level=*)
+      AUDIT_LEVEL="${arg#*=}"
+      shift
+      ;;
+    --audit-all)
+      AUDIT_LEVEL="low"
       shift
       ;;
   esac
@@ -256,20 +267,35 @@ else
 fi
 
 # Step 5: Dependency audit
-print_section "Step 5: Dependency Audit (pnpm audit --audit-level=high)"
+print_section "Step 5: Dependency Audit (pnpm audit --audit-level=${AUDIT_LEVEL})"
 
-AUDIT_OUTPUT=$(pnpm audit --audit-level=high 2>&1)
+AUDIT_OUTPUT=$(pnpm audit --audit-level="${AUDIT_LEVEL}" 2>&1)
 AUDIT_EXIT_CODE=$?
+AUDIT_HAS_FINDINGS=false
+
+if echo "$AUDIT_OUTPUT" | grep -qiE "vulnerab|advisory|severity"; then
+  AUDIT_HAS_FINDINGS=true
+fi
 
 if [ $AUDIT_EXIT_CODE -eq 0 ]; then
   print_success "Dependency audit passed (no high/critical vulnerabilities)"
+  if [ "$AUDIT_HAS_FINDINGS" = true ]; then
+    print_warning "Audit reported findings below the ${AUDIT_LEVEL} threshold"
+    echo ""
+    echo "Audit output (full):"
+    echo ""
+    echo "$AUDIT_OUTPUT"
+    echo ""
+  fi
 else
   AUDIT_FAILED=true
   print_failure "Dependency audit failed"
   echo ""
-  echo "$AUDIT_OUTPUT" | head -50
+  echo "Audit output (full):"
   echo ""
-  print_troubleshooting "  1. Run: pnpm audit --audit-level=high
+  echo "$AUDIT_OUTPUT"
+  echo ""
+  print_troubleshooting "  1. Run: pnpm audit --audit-level=${AUDIT_LEVEL}
   2. Update vulnerable dependencies: pnpm up --latest
   3. If a fix is unavailable, document risk in docs/40-security/risk-register.md"
 fi

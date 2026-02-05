@@ -101,6 +101,7 @@ Phase 1–3 governance is enforced:
   - `ci / build` (Next.js build; depends on quality and link-validation)
 - Deterministic installs in CI: `pnpm install --frozen-lockfile`
 - Supply chain and static analysis: CodeQL (JS/TS) and Dependabot (weekly; majors excluded)
+- Audit posture: CI blocks on high/critical advisories; low/medium are logged and require a ticket or risk register entry if they persist
 
 ## Security (Stage 4.4)
 
@@ -124,6 +125,16 @@ pnpm verify:quick
 
 # Manual sequence (if verify script unavailable):
 pnpm format:write && pnpm lint && pnpm typecheck && pnpm audit && pnpm registry:validate && pnpm build && pnpm test
+```
+
+Optional audit flags:
+
+```bash
+# Audit all severities (low+)
+pnpm verify -- --audit-all
+
+# Customize audit threshold
+pnpm verify -- --audit-level=critical
 ```
 
 **What each verification command does:**
