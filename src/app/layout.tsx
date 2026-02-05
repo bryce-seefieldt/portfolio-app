@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { NavigationEnhanced } from "@/components/NavigationEnhanced";
 import { BackToTop } from "@/components/BackToTop";
+import { headers } from "next/headers";
 import "./globals.css";
 
 import { DOCS_BASE_URL, GITHUB_URL, LINKEDIN_URL, SITE_URL } from "@/lib/config";
@@ -78,7 +79,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -87,6 +90,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             preventing a visible flash when the page loads in the wrong theme.
             Uses stored preference or system preference as fallback. */}
         <script
+          nonce={nonce}
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
@@ -105,12 +110,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* JSON-LD Structured Data for SEO */}
         <script
           type="application/ld+json"
+          nonce={nonce}
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: formatSchemaAsScript(generatePersonSchema()),
           }}
         />
         <script
           type="application/ld+json"
+          nonce={nonce}
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: formatSchemaAsScript(generateWebsiteSchema()),
           }}

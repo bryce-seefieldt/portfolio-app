@@ -72,6 +72,12 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
+      - name: Audit gate (high/critical)
+        run: pnpm audit --audit-level=high
+
+      - name: Audit visibility (all severities)
+        run: pnpm audit --audit-level=low || true
+
   # Phase 2 Enhancement: Secrets scanning gate
   # Ref: Threat model — Information Disclosure mitigation (hardened control)
   secrets-scan:

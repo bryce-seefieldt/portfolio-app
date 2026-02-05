@@ -96,6 +96,14 @@ You must never:
 - Avoid introducing new dependencies without clear benefit.
 - Any dependency addition must be justified in the PR description and should not expand attack surface unnecessarily.
 
+### 3.4 React2Shell hardening guardrails
+
+- Treat React/Next.js as a backend surface; never deserialize untrusted payloads into rich objects.
+- All mutation endpoints must validate input with Zod and reject unknown shapes.
+- Use CSRF protection and rate limiting on any non-idempotent routes.
+- Inline scripts must include CSP nonces; do not reintroduce `unsafe-inline` for scripts.
+- Do not add generic "execute" or dynamic evaluation helpers.
+
 ---
 
 ## 4) Delivery governance and CI gates

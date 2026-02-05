@@ -1,6 +1,23 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Project } from "../registry";
 
+const mockExistsSync = vi.fn();
+const mockReadFileSync = vi.fn();
+const mockYamlLoad = vi.fn();
+
+vi.mock("node:fs", () => ({
+  default: {
+    existsSync: (...args: unknown[]) => mockExistsSync(...args),
+    readFileSync: (...args: unknown[]) => mockReadFileSync(...args),
+  },
+  existsSync: (...args: unknown[]) => mockExistsSync(...args),
+  readFileSync: (...args: unknown[]) => mockReadFileSync(...args),
+}));
+
+vi.mock("js-yaml", () => ({
+  load: (...args: unknown[]) => mockYamlLoad(...args),
+}));
+
 describe("registry CLI", () => {
   const mockProject: Project = {
     slug: "portfolio-app",
@@ -18,6 +35,14 @@ describe("registry CLI", () => {
     vi.spyOn(console, "log").mockImplementation(() => {});
     vi.spyOn(console, "warn").mockImplementation(() => {});
     vi.spyOn(console, "error").mockImplementation(() => {});
+    mockExistsSync.mockReset().mockReturnValue(true);
+    mockReadFileSync.mockReset().mockReturnValue("fake");
+    mockYamlLoad.mockReset().mockReturnValue([mockProject]);
+    process.env.NEXT_RUNTIME = "test";
+    process.env.NEXT_PUBLIC_DOCS_BASE_URL = "/docs";
+    process.env.NEXT_PUBLIC_GITHUB_URL = "https://github.com/acme";
+    process.env.NEXT_PUBLIC_DOCS_GITHUB_URL = "https://github.com/acme/docs";
+    process.env.NEXT_PUBLIC_SITE_URL = "https://example.com";
   });
 
   afterEach(() => {
@@ -55,6 +80,28 @@ describe("registry CLI", () => {
     const status = registry.runRegistryCli("", {
       loadProjectRegistry: () => {
         throw "boom";
+      },
+    });
+
+    expect(status).toBe(1);
+    expect(console.error).toHaveBeenCalled();
+  });
+
+  it("should use default helpers when no overrides provided", async () => {
+    const registry = await import("../registry");
+
+    const status = registry.runRegistryCli("");
+
+    expect(status).toBe(0);
+    expect(console.log).toHaveBeenCalledWith("Registry OK (projects: 1)");
+  });
+
+  it("should report error messages for Error instances", async () => {
+    const registry = await import("../registry");
+
+    const status = registry.runRegistryCli("", {
+      loadProjectRegistry: () => {
+        throw new Error("registry failed");
       },
     });
 

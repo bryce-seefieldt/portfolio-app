@@ -20,6 +20,8 @@
 #   ./scripts/verify-local.sh              # Run all checks including tests & performance
 #   ./scripts/verify-local.sh --skip-tests # Skip unit + E2E tests (faster)
 #   ./scripts/verify-local.sh --skip-performance # Skip performance verification
+#   ./scripts/verify-local.sh --audit-all  # Audit all severities (low+)
+#   ./scripts/verify-local.sh --audit-level=critical # Customize audit threshold
 #   # or via package.json scripts:
 #   pnpm verify         # Full verification with tests & performance
 #   pnpm verify:quick   # Fast verification without tests or performance
@@ -33,6 +35,7 @@ set -euo pipefail
 # Parse command line arguments
 SKIP_TESTS=false
 SKIP_PERFORMANCE=false
+AUDIT_LEVEL="high"
 for arg in "$@"; do
   case $arg in
     --skip-tests)
@@ -41,6 +44,14 @@ for arg in "$@"; do
       ;;
     --skip-performance)
       SKIP_PERFORMANCE=true
+      shift
+      ;;
+    --audit-level=*)
+      AUDIT_LEVEL="${arg#*=}"
+      shift
+      ;;
+    --audit-all)
+      AUDIT_LEVEL="low"
       shift
       ;;
   esac
@@ -58,6 +69,7 @@ BOLD='\033[1m'
 # Track overall status
 FAILURES=0
 WARNINGS=0
+AUDIT_FAILED=false
 
 # Performance metrics tracking
 BUILD_TIME_SECONDS=0
@@ -254,8 +266,42 @@ else
   4. Run: pnpm typecheck for full output"
 fi
 
-# Step 5: Secret scanning
-print_section "Step 5: Secret Scanning (basic local scan)"
+# Step 5: Dependency audit
+print_section "Step 5: Dependency Audit (pnpm audit --audit-level=${AUDIT_LEVEL})"
+
+AUDIT_OUTPUT=$(pnpm audit --audit-level="${AUDIT_LEVEL}" 2>&1)
+AUDIT_EXIT_CODE=$?
+AUDIT_HAS_FINDINGS=false
+
+if echo "$AUDIT_OUTPUT" | grep -qiE "vulnerab|advisory|severity"; then
+  AUDIT_HAS_FINDINGS=true
+fi
+
+if [ $AUDIT_EXIT_CODE -eq 0 ]; then
+  print_success "Dependency audit passed (no high/critical vulnerabilities)"
+  if [ "$AUDIT_HAS_FINDINGS" = true ]; then
+    print_warning "Audit reported findings below the ${AUDIT_LEVEL} threshold"
+    echo ""
+    echo "Audit output (full):"
+    echo ""
+    echo "$AUDIT_OUTPUT"
+    echo ""
+  fi
+else
+  AUDIT_FAILED=true
+  print_failure "Dependency audit failed"
+  echo ""
+  echo "Audit output (full):"
+  echo ""
+  echo "$AUDIT_OUTPUT"
+  echo ""
+  print_troubleshooting "  1. Run: pnpm audit --audit-level=${AUDIT_LEVEL}
+  2. Update vulnerable dependencies: pnpm up --latest
+  3. If a fix is unavailable, document risk in docs/40-security/risk-register.md"
+fi
+
+# Step 6: Secret scanning
+print_section "Step 6: Secret Scanning (basic local scan)"
 
 print_info "Running lightweight pattern-based scan for common secrets..."
 
@@ -323,8 +369,8 @@ else
   print_success "No secrets detected by basic scan"
 fi
 
-# Step 6: Registry validation
-print_section "Step 6: Registry Validation (registry:validate)"
+# Step 7: Registry validation
+print_section "Step 7: Registry Validation (registry:validate)"
 
 REGISTRY_OUTPUT=$(pnpm registry:validate 2>&1)
 REGISTRY_EXIT_CODE=$?
@@ -352,8 +398,8 @@ else
      - NEXT_PUBLIC_DOCS_GITHUB_URL"
 fi
 
-# Step 7: Next.js build
-print_section "Step 7: Next.js Build (build)"
+# Step 8: Next.js build
+print_section "Step 8: Next.js Build (build)"
 
 print_info "Starting production build with performance tracking..."
 echo ""
@@ -526,8 +572,8 @@ if [ $BUILD_EXIT_CODE -eq 0 ] && [ "$SKIP_PERFORMANCE" = false ]; then
   fi
 fi
 
-# Step 8: Unit tests
-print_section "Step 8: Unit Tests (src/lib/__tests__/)"
+# Step 9: Unit tests
+print_section "Step 9: Unit Tests (src/lib/__tests__/)"
 
 if [ "$SKIP_TESTS" = true ]; then
   print_warning "Unit tests skipped (--skip-tests flag)"
@@ -561,12 +607,12 @@ elif [ $BUILD_EXIT_CODE -eq 0 ]; then
   4. View coverage: pnpm test:coverage"
   fi
 else
-  print_section "Step 8: Unit Tests (skipped - build failed)"
+  print_section "Step 9: Unit Tests (skipped - build failed)"
   print_warning "Fix build errors before running tests"
 fi
 
-# Step 9: Link Validation (links:check / Playwright)
-print_section "Step 9: Link Validation (links:check / Playwright)"
+# Step 10: Link Validation (links:check / Playwright)
+print_section "Step 10: Link Validation (links:check / Playwright)"
 
 if [ "$SKIP_TESTS" = true ]; then
   print_warning "Link validation skipped (--skip-tests flag)"
@@ -645,7 +691,7 @@ elif [ $BUILD_EXIT_CODE -eq 0 ]; then
     fi
   fi
 else
-  print_section "Step 9: Link Validation (skipped - build failed)"
+  print_section "Step 10: Link Validation (skipped - build failed)"
   print_warning "Fix build errors before running link validation"
 fi
 
@@ -673,6 +719,14 @@ if [ $FAILURES -eq 0 ]; then
   echo "  3. Commit: git commit -m \"<message>\""
   echo "  4. Push: git push"
   echo "  5. Create PR with closing keyword (e.g., 'Closes #123')"
+
+  if [ "$AUDIT_FAILED" = true ]; then
+    echo ""
+    echo "Audit troubleshooting:"
+    echo "  - Re-run: pnpm audit --audit-level=high"
+    echo "  - Update vulnerable dependencies: pnpm up --latest"
+    echo "  - If no fix exists, document the risk in docs/40-security/risk-register.md"
+  fi
 else
   echo -e "${RED}${BOLD}✗ $FAILURES CHECK(S) FAILED${NC}"
   echo ""

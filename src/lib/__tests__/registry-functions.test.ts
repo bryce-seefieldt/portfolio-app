@@ -202,4 +202,40 @@ describe("registry helpers", () => {
     expect(projects[0].demoUrl).toBeNull();
     expect(projects[0].evidence?.github).toBeNull();
   });
+
+  it("should tolerate missing DOCS_BASE_URL while interpolating other placeholders", async () => {
+    process.env.NEXT_PUBLIC_DOCS_BASE_URL = "";
+    process.env.NEXT_PUBLIC_GITHUB_URL = "https://github.com/acme";
+
+    mockYamlLoad.mockReturnValue([
+      {
+        slug: "portfolio-app",
+        title: "Portfolio App",
+        summary: "A portfolio app with evidence-driven docs.",
+        tags: ["nextjs"],
+        repoUrl: "{GITHUB_URL}/portfolio-app",
+      },
+    ]);
+
+    const registry = await loadRegistryModule();
+    const projects = registry.loadProjectRegistry();
+
+    expect(projects[0].repoUrl).toBe("https://github.com/acme/portfolio-app");
+  });
+
+  it("should return no warnings when evidence is missing", async () => {
+    mockYamlLoad.mockReturnValue([
+      {
+        slug: "portfolio-app",
+        title: "Portfolio App",
+        summary: "A portfolio app with evidence-driven docs.",
+        tags: ["nextjs"],
+      },
+    ]);
+
+    const registry = await loadRegistryModule();
+    const project = registry.loadProjectRegistry()[0];
+
+    expect(registry.validateEvidenceLinks(project)).toEqual([]);
+  });
 });

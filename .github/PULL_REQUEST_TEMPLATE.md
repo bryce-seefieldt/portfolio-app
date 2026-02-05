@@ -10,7 +10,7 @@
 ## Evidence
 
 - [ ] Local verify ran (recommended): `pnpm verify`
-  - Or individually: `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, `pnpm build`
+  - Or individually: `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, `pnpm audit`, `pnpm build`
 - Links/screenshots (optional):
 
 ## Risk and impact
