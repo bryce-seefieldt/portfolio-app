@@ -114,12 +114,13 @@ You must never:
 The following GitHub checks are required for merge and must remain stable:
 
 - `ci / quality`
+- `ci / test`
 - `ci / build`
 
 **Do not rename**:
 
 - the GitHub Actions workflow name `ci`
-- the job names `quality` and `build` (or their displayed names)
+- the job names `quality`, `test`, and `build` (or their displayed names)
 
 If a change would rename or re-scope these checks, you must:
 
@@ -1129,6 +1130,7 @@ Symptoms:
 - merges blocked or unexpectedly allowed
   Mitigation:
 - ensure workflow name `ci` and jobs `quality`/`build` are stable
+- ensure workflow name `ci` and jobs `quality`/`test`/`build` are stable
 - run CI on PR and `main`
 - update GitHub ruleset required checks if a deliberate change is made (requires governance documentation)
 
@@ -1152,7 +1154,7 @@ Every PR must include:
 - **Rationale**: why
 - **Evidence**:
   - local: `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, `pnpm build`
-  - CI: confirm `ci / quality` and `ci / build` pass
+  - CI: confirm `ci / quality`, `ci / test`, and `ci / build` pass
 - **Security note**: “No secrets added; no sensitive endpoints introduced.”
 - **Documentation impact**: list any Documentation App updates needed
 
@@ -1172,7 +1174,7 @@ Do not change or introduce the following without an explicit request and documen
 - Analytics/telemetry
 - Large UI frameworks or component libraries
 - Significant URL structure changes (routes/slugs)
-- Renaming required CI checks (`ci / quality`, `ci / build`)
+- Renaming required CI checks (`ci / quality`, `ci / test`, `ci / build`)
 - Removing CodeQL or Dependabot baselines
 
 ---
