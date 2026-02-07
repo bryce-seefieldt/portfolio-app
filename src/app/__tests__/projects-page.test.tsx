@@ -23,8 +23,8 @@ async function loadPage(options: {
     getFeaturedProjects: () => options.featured,
     PROJECTS: options.projects,
   }));
-  const module = await import("../projects/page");
-  return module.default;
+  const pageModule = await import("../projects/page");
+  return pageModule.default;
 }
 
 // RATIONALE: Projects page must show featured and full registry lists.

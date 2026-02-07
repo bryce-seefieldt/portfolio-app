@@ -5,8 +5,8 @@ async function loadRobots(siteUrl: string | null) {
   vi.doMock("@/lib/config", () => ({
     SITE_URL: siteUrl,
   }));
-  const module = await import("../robots");
-  return module.default;
+  const pageModule = await import("../robots");
+  return pageModule.default;
 }
 
 // RATIONALE: robots.txt must point crawlers to the correct sitemap.

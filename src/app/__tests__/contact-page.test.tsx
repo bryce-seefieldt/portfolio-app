@@ -11,8 +11,8 @@ async function loadPage(config: Record<string, string | null>) {
     LINKEDIN_URL: config.LINKEDIN_URL,
     mailtoUrl: (email: string, subject: string) => `mailto:${email}?subject=${subject}`,
   }));
-  const module = await import("../contact/page");
-  return module.default;
+  const pageModule = await import("../contact/page");
+  return pageModule.default;
 }
 
 // RATIONALE: Contact page must render static contact methods or clear setup guidance.

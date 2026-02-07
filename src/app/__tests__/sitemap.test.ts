@@ -8,8 +8,8 @@ async function loadSitemap(siteUrl: string | null) {
   vi.doMock("@/data/projects", () => ({
     PROJECTS: [{ slug: "portfolio-app" }, { slug: "portfolio-docs" }],
   }));
-  const module = await import("../sitemap");
-  return module.default;
+  const pageModule = await import("../sitemap");
+  return pageModule.default;
 }
 
 // RATIONALE: Sitemap must include core routes and all project slugs.

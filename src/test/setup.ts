@@ -18,7 +18,9 @@ if (!globalThis.IntersectionObserver) {
     readonly root = null;
     readonly rootMargin = "0px";
     readonly thresholds = [0];
-    constructor(_callback: IntersectionObserverCallback) {}
+    constructor(_callback: IntersectionObserverCallback) {
+      void _callback;
+    }
     observe() {}
     unobserve() {}
     disconnect() {}
