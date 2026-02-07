@@ -1,7 +1,9 @@
 // src/lib/__tests__/config.test.ts
 
-/* 
+/*
 Unit tests for link construction helpers (docsUrl, githubUrl, docsGithubUrl, mailtoUrl).
+RATIONALE: Link helpers enforce evidence-first navigation without hardcoding environment-specific URLs.
+FAILURE MODE: Misconstructed links break reviewer paths and evidence discovery.
 */
 import { describe, it, expect } from "vitest";
 import {

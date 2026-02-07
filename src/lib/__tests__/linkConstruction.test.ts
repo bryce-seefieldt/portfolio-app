@@ -1,6 +1,8 @@
 // src/lib/__tests__/linkConstruction.test.ts
 //
 // Unit tests for link construction helpers (docsUrl, githubUrl, docsGithubUrl, mailtoUrl).
+// RATIONALE: Evidence links must be deterministic across local, preview, and production environments.
+// FAILURE MODE: A broken helper leaks bad URLs into the UI and evidence registry.
 
 import { describe, it, expect } from "vitest";
 import {

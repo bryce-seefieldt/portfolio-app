@@ -29,6 +29,7 @@ Enterprise-grade documentation is hosted separately to preserve a clean product 
 
 - Docs base URL is configured via: `NEXT_PUBLIC_DOCS_BASE_URL`
 - The code constructs evidence links through: `src/lib/config.ts`
+- Code commentary standard: https://bns-portfolio-docs.vercel.app/docs/engineering/commentary-standard (examples: https://bns-portfolio-docs.vercel.app/docs/reference/commentary-examples)
 
 ## Tech stack
 

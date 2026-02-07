@@ -19,6 +19,8 @@ vi.mock("js-yaml", () => ({
 }));
 
 describe("registry CLI", () => {
+  // RATIONALE: CLI output drives CI verification and human triage for registry integrity.
+  // FAILURE MODE: Non-zero exit codes must surface on validation errors.
   const mockProject: Project = {
     slug: "portfolio-app",
     title: "Portfolio App",
@@ -75,6 +77,7 @@ describe("registry CLI", () => {
   });
 
   it("should return non-zero status on failure", async () => {
+    // FAILURE MODE: Load failures must fail CI and print diagnostics.
     const registry = await import("../registry");
 
     const status = registry.runRegistryCli("", {
@@ -97,6 +100,7 @@ describe("registry CLI", () => {
   });
 
   it("should report error messages for Error instances", async () => {
+    // ASSUMPTION: Errors are surfaced as human-readable messages for CI logs.
     const registry = await import("../registry");
 
     const status = registry.runRegistryCli("", {
