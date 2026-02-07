@@ -7,7 +7,10 @@ import { ThemeToggle } from "../ThemeToggle";
 // RATIONALE: Theme toggling must persist preference and update document class.
 describe("ThemeToggle", () => {
   it("should toggle theme and persist to localStorage", async () => {
-    vi.stubGlobal("matchMedia", vi.fn(() => ({ matches: false })));
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => ({ matches: false })),
+    );
 
     render(<ThemeToggle />);
 
@@ -23,7 +26,10 @@ describe("ThemeToggle", () => {
   });
 
   it("should initialize from saved light theme", async () => {
-    vi.stubGlobal("matchMedia", vi.fn(() => ({ matches: true })));
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => ({ matches: true })),
+    );
     localStorage.setItem("theme", "light");
 
     render(<ThemeToggle />);
@@ -36,7 +42,10 @@ describe("ThemeToggle", () => {
   });
 
   it("should toggle from dark to light", async () => {
-    vi.stubGlobal("matchMedia", vi.fn(() => ({ matches: false })));
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => ({ matches: false })),
+    );
     localStorage.setItem("theme", "dark");
 
     render(<ThemeToggle />);

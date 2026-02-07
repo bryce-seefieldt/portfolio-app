@@ -91,7 +91,7 @@ vi.mock("@/data/projects", () => ({
                 dossierPath: "projects/demo-project",
               },
             }
-        : undefined,
+          : undefined,
 }));
 
 import ProjectDetailPage from "../projects/[slug]/page";

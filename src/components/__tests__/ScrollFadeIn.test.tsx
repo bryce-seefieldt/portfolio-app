@@ -30,7 +30,10 @@ describe("ScrollFadeIn", () => {
         return instance;
       }),
     );
-    vi.stubGlobal("matchMedia", vi.fn(() => ({ matches: false })));
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => ({ matches: false })),
+    );
 
     const { container } = render(
       <ScrollFadeIn>
@@ -50,7 +53,10 @@ describe("ScrollFadeIn", () => {
   it("should render visible immediately for reduced motion", () => {
     const observerSpy = vi.fn();
     vi.stubGlobal("IntersectionObserver", observerSpy);
-    vi.stubGlobal("matchMedia", vi.fn(() => ({ matches: true })));
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => ({ matches: true })),
+    );
 
     const { container } = render(
       <ScrollFadeIn>

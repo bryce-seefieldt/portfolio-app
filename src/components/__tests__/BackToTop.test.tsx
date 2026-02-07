@@ -29,7 +29,10 @@ describe("BackToTop", () => {
         return instance;
       }),
     );
-    vi.stubGlobal("matchMedia", vi.fn(() => ({ matches: false })));
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => ({ matches: false })),
+    );
     window.scrollTo = vi.fn();
 
     render(<BackToTop />);
@@ -56,7 +59,10 @@ describe("BackToTop", () => {
         return instance;
       }),
     );
-    vi.stubGlobal("matchMedia", vi.fn(() => ({ matches: true })));
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => ({ matches: true })),
+    );
     window.scrollTo = vi.fn();
 
     render(<BackToTop />);
