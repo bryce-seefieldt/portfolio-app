@@ -1,6 +1,8 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 import { log, logError } from "../observability";
 
+// OPS: Structured logs are the primary audit trail in serverless environments.
+// ASSUMPTION: Timestamp and environment fields are required for downstream triage.
 describe("observability", () => {
   const originalEnv = process.env.VERCEL_ENV;
 

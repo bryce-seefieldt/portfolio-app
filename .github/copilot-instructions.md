@@ -69,6 +69,7 @@ Before proposing changes, review and internalize the existing architecture and c
 - Use the import alias `@/*` for internal imports (configured in `tsconfig.json`).
 - Keep route pages simple and reviewer-focused. Deep technical details belong in the Documentation App.
 - Prefer small, composable components under `src/components/`.
+- Follow the code commentary standard: https://bns-portfolio-docs.vercel.app/docs/engineering/commentary-standard (examples: https://bns-portfolio-docs.vercel.app/docs/reference/commentary-examples).
 
 **Phase status:** Phase 3 Stages 3.1–3.3 are complete (registry, evidence components, unit/E2E coverage integrated into CI); Stage 3.4 documentation alignment is next.
 

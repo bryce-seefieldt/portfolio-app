@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
+// RATIONALE: Config parsing hardens public-safe URL inputs and prevents malformed links.
+// FAILURE MODE: Invalid base URLs propagate into evidence links and metadata.
 describe("config variants", () => {
   it("should fall back to null for invalid site URL", async () => {
     process.env.NEXT_PUBLIC_SITE_URL = "not-a-url";
@@ -11,6 +13,7 @@ describe("config variants", () => {
   });
 
   it("should normalize trailing slashes in configured URLs", async () => {
+    // ASSUMPTION: Normalized URLs avoid double-slash regressions in link helpers.
     process.env.NEXT_PUBLIC_SITE_URL = "https://example.com/";
     process.env.NEXT_PUBLIC_DOCS_BASE_URL = "https://docs.example.com/";
     vi.resetModules();

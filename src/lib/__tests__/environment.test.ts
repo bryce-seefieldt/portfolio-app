@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import * as config from "../config";
 import * as environment from "../environment";
 
+// RATIONALE: The environment module is a stable facade; re-exports must remain consistent.
 describe("environment re-exports", () => {
   it("should re-export config constants and helpers", () => {
     expect(environment.ENVIRONMENT).toBe(config.ENVIRONMENT);

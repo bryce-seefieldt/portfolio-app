@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
+// RATIONALE: Structured data improves SEO and must remain stable across environments.
+// FAILURE MODE: Missing schema links reduce search visibility and rich results.
 describe("structured data", () => {
   it("should build person schema with sameAs links when configured", async () => {
     process.env.NEXT_PUBLIC_SITE_URL = "https://example.com";
@@ -44,6 +46,7 @@ describe("structured data", () => {
   });
 
   it("should fall back to example.com when SITE_URL is missing", async () => {
+    // ASSUMPTION: Fallback URL avoids generating invalid schema when env vars are absent.
     process.env.NEXT_PUBLIC_SITE_URL = "";
     vi.resetModules();
 

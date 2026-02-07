@@ -3,6 +3,7 @@ import { BASE_SECURITY_HEADERS, buildCsp } from "@/lib/security/headers";
 import { generateCsrfToken, validateCsrf } from "@/lib/security/csrf";
 import { rateLimit } from "@/lib/security/ratelimit";
 
+// SECURITY: These tests harden the public surface by enforcing headers, CSRF, and rate limits.
 describe("security headers", () => {
   it("should include core security headers", () => {
     const headerMap = new Map(BASE_SECURITY_HEADERS);
@@ -26,6 +27,7 @@ describe("security headers", () => {
 });
 
 describe("csrf utilities", () => {
+  // SECURITY: CSRF validation must fail closed when tokens are missing or mismatched.
   it("should generate a unique token", () => {
     const first = generateCsrfToken();
     const second = generateCsrfToken();
@@ -62,6 +64,7 @@ describe("csrf utilities", () => {
 });
 
 describe("rate limiter", () => {
+  // SECURITY: Rate limits reduce abuse risk and protect shared resources.
   it("should enforce limits and reset after window", () => {
     vi.useFakeTimers();
     const now = new Date("2026-02-05T00:00:00.000Z");

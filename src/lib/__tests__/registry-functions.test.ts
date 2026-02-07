@@ -18,6 +18,8 @@ vi.mock("js-yaml", () => ({
 }));
 
 describe("registry helpers", () => {
+  // RATIONALE: Registry helpers normalize data so UI and validation share the same contract.
+  // FAILURE MODE: Bad interpolation or caching creates inconsistent evidence links.
   beforeEach(() => {
     mockExistsSync.mockReset().mockReturnValue(true);
     mockReadFileSync.mockReset().mockReturnValue("fake");
@@ -150,6 +152,7 @@ describe("registry helpers", () => {
   });
 
   it("should generate evidence links and validation warnings", async () => {
+    // SECURITY: Evidence paths must follow safe, predictable patterns to avoid link injection.
     mockYamlLoad.mockReturnValue([
       {
         slug: "portfolio-app",
@@ -179,6 +182,7 @@ describe("registry helpers", () => {
   });
 
   it("should null out unresolved placeholders", async () => {
+    // FAILURE MODE: Empty env vars should not leak placeholder strings into rendered links.
     process.env.NEXT_PUBLIC_GITHUB_URL = "";
     process.env.NEXT_PUBLIC_DOCS_GITHUB_URL = "";
     process.env.NEXT_PUBLIC_SITE_URL = "";

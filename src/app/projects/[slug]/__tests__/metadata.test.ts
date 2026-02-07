@@ -1,19 +1,21 @@
 // src/app/projects/[slug]/__tests__/metadata.test.ts
 //
 // Unit tests for project page metadata generation.
-// Verifies that generateMetadata returns correct structure with project details,
-// Open Graph metadata, and Twitter Card configuration.
+// RATIONALE: Metadata is the primary SEO/social contract for project pages; regressions are visible externally.
+// FAILURE MODE: Missing or malformed metadata degrades previews and discovery.
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import type { Metadata } from "next";
 import type { Project } from "@/lib/registry";
 import { getProjectBySlug } from "@/data/projects";
 
+// ASSUMPTION: Metadata behavior is deterministic given a project registry entry.
 // Mock the data/projects module
 vi.mock("@/data/projects", () => ({
   getProjectBySlug: vi.fn(),
 }));
 
+// ASSUMPTION: SITE_URL is a stable base for canonical/OG URLs in tests.
 // Mock the config module
 vi.mock("@/lib/config", () => ({
   SITE_URL: "https://example.com",
@@ -24,7 +26,7 @@ import * as ProjectModule from "@/app/projects/[slug]/page";
 
 /**
  * Helper to create a valid mock Project object for testing.
- * Provides sensible defaults for required fields.
+ * RATIONALE: Centralizes required fields to reduce test noise and keep intent focused on metadata assertions.
  */
 function createMockProject(overrides: Partial<Project> = {}): Project {
   const defaults: Project = {
@@ -53,6 +55,7 @@ describe("Project Page Metadata", () => {
     });
 
     it("should return fallback metadata when project not found", async () => {
+      // FAILURE MODE: Unregistered slugs must produce safe, user-friendly metadata.
       const mockGetProjectBySlug = vi.mocked(getProjectBySlug);
       mockGetProjectBySlug.mockReturnValue(undefined);
 
@@ -96,6 +99,7 @@ describe("Project Page Metadata", () => {
     });
 
     describe("Open Graph metadata", () => {
+      // RATIONALE: Social previews depend on Open Graph fields and must be consistent across projects.
       it("should include Open Graph object", async () => {
         const mockProject = createMockProject({
           title: "Portfolio App",
@@ -187,6 +191,7 @@ describe("Project Page Metadata", () => {
     });
 
     describe("Twitter Card metadata", () => {
+      // RATIONALE: Twitter cards mirror Open Graph expectations; missing fields cause degraded previews.
       it("should include twitter object", async () => {
         const mockProject = createMockProject();
 
