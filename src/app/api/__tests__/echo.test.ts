@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("@/lib/security/ratelimit", () => ({
-  rateLimit: vi.fn(() => ({ ok: true })),
+  rateLimit: vi.fn(() => ({ ok: true, remaining: 1, resetAt: Date.now() + 1000 })),
 }));
 
 vi.mock("@/lib/security/csrf", () => ({
@@ -15,7 +15,7 @@ import { validateCsrf } from "@/lib/security/csrf";
 // SECURITY: Echo endpoint must enforce rate limits and CSRF before reflecting input.
 describe("/api/echo", () => {
   it("should reject when rate limit is exceeded", async () => {
-    vi.mocked(rateLimit).mockReturnValueOnce({ ok: false });
+    vi.mocked(rateLimit).mockReturnValueOnce({ ok: false, remaining: 0, resetAt: 0 });
 
     const response = await POST(
       new Request("https://example.test/api/echo", {

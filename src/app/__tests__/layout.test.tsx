@@ -23,12 +23,19 @@ vi.mock("@/components/BackToTop", () => ({
   BackToTop: () => <div>BackToTop</div>,
 }));
 
-const configValues = vi.hoisted(() => ({
-  DOCS_BASE_URL: "https://docs.example.com",
-  GITHUB_URL: "https://github.com/example",
-  LINKEDIN_URL: "https://linkedin.example.com",
-  SITE_URL: "https://example.com",
-}));
+const configValues = vi.hoisted(
+  (): {
+    DOCS_BASE_URL: string;
+    GITHUB_URL: string | null;
+    LINKEDIN_URL: string | null;
+    SITE_URL: string;
+  } => ({
+    DOCS_BASE_URL: "https://docs.example.com",
+    GITHUB_URL: "https://github.com/example",
+    LINKEDIN_URL: "https://linkedin.example.com",
+    SITE_URL: "https://example.com",
+  }),
+);
 
 vi.mock("@/lib/config", () => ({
   get DOCS_BASE_URL() {

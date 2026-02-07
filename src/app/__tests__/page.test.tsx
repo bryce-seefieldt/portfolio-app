@@ -11,7 +11,11 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-const configValues = {
+const configValues: {
+  DOCS_BASE_URL: string;
+  GITHUB_URL: string | null;
+  LINKEDIN_URL: string | null;
+} = {
   DOCS_BASE_URL: "https://docs.example.com",
   GITHUB_URL: "https://github.com/example",
   LINKEDIN_URL: "https://linkedin.example.com",

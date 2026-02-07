@@ -7,6 +7,9 @@ import { BackToTop } from "../BackToTop";
 const observeMock = vi.fn();
 
 class MockIntersectionObserver {
+  root: Element | Document | null = null;
+  rootMargin = "0px";
+  thresholds = [0];
   constructor(private callback: IntersectionObserverCallback) {}
   observe = observeMock;
   unobserve = vi.fn();
@@ -14,7 +17,10 @@ class MockIntersectionObserver {
   takeRecords = vi.fn();
 
   trigger(isIntersecting: boolean) {
-    this.callback([{ isIntersecting } as IntersectionObserverEntry], this);
+    this.callback(
+      [{ isIntersecting } as IntersectionObserverEntry],
+      this as unknown as IntersectionObserver,
+    );
   }
 }
 

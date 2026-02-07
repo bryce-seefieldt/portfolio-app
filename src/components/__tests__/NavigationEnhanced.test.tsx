@@ -16,7 +16,10 @@ vi.mock("../ThemeToggle", () => ({
   ThemeToggle: () => <div>Theme Toggle</div>,
 }));
 
-const configValues = {
+const configValues: {
+  DOCS_BASE_URL: string;
+  GITHUB_URL: string | null;
+} = {
   DOCS_BASE_URL: "https://docs.example.com",
   GITHUB_URL: "https://github.com/example",
 };
