@@ -71,7 +71,7 @@ Before proposing changes, review and internalize the existing architecture and c
 - Prefer small, composable components under `src/components/`.
 - Follow the code commentary standard: https://bns-portfolio-docs.vercel.app/docs/engineering/commentary-standard (examples: https://bns-portfolio-docs.vercel.app/docs/reference/commentary-examples).
 
-**Phase status:** Phase 3 Stages 3.1–3.3 are complete (registry, evidence components, unit/E2E coverage integrated into CI); Stage 3.4 documentation alignment is next.
+**Phase status:** Phases 1-7 are complete. Current work focuses on incremental hardening, content quality, and evidence freshness while preserving established CI and governance contracts.
 
 ---
 
@@ -109,18 +109,21 @@ You must never:
 
 ## 4) Delivery governance and CI gates
 
-### 4.1 Required checks (do not break these)
+### 4.1 CI checks and naming stability (do not break these)
 
-The following GitHub checks are required for merge and must remain stable:
+The CI pipeline checks below are part of the delivery contract and must remain stable:
 
 - `ci / quality`
 - `ci / test`
+- `ci / link-validation`
 - `ci / build`
+
+`secrets-scan` is a PR-only gate; keep it intact unless governance documentation and workflow behavior are updated together.
 
 **Do not rename**:
 
 - the GitHub Actions workflow name `ci`
-- the job names `quality`, `test`, and `build` (or their displayed names)
+- the job names `quality`, `test`, `link-validation`, and `build` (or their displayed names)
 
 If a change would rename or re-scope these checks, you must:
 
@@ -304,6 +307,7 @@ Rulesets enforce at minimum:
 
 - PR required before merge
 - required checks: `ci / quality` and `ci / build`
+- pipeline prerequisites: `ci / test` and `ci / link-validation`
 - block force-push
 - prevent deletion
 - require conversation resolution (recommended)
