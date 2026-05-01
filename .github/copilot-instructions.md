@@ -146,6 +146,7 @@ When a Dependabot PR causes CI job failures (e.g., `ci / quality`, `ci / build`,
 [`docs/50-operations/runbooks/rbk-portfolio-ci-triage.md`](https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-ci-triage)
 
 Key steps:
+
 - Identify root cause in GitHub Actions logs (e.g., `ERR_PNPM_BROKEN_LOCKFILE`, action incompatibility)
 - Roll back the failing action to its prior pinned SHA in `.github/workflows/ci.yml`
 - Add a temporary ignore rule in `.github/dependabot.yml` with an expiry date and tracking issue
