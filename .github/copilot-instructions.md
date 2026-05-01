@@ -138,6 +138,21 @@ CI installs must use:
 
 Lockfile changes must be committed intentionally and reviewed in PRs.
 
+### 4.2.1 Dependabot PR CI failures
+
+When a Dependabot PR causes CI job failures (e.g., `ci / quality`, `ci / build`, `ci / test`), treat it as a stop-the-line event. Do not merge with failing checks.
+
+**Remediation procedure:** Follow the **Temporary Exception Policy (Dependabot)** section in the Portfolio CI Triage runbook in the Documentation App:
+[`docs/50-operations/runbooks/rbk-portfolio-ci-triage.md`](https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-ci-triage)
+
+Key steps:
+- Identify root cause in GitHub Actions logs (e.g., `ERR_PNPM_BROKEN_LOCKFILE`, action incompatibility)
+- Roll back the failing action to its prior pinned SHA in `.github/workflows/ci.yml`
+- Add a temporary ignore rule in `.github/dependabot.yml` with an expiry date and tracking issue
+- Document the exception with exit criteria; do not leave open-ended ignores
+
+**Note:** The companion portfolio-docs repo owns the canonical exception policy and tracking. Cross-reference any exception opened in this repo with the portfolio-docs tracking issue.
+
 ### 4.3 Local quality contract (must stay valid)
 
 These commands must continue to work and be referenced in PR “Evidence”:
