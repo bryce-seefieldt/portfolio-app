@@ -323,7 +323,7 @@ The Portfolio App uses a **staging-first deployment workflow** to ensure changes
 | ----------- | ----------- | ------------------------------------------ | ----------------------------------------- |
 | Preview     | PR branches | Auto-generated (`*.vercel.app`)            | PR review and feature validation          |
 | Staging     | `staging`   | `https://staging-bns-portfolio.vercel.app` | Pre-production validation and smoke tests |
-| Production  | `main`      | `https://bryce.seefieldt.ca`         | Live public site                          |
+| Production  | `main`      | `https://bryce.seefieldt.ca`               | Live public site                          |
 
 ### Local Development → Staging → Production Workflow
 
