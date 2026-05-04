@@ -667,12 +667,16 @@ elif [ $BUILD_EXIT_CODE -eq 0 ]; then
           print_troubleshooting "  1. Review failures above (see playwright-report for details)
   2. Run tests in UI mode for debugging: pnpm playwright test --ui
   3. Run tests in debug mode: pnpm playwright test --debug
-  4. Link validation file: e2e/evidence-links.spec.ts (via links:check)
+  4. Test files (all three run via pnpm links:check → pnpm test:e2e):
+     - tests/e2e/evidence-links.spec.ts (evidence UI, badges, viewports, dark mode, a11y)
+     - tests/e2e/routes.spec.ts (route coverage, 404s, health/robots/sitemap, CSP, CSRF, rate-limit)
+     - tests/e2e/smoke.spec.ts (smoke renders + docs link presence)
   5. Tests verify:
-     - Routes render correctly
+     - All core routes render (/, /cv, /projects, /contact, /projects/[slug])
      - Evidence links resolve to docs and GitHub targets
      - Badges render correctly
      - Responsive layouts work (mobile/tablet/desktop)
+     - Security headers (CSP nonce), CSRF tokens, and rate-limiting behaviour
   6. View detailed HTML report: npx playwright show-report
   7. Common issues:
      - Missing or invalid env vars

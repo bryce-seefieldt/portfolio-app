@@ -92,19 +92,19 @@ See `.env.example` for the public-safe configuration contract.
 
 All variables prefixed with `NEXT_PUBLIC_` are exposed to the browser. Do not place secrets, tokens, private endpoints, or sensitive values in `NEXT_PUBLIC_*`.
 
-## Governance (Implemented)
+## Governance
 
 Phase 1–3 governance is enforced:
 
 - Required CI checks with stable names:
   - `ci / quality` (lint, format:check, typecheck)
-  - `ci / link-validation` (registry validation + evidence link checks; Stage 3.5)
+  - `ci / link-validation` (registry validation + full Playwright E2E suite: routes, evidence links, security headers, CSRF, rate-limiting)
   - `ci / build` (Next.js build; depends on quality and link-validation)
 - Deterministic installs in CI: `pnpm install --frozen-lockfile`
 - Supply chain and static analysis: CodeQL (JS/TS) and Dependabot (weekly; majors excluded)
 - Audit posture: CI blocks on high/critical advisories; low/medium are logged and require a ticket or risk register entry if they persist
 
-## Security (Stage 4.4)
+## Security
 
 - OWASP security headers and CSP configured in [next.config.ts](next.config.ts) (DENY framing, nosniff, strict referrer policy, restricted permissions, CSP with analytics exception)
 - CSP is enforced with per-request nonces (proxy) and applied to inline scripts
