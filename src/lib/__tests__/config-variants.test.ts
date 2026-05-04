@@ -86,4 +86,14 @@ describe("config variants", () => {
     expect(config.isStaging()).toBe(false);
     expect(config.isDevelopment()).toBe(false);
   });
+
+  it("should canonicalize preview docs origin in production", async () => {
+    process.env.VERCEL_ENV = "production";
+    process.env.NEXT_PUBLIC_SITE_URL = "https://bryce.seefieldt.ca";
+    process.env.NEXT_PUBLIC_DOCS_BASE_URL = "https://bns-portfolio-docs.vercel.app";
+    vi.resetModules();
+
+    const config = await import("../config");
+    expect(config.DOCS_BASE_URL).toBe("https://bryce.seefieldt.ca/docs");
+  });
 });
