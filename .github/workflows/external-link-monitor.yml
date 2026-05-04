@@ -1,0 +1,42 @@
+name: external-link-monitor
+
+on:
+  schedule:
+    - cron: "20 9 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  NEXT_PUBLIC_DOCS_BASE_URL: https://bns-portfolio-docs.vercel.app
+  NEXT_PUBLIC_GITHUB_URL: https://github.com/bryce-seefieldt/portfolio-app
+  NEXT_PUBLIC_DOCS_GITHUB_URL: https://github.com/bryce-seefieldt/portfolio-docs
+  NEXT_PUBLIC_SITE_URL: https://bns-portfolio.vercel.app
+
+jobs:
+  check-external-evidence-links:
+    name: check-external-evidence-links
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@903f9c1a6ebcba6cf41d87230be49611ac97822e # v6.0.3
+        with:
+          version: "10.0.0"
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install deps (frozen)
+        run: pnpm install --frozen-lockfile
+
+      - name: Check external evidence links (live)
+        run: pnpm links:check:external
