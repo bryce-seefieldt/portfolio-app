@@ -20,8 +20,8 @@ The design goal is for reviewers to evaluate the portfolio like a real service: 
 
 ## Reviewer quickstart
 
-- Reviewer guide: https://bns-portfolio-docs.vercel.app/docs/portfolio/reviewer-guide
-- Portfolio App dossier: https://bns-portfolio-docs.vercel.app/docs/projects/portfolio-app/
+- Reviewer guide: https://bryce.seefieldt.ca/docs/portfolio/reviewer-guide
+- Portfolio App dossier: https://bryce.seefieldt.ca/docs/projects/portfolio-app/
 
 ## Documentation App (Evidence Engine)
 
@@ -29,7 +29,7 @@ Enterprise-grade documentation is hosted separately to preserve a clean product 
 
 - Docs base URL is configured via: `NEXT_PUBLIC_DOCS_BASE_URL`
 - The code constructs evidence links through: `src/lib/config.ts`
-- Code commentary standard: https://bns-portfolio-docs.vercel.app/docs/engineering/commentary-standard (examples: https://bns-portfolio-docs.vercel.app/docs/reference/commentary-examples)
+- Code commentary standard: https://bryce.seefieldt.ca/docs/engineering/commentary-standard (examples: https://bryce.seefieldt.ca/docs/reference/commentary-examples)
 
 ## Tech stack
 
@@ -113,8 +113,8 @@ Phase 1–3 governance is enforced:
 - CSP is enforced with per-request nonces (proxy) and applied to inline scripts
 - Mutation endpoints require Zod validation, CSRF checks, and rate limiting
 - Public-safe environment contract documented in [.env.example](.env.example); all `NEXT_PUBLIC_*` values are client-visible
-- Threat model and security posture documented in [docs/60-projects/portfolio-app/04-security.md](https://bns-portfolio-docs.vercel.app/docs/60-projects/portfolio-app/04-security.md) and [docs/40-security/threat-models/portfolio-app-threat-model-v2.md](https://bns-portfolio-docs.vercel.app/docs/40-security/threat-models/portfolio-app-threat-model-v2.md)
-- Dependency vulnerability response handled via [docs/50-operations/runbooks/rbk-portfolio-dependency-vulnerability.md](https://bns-portfolio-docs.vercel.app/docs/50-operations/runbooks/rbk-portfolio-dependency-vulnerability.md); secrets incidents via [docs/50-operations/runbooks/rbk-portfolio-secrets-incident.md](https://bns-portfolio-docs.vercel.app/docs/50-operations/runbooks/rbk-portfolio-secrets-incident.md)
+- Threat model and security posture documented in [docs/60-projects/portfolio-app/04-security.md](https://bryce.seefieldt.ca/docs/60-projects/portfolio-app/04-security.md) and [docs/40-security/threat-models/portfolio-app-threat-model-v2.md](https://bryce.seefieldt.ca/docs/40-security/threat-models/portfolio-app-threat-model-v2.md)
+- Dependency vulnerability response handled via [docs/50-operations/runbooks/rbk-portfolio-dependency-vulnerability.md](https://bryce.seefieldt.ca/docs/50-operations/runbooks/rbk-portfolio-dependency-vulnerability.md); secrets incidents via [docs/50-operations/runbooks/rbk-portfolio-secrets-incident.md](https://bryce.seefieldt.ca/docs/50-operations/runbooks/rbk-portfolio-secrets-incident.md)
 
 ### Local quality contract
 
@@ -323,7 +323,7 @@ The Portfolio App uses a **staging-first deployment workflow** to ensure changes
 | ----------- | ----------- | ------------------------------------------ | ----------------------------------------- |
 | Preview     | PR branches | Auto-generated (`*.vercel.app`)            | PR review and feature validation          |
 | Staging     | `staging`   | `https://staging-bns-portfolio.vercel.app` | Pre-production validation and smoke tests |
-| Production  | `main`      | `https://bns-portfolio.vercel.app`         | Live public site                          |
+| Production  | `main`      | `https://bryce.seefieldt.ca`         | Live public site                          |
 
 ### Local Development → Staging → Production Workflow
 
