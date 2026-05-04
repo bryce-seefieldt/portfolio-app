@@ -521,7 +521,7 @@ if [ $BUILD_EXIT_CODE -eq 0 ] && [ "$SKIP_PERFORMANCE" = false ]; then
   4. Consider code splitting or lazy loading for large components
   
   For detailed guidance, see:
-  https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#bundle-size-regression"
+  https://bryce.seefieldt.ca/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#bundle-size-regression"
       elif (( $(echo "$BUNDLE_SIZE_MB > $BUNDLE_SIZE_WARNING_THRESHOLD" | bc -l) )); then
         print_warning "Bundle size (${BUNDLE_SIZE_MB} MB) exceeds warning threshold (${BUNDLE_SIZE_WARNING_THRESHOLD} MB)"
         print_info "Growth: +$(echo "scale=1; (($BUNDLE_SIZE_MB - $BASELINE_BUNDLE_MB) / $BASELINE_BUNDLE_MB) * 100" | bc)%"
@@ -533,7 +533,7 @@ if [ $BUILD_EXIT_CODE -eq 0 ] && [ "$SKIP_PERFORMANCE" = false ]; then
   3. Check if tree-shaking is working correctly
   
   Documentation:
-  https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#bundle-size-regression"
+  https://bryce.seefieldt.ca/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#bundle-size-regression"
       elif (( $(echo "$BUNDLE_SIZE_MB > $BASELINE_BUNDLE_MB" | bc -l) )); then
         print_success "Bundle size (${BUNDLE_SIZE_MB} MB) within acceptable range (+$(echo "scale=1; $BUNDLE_SIZE_MB - $BASELINE_BUNDLE_MB" | bc) MB)"
       else
@@ -591,7 +591,7 @@ if [ $BUILD_EXIT_CODE -eq 0 ] && [ "$SKIP_PERFORMANCE" = false ]; then
   Expected header: ${BASELINE_CACHE_CONTROL}
   
   Documentation:
-  https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#cache-headers-missing"
+  https://bryce.seefieldt.ca/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#cache-headers-missing"
     elif echo "$CACHE_CONTROL_HEADER" | grep -q "$BASELINE_CACHE_CONTROL"; then
       print_success "Cache-Control header correct: $CACHE_CONTROL_HEADER"
     else
@@ -606,7 +606,7 @@ if [ $BUILD_EXIT_CODE -eq 0 ] && [ "$SKIP_PERFORMANCE" = false ]; then
   3. Update baseline if new caching strategy is intended
   
   Documentation:
-  https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#cache-headers-mismatch"
+  https://bryce.seefieldt.ca/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#cache-headers-mismatch"
     fi
   fi
 fi
@@ -1007,27 +1007,27 @@ if [ $BUILD_EXIT_CODE -eq 0 ] && [ "$SKIP_PERFORMANCE" = false ]; then
   echo "─────────────────────────────────────────────────────────────────"
   echo ""
   echo "  Performance Troubleshooting Guide:"
-  echo -e "  ${BLUE}https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting${NC}"
+  echo -e "  ${BLUE}https://bryce.seefieldt.ca/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting${NC}"
   echo ""
   echo "  Specific Issues:"
   echo "  • Bundle Size Regression:"
-  echo -e "    ${BLUE}https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#bundle-size-regression${NC}"
+  echo -e "    ${BLUE}https://bryce.seefieldt.ca/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#bundle-size-regression${NC}"
   echo "  • Build Time Issues:"
-  echo -e "    ${BLUE}https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#slow-build-time${NC}"
+  echo -e "    ${BLUE}https://bryce.seefieldt.ca/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#slow-build-time${NC}"
   echo "  • Cache Headers:"
-  echo -e "    ${BLUE}https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#cache-headers-missing${NC}"
+  echo -e "    ${BLUE}https://bryce.seefieldt.ca/docs/operations/runbooks/rbk-portfolio-performance-troubleshooting#cache-headers-missing${NC}"
   echo ""
 fi
 
 echo ""
 echo -e "${BLUE}${BOLD}Documentation & References:${NC}"
 echo "  - README: ./README.md"
-echo "  - Testing guide: https://bns-portfolio-docs.vercel.app/docs/reference/testing-guide"
-echo "  - Registry schema: https://bns-portfolio-docs.vercel.app/docs/reference/registry-schema-guide"
-echo "  - ADR-0011 (registry): https://bns-portfolio-docs.vercel.app/docs/architecture/adr/adr-0011-data-driven-project-registry"
+echo "  - Testing guide: https://bryce.seefieldt.ca/docs/reference/testing-guide"
+echo "  - Registry schema: https://bryce.seefieldt.ca/docs/reference/registry-schema-guide"
+echo "  - ADR-0011 (registry): https://bryce.seefieldt.ca/docs/architecture/adr/adr-0011-data-driven-project-registry"
 echo "  - Performance baseline (YAML): ./docs/performance-baseline.yml"
 echo "  - Performance baseline (docs): ./docs/performance-baseline.md"
-echo "  - Performance optimization: https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-performance-optimization"
+echo "  - Performance optimization: https://bryce.seefieldt.ca/docs/operations/runbooks/rbk-portfolio-performance-optimization"
 echo ""
 
 # Exit with failure code if any checks failed

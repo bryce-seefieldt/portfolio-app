@@ -69,7 +69,7 @@ const nextConfig: NextConfig = {
   // Routing: Proxy /docs/* to the separate Docusaurus docs site origin.
   // This lets bryce.seefieldt.ca/docs serve the docs project transparently.
   // Set DOCS_UPSTREAM_URL in Vercel env to the docs project origin
-  // (e.g. https://bns-portfolio-docs.vercel.app).
+  // (e.g. https://bryce.seefieldt.ca/docs or https://bns-portfolio-docs.vercel.app for preview).
   // When not set (local dev without docs), rewrites are skipped gracefully.
   rewrites: async () => {
     const docsUpstream = process.env.DOCS_UPSTREAM_URL;

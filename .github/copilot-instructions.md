@@ -69,7 +69,7 @@ Before proposing changes, review and internalize the existing architecture and c
 - Use the import alias `@/*` for internal imports (configured in `tsconfig.json`).
 - Keep route pages simple and reviewer-focused. Deep technical details belong in the Documentation App.
 - Prefer small, composable components under `src/components/`.
-- Follow the code commentary standard: https://bns-portfolio-docs.vercel.app/docs/engineering/commentary-standard (examples: https://bns-portfolio-docs.vercel.app/docs/reference/commentary-examples).
+- Follow the code commentary standard: https://bryce.seefieldt.ca/docs/engineering/commentary-standard (examples: https://bryce.seefieldt.ca/docs/reference/commentary-examples).
 
 **Phase status:** Phases 1-7 are complete. Current work focuses on incremental hardening, content quality, and evidence freshness while preserving established CI and governance contracts.
 
@@ -143,7 +143,7 @@ Lockfile changes must be committed intentionally and reviewed in PRs.
 When a Dependabot PR causes CI job failures (e.g., `ci / quality`, `ci / build`, `ci / test`), treat it as a stop-the-line event. Do not merge with failing checks.
 
 **Remediation procedure:** Follow the **Temporary Exception Policy (Dependabot)** section in the Portfolio CI Triage runbook in the Documentation App:
-[`docs/50-operations/runbooks/rbk-portfolio-ci-triage.md`](https://bns-portfolio-docs.vercel.app/docs/operations/runbooks/rbk-portfolio-ci-triage)
+[`docs/50-operations/runbooks/rbk-portfolio-ci-triage.md`](https://bryce.seefieldt.ca/docs/operations/runbooks/rbk-portfolio-ci-triage)
 
 Key steps:
 
@@ -311,7 +311,7 @@ When phase work spans both repositories:
 4. Reference docs issue in docs PRs (`Closes #Y`)
 5. Verify both PRs merged before marking phase stage complete
 
-**Reference:** See [Template Usage Guide](https://bns-portfolio-docs.vercel.app/docs/_meta/templates) for full details on all templates.
+**Reference:** See [Template Usage Guide](https://bryce.seefieldt.ca/docs/_meta/templates) for full details on all templates.
 
 ---
 
@@ -366,7 +366,7 @@ Use `NEXT_PUBLIC_DOCS_BASE_URL` to construct links to published docs.
 
 **Examples:**
 
-- ✅ `NEXT_PUBLIC_DOCS_BASE_URL + "docs/portfolio/roadmap"` → `https://bns-portfolio-docs.vercel.app/docs/portfolio/roadmap`
+- ✅ `NEXT_PUBLIC_DOCS_BASE_URL + "docs/portfolio/roadmap"` → `https://bryce.seefieldt.ca/docs/portfolio/roadmap`
 - ✅ `docsUrl("portfolio/architecture")` (use the helper function)
 - ❌ `NEXT_PUBLIC_DOCS_BASE_URL + "docs/00-portfolio/roadmap.md"` (wrong prefix + extension)
 - ❌ `NEXT_PUBLIC_DOCS_BASE_URL + "portfolio.roadmap"` (wrong separator)
@@ -415,10 +415,10 @@ Ensure these `NEXT_PUBLIC_*` variables are defined (checked in CI):
 
 ```typescript
 // .env.example
-NEXT_PUBLIC_DOCS_BASE_URL=https://bns-portfolio-docs.vercel.app/docs/
+NEXT_PUBLIC_DOCS_BASE_URL=https://bryce.seefieldt.ca/docs
 NEXT_PUBLIC_DOCS_GITHUB_URL=https://github.com/bryce-seefieldt/portfolio-docs/
 NEXT_PUBLIC_GITHUB_URL=https://github.com/bryce-seefieldt/portfolio-app
-NEXT_PUBLIC_SITE_URL=https://bns-portfolio.vercel.app/
+NEXT_PUBLIC_SITE_URL=https://bryce.seefieldt.ca/
 ```
 
 ### 6.5 Documentation updates expectation
@@ -1125,10 +1125,10 @@ Do NOT add tests for:
 
 ### 9.9 Test Reference Documentation
 
-- **Comprehensive Testing Guide:** [docs/70-reference/testing-guide.md](https://bns-portfolio-docs.vercel.app/docs/reference/testing-guide)
+- **Comprehensive Testing Guide:** [docs/70-reference/testing-guide.md](https://bryce.seefieldt.ca/docs/reference/testing-guide)
 - **Vitest Documentation:** https://vitest.dev
 - **Playwright Documentation:** https://playwright.dev
-- **Implementation Issue:** [stage-3-3-app-issue.md](https://bns-portfolio-docs.vercel.app/docs/portfolio/roadmap/issues/stage-3-3-app-issue)
+- **Implementation Issue:** [stage-3-3-app-issue.md](https://bryce.seefieldt.ca/docs/portfolio/roadmap/issues/stage-3-3-app-issue)
 
 ---
 
