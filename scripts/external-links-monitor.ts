@@ -179,7 +179,8 @@ async function run(): Promise<number> {
   if (failed.length > 0) {
     console.error("\nFailed URLs:");
     for (const failure of failed) {
-      const detail = failure.error ?? (failure.status ? `HTTP ${failure.status}` : "unknown failure");
+      const detail =
+        failure.error ?? (failure.status ? `HTTP ${failure.status}` : "unknown failure");
       console.error(`- ${failure.url} (${detail})`);
     }
     return 1;
