@@ -28,6 +28,7 @@ The design goal is for reviewers to evaluate the portfolio like a real service: 
 Enterprise-grade documentation is hosted separately to preserve a clean product surface and maintain governance discipline.
 
 - Docs base URL is configured via: `NEXT_PUBLIC_DOCS_BASE_URL`
+- The `/docs/*` path is proxied to the portfolio-docs origin via Vercel edge rewrites in `vercel.json` (no env var required for routing)
 - The code constructs evidence links through: `src/lib/config.ts`
 - Code commentary standard: https://bryce.seefieldt.ca/docs/engineering/commentary-standard (examples: https://bryce.seefieldt.ca/docs/reference/commentary-examples)
 
@@ -42,6 +43,7 @@ Enterprise-grade documentation is hosted separately to preserve a clean product 
   - `src/lib/registry.ts` (YAML-backed registry loader with Zod validation and env interpolation)
   - `src/data/projects.yml` (canonical project registry data)
   - `src/data/projects.ts` (typed export of the validated registry)
+- `vercel.json` — Vercel edge-layer rewrites: proxies `/docs` and `/docs/:path*` to `bns-portfolio-docs.vercel.app`
 
 ## Data-driven project registry (Stage 3.1)
 
