@@ -66,6 +66,20 @@ const nextConfig: NextConfig = {
   // - Environment variables used: VERCEL_ENV, VERCEL_GIT_COMMIT_SHA, BUILD_TIME
   // See: `docs/60-projects/portfolio-app/08-observability.md`
 
+  // Routing: Proxy /docs/* to the separate Docusaurus docs site origin.
+  // This lets bryce.seefieldt.ca/docs serve the docs project transparently.
+  // Set DOCS_UPSTREAM_URL in Vercel env to the docs project origin
+  // (e.g. https://bns-portfolio-docs.vercel.app).
+  // When not set (local dev without docs), rewrites are skipped gracefully.
+  rewrites: async () => {
+    const docsUpstream = process.env.DOCS_UPSTREAM_URL;
+    if (!docsUpstream) return [];
+    return [
+      { source: "/docs", destination: `${docsUpstream}/docs` },
+      { source: "/docs/:path*", destination: `${docsUpstream}/docs/:path*` },
+    ];
+  },
+
   // Caching: Configure HTTP Cache-Control headers
   headers: async () => [
     {
