@@ -63,6 +63,10 @@ Before proposing changes, review and internalize the existing architecture and c
   - global layout + navigation
 - `src/app/page.tsx`
   - evidence-first landing page
+- `vercel.json`
+  - Vercel edge-layer routing: rewrites `/docs` and `/docs/:path*` to the portfolio-docs origin (`bns-portfolio-docs.vercel.app`)
+  - Evaluated at Vercel's edge before Next.js sees the request; takes precedence over Next.js routing for matching paths
+  - **Do not add `/docs` rewrites in `next.config.ts`**: build-time env var dependencies caused an `INFINITE_LOOP_DETECTED` (508) production incident — routing belongs here, not in `rewrites()` in `next.config.ts`
 
 ### 2.2 Conventions
 
