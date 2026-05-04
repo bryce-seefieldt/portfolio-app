@@ -201,7 +201,7 @@ jobs:
       - name: Wait for server to be ready
         run: npx wait-on http://localhost:3000
 
-      - name: Link checks (Playwright)
+      - name: E2E suite (routes, evidence links, security, registry) via Playwright
         run: pnpm links:check
 
       - name: Upload Playwright report (on failure)
