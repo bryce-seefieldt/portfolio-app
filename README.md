@@ -100,6 +100,9 @@ Phase 1–3 governance is enforced:
   - `ci / quality` (lint, format:check, typecheck)
   - `ci / link-validation` (registry validation + full Playwright E2E suite: routes, evidence links, security headers, CSRF, rate-limiting)
   - `ci / build` (Next.js build; depends on quality and link-validation)
+- Live external-link monitor is intentionally separate from required PR checks:
+  - `external-link-monitor / check-external-evidence-links` (scheduled + on-demand live HTTP checks against evidence URLs)
+  - This avoids flaky PR failures caused by third-party uptime/rate-limits while still monitoring real connectivity.
 - Deterministic installs in CI: `pnpm install --frozen-lockfile`
 - Supply chain and static analysis: CodeQL (JS/TS) and Dependabot (weekly; majors excluded)
 - Audit posture: CI blocks on high/critical advisories; low/medium are logged and require a ticket or risk register entry if they persist
@@ -257,7 +260,8 @@ Secrets will still be scanned in CI (GitHub Actions), but setting up the local h
 ```bash
 pnpm registry:validate # Validate projects.yml schema and integrity
 pnpm registry:list     # List all projects with interpolated values
-pnpm links:check       # Run Playwright link validation (evidence URL smoke tests)
+pnpm links:check       # Run deterministic Playwright E2E validation (DOM presence + internal routes/APIs)
+pnpm links:check:external # Run live HTTP checks for external evidence links (best-effort monitor)
 ```
 
 **Comprehensive validation:**
