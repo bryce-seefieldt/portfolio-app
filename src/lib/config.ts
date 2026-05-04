@@ -67,7 +67,20 @@ function normalizeDocsBaseUrl(value?: string): string {
   if (!trimmed) return "/docs";
 
   const absolute = asAbsoluteUrl(trimmed);
-  if (absolute) return normalizeBaseUrl(absolute);
+  if (absolute) {
+    const docsHost = new URL(absolute).hostname.toLowerCase();
+    const siteHost = SITE_URL ? new URL(SITE_URL).hostname.toLowerCase() : null;
+
+    // Safety rail: never expose the preview docs origin on the production app domain.
+    if (
+      docsHost === "bns-portfolio-docs.vercel.app" &&
+      (env.VERCEL_ENV === "production" || siteHost === "bryce.seefieldt.ca")
+    ) {
+      return "https://bryce.seefieldt.ca/docs";
+    }
+
+    return normalizeBaseUrl(absolute);
+  }
 
   if (trimmed.startsWith("/")) {
     return normalizeBaseUrl(trimmed);
