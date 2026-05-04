@@ -71,6 +71,44 @@ FAILURES=0
 WARNINGS=0
 AUDIT_FAILED=false
 
+# Track background processes started by this script (e.g., local dev servers)
+# so they are always cleaned up on success, failure, or interruption.
+TRACKED_PIDS=()
+
+track_process() {
+  local pid="$1"
+  if [ -n "$pid" ]; then
+    TRACKED_PIDS+=("$pid")
+  fi
+}
+
+stop_process() {
+  local pid="$1"
+  if [ -z "$pid" ]; then
+    return
+  fi
+
+  # Stop child processes first (pnpm -> next dev) to avoid orphaned servers.
+  local child_pid
+  for child_pid in $(pgrep -P "$pid" 2>/dev/null || true); do
+    stop_process "$child_pid"
+  done
+
+  if kill -0 "$pid" 2>/dev/null; then
+    kill "$pid" 2>/dev/null || true
+    wait "$pid" 2>/dev/null || true
+  fi
+}
+
+cleanup_tracked_processes() {
+  local pid
+  for pid in "${TRACKED_PIDS[@]:-}"; do
+    stop_process "$pid"
+  done
+}
+
+trap cleanup_tracked_processes EXIT INT TERM
+
 # Performance metrics tracking
 BUILD_TIME_SECONDS=0
 BUNDLE_SIZE_MB=0
@@ -516,6 +554,7 @@ if [ $BUILD_EXIT_CODE -eq 0 ] && [ "$SKIP_PERFORMANCE" = false ]; then
   # Start dev server in background
   pnpm dev > /dev/null 2>&1 &
   DEV_SERVER_PID=$!
+  track_process "$DEV_SERVER_PID"
   
   # Wait for server to start (max 30 seconds)
   WAIT_COUNT=0
@@ -529,7 +568,7 @@ if [ $BUILD_EXIT_CODE -eq 0 ] && [ "$SKIP_PERFORMANCE" = false ]; then
   
   if [ $WAIT_COUNT -ge 30 ]; then
     print_warning "Dev server did not start within 30 seconds - skipping cache header check"
-    kill $DEV_SERVER_PID 2>/dev/null || true
+    stop_process "$DEV_SERVER_PID"
   else
     print_success "Dev server started on port 3000"
     
@@ -537,7 +576,7 @@ if [ $BUILD_EXIT_CODE -eq 0 ] && [ "$SKIP_PERFORMANCE" = false ]; then
     CACHE_CONTROL_HEADER=$(curl -sI http://localhost:3000/projects/portfolio-app 2>/dev/null | grep -i "cache-control:" | cut -d' ' -f2- | tr -d '\r')
     
     # Stop dev server
-    kill $DEV_SERVER_PID 2>/dev/null || true
+    stop_process "$DEV_SERVER_PID"
     sleep 2
     
     if [ -z "$CACHE_CONTROL_HEADER" ]; then
@@ -634,6 +673,7 @@ elif [ $BUILD_EXIT_CODE -eq 0 ]; then
       print_info "Starting dev server for link validation..."
       pnpm dev > /dev/null 2>&1 &
       DEV_SERVER_PID=$!
+      track_process "$DEV_SERVER_PID"
       
       # Wait for dev server to be ready (max 30 seconds)
       print_info "Waiting for dev server to be ready..."
@@ -648,8 +688,7 @@ elif [ $BUILD_EXIT_CODE -eq 0 ]; then
         E2E_TEST_EXIT_CODE=$?
         
         # Kill dev server
-        kill $DEV_SERVER_PID 2>/dev/null || true
-        wait $DEV_SERVER_PID 2>/dev/null || true
+        stop_process "$DEV_SERVER_PID"
         
         if [ $E2E_TEST_EXIT_CODE -eq 0 ]; then
           print_success "Link validation passed"
@@ -685,8 +724,7 @@ elif [ $BUILD_EXIT_CODE -eq 0 ]; then
         fi
       else
         print_failure "Dev server failed to start"
-        kill $DEV_SERVER_PID 2>/dev/null || true
-        wait $DEV_SERVER_PID 2>/dev/null || true
+        stop_process "$DEV_SERVER_PID"
         print_troubleshooting "  1. Check if port 3000 is already in use: lsof -i :3000
   2. Try starting manually: pnpm dev
   3. Check for build errors above
