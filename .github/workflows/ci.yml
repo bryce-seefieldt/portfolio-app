@@ -154,7 +154,7 @@ jobs:
   link-validation:
     name: link-validation
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     needs: [quality]
     permissions:
       contents: read
@@ -178,6 +178,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Restore Playwright browser cache
+        id: playwright-cache
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
@@ -189,6 +190,7 @@ jobs:
         run: pnpm registry:validate
 
       - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
 
       - name: Start dev server
