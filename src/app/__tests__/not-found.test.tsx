@@ -18,7 +18,7 @@ vi.mock("next/link", () => ({
 vi.mock("@/lib/observability", () => observabilityMocks);
 
 vi.mock("@/lib/config", () => ({
-  DOCS_BASE_URL: "https://docs.example.com",
+  DOCS_URL: "https://docs.example.com",
   docsUrl: (path: string) => `https://docs.example.com/${path}`,
 }));
 

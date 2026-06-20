@@ -12,18 +12,18 @@ vi.mock("next/link", () => ({
 }));
 
 const configValues: {
-  DOCS_BASE_URL: string;
+  DOCS_URL: string;
   GITHUB_URL: string | null;
   LINKEDIN_URL: string | null;
 } = {
-  DOCS_BASE_URL: "https://docs.example.com",
+  DOCS_URL: "https://docs.example.com",
   GITHUB_URL: "https://github.com/example",
   LINKEDIN_URL: "https://linkedin.example.com",
 };
 
 vi.mock("@/lib/config", () => ({
-  get DOCS_BASE_URL() {
-    return configValues.DOCS_BASE_URL;
+  get DOCS_URL() {
+    return configValues.DOCS_URL;
   },
   get GITHUB_URL() {
     return configValues.GITHUB_URL;
@@ -44,9 +44,9 @@ describe("HomePage", () => {
 
     render(<HomePage />);
 
-    expect(screen.getByText("Start with the CV")).toBeInTheDocument();
-    expect(screen.getByText("Browse projects")).toBeInTheDocument();
-    expect(screen.getByText("Open evidence docs")).toBeInTheDocument();
+    expect(screen.getByText("Read the CV")).toBeInTheDocument();
+    expect(screen.getByText("See the work")).toBeInTheDocument();
+    expect(screen.getByText(/Or jump straight to the engineering docs/i)).toBeInTheDocument();
     expect(screen.getByText("GitHub")).toBeInTheDocument();
     expect(screen.getByText("LinkedIn")).toBeInTheDocument();
   });

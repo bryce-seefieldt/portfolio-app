@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 describe("config variants", () => {
   it("should fall back to null for invalid site URL", async () => {
     process.env.NEXT_PUBLIC_SITE_URL = "not-a-url";
-    process.env.NEXT_PUBLIC_DOCS_BASE_URL = "/docs";
+    process.env.NEXT_PUBLIC_DOCS_URL = "/docs";
     vi.resetModules();
 
     const config = await import("../config");
@@ -15,7 +15,7 @@ describe("config variants", () => {
   it("should normalize trailing slashes in configured URLs", async () => {
     // ASSUMPTION: Normalized URLs avoid double-slash regressions in link helpers.
     process.env.NEXT_PUBLIC_SITE_URL = "https://example.com/";
-    process.env.NEXT_PUBLIC_DOCS_BASE_URL = "https://docs.example.com/";
+    process.env.NEXT_PUBLIC_DOCS_URL = "https://docs.example.com/";
     vi.resetModules();
 
     const config = await import("../config");
@@ -24,7 +24,7 @@ describe("config variants", () => {
   });
 
   it("should return base docs URL for empty path", async () => {
-    process.env.NEXT_PUBLIC_DOCS_BASE_URL = "/docs";
+    process.env.NEXT_PUBLIC_DOCS_URL = "/docs";
     vi.resetModules();
 
     const config = await import("../config");
@@ -32,7 +32,7 @@ describe("config variants", () => {
   });
 
   it("should fall back to /docs when base URL is invalid", async () => {
-    process.env.NEXT_PUBLIC_DOCS_BASE_URL = "docs";
+    process.env.NEXT_PUBLIC_DOCS_URL = "docs";
     vi.resetModules();
 
     const config = await import("../config");
@@ -48,7 +48,7 @@ describe("config variants", () => {
 
   it("should return base URLs when path is empty", async () => {
     process.env.NEXT_PUBLIC_GITHUB_URL = "https://github.com/example";
-    process.env.NEXT_PUBLIC_DOCS_GITHUB_URL = "https://github.com/example/docs";
+    process.env.NEXT_PUBLIC_GITHUB_DOCS_REPO_URL = "https://github.com/example/docs";
     vi.resetModules();
 
     const config = await import("../config");
@@ -58,7 +58,7 @@ describe("config variants", () => {
 
   it("should build GitHub URLs when base is configured", async () => {
     process.env.NEXT_PUBLIC_GITHUB_URL = "https://github.com/example";
-    process.env.NEXT_PUBLIC_DOCS_GITHUB_URL = "https://github.com/example/docs";
+    process.env.NEXT_PUBLIC_GITHUB_DOCS_REPO_URL = "https://github.com/example/docs";
     vi.resetModules();
 
     const config = await import("../config");
@@ -90,7 +90,7 @@ describe("config variants", () => {
   it("should canonicalize preview docs origin in production", async () => {
     process.env.VERCEL_ENV = "production";
     process.env.NEXT_PUBLIC_SITE_URL = "https://bryce.seefieldt.ca";
-    process.env.NEXT_PUBLIC_DOCS_BASE_URL = "https://bns-portfolio-docs.vercel.app";
+    process.env.NEXT_PUBLIC_DOCS_URL = "https://bns-portfolio-docs.vercel.app";
     vi.resetModules();
 
     const config = await import("../config");

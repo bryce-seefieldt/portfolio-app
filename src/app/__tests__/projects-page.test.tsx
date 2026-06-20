@@ -17,7 +17,7 @@ async function loadPage(options: {
 }) {
   vi.resetModules();
   vi.doMock("@/lib/config", () => ({
-    DOCS_BASE_URL: "https://docs.example.com",
+    DOCS_URL: "https://docs.example.com",
   }));
   vi.doMock("@/data/projects", () => ({
     getFeaturedProjects: () => options.featured,

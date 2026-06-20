@@ -17,16 +17,16 @@ vi.mock("../ThemeToggle", () => ({
 }));
 
 const configValues: {
-  DOCS_BASE_URL: string;
+  DOCS_URL: string;
   GITHUB_URL: string | null;
 } = {
-  DOCS_BASE_URL: "https://docs.example.com",
+  DOCS_URL: "https://docs.example.com",
   GITHUB_URL: "https://github.com/example",
 };
 
 vi.mock("@/lib/config", () => ({
-  get DOCS_BASE_URL() {
-    return configValues.DOCS_BASE_URL;
+  get DOCS_URL() {
+    return configValues.DOCS_URL;
   },
   get GITHUB_URL() {
     return configValues.GITHUB_URL;
@@ -41,11 +41,11 @@ describe("NavigationEnhanced", () => {
     render(<NavigationEnhanced />);
 
     expect(screen.getAllByText("Home").length).toBeGreaterThan(0);
+    expect(screen.getByText("Work")).toBeInTheDocument();
     expect(screen.getByText("CV")).toBeInTheDocument();
-    expect(screen.getByText("Projects")).toBeInTheDocument();
     expect(screen.getByText("Contact")).toBeInTheDocument();
-    expect(screen.getByText("Evidence (Docs)")).toBeInTheDocument();
-    expect(screen.getByText("GitHub")).toBeInTheDocument();
+    expect(screen.getByText("Engineering Docs")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "GitHub" })).toBeInTheDocument();
   });
 
   it("should toggle mobile menu", () => {
@@ -90,6 +90,6 @@ describe("NavigationEnhanced", () => {
 
     render(<NavigationEnhanced />);
 
-    expect(screen.queryByText("GitHub")).toBeNull();
+    expect(screen.queryByRole("link", { name: "GitHub" })).toBeNull();
   });
 });

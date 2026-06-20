@@ -15,9 +15,9 @@ concurrency:
 
 # Public, non-secret env needed for registry interpolation during CI builds
 env:
-  NEXT_PUBLIC_DOCS_BASE_URL: https://bryce.seefieldt.ca/docs
+  NEXT_PUBLIC_DOCS_URL: https://bryce.seefieldt.ca/docs
   NEXT_PUBLIC_GITHUB_URL: https://github.com/bryce-seefieldt/portfolio-app
-  NEXT_PUBLIC_DOCS_GITHUB_URL: https://github.com/bryce-seefieldt/portfolio-docs
+  NEXT_PUBLIC_GITHUB_DOCS_REPO_URL: https://github.com/bryce-seefieldt/portfolio-docs
   NEXT_PUBLIC_SITE_URL: https://bryce.seefieldt.ca
 
 jobs:
