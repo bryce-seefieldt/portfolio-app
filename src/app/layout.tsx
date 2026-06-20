@@ -6,7 +6,7 @@ import { BackToTop } from "@/components/BackToTop";
 import { headers } from "next/headers";
 import "./globals.css";
 
-import { DOCS_BASE_URL, GITHUB_URL, LINKEDIN_URL, SITE_URL } from "@/lib/config";
+import { DOCS_URL, GITHUB_URL, LINKEDIN_URL, SITE_URL } from "@/lib/config";
 import {
   generatePersonSchema,
   generateWebsiteSchema,
@@ -24,8 +24,8 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Portfolio",
-    template: "%s | Portfolio",
+    default: "Bryce Seefieldt | Portfolio",
+    template: "Bryce Seefieldt| Portfolio",
   },
   description:
     "Enterprise-grade full-stack portfolio: interactive CV, verified projects, and engineering evidence (ADRs, threat models, runbooks).",
@@ -34,10 +34,13 @@ export const metadata: Metadata = {
     canonical: SITE_URL || "/",
   },
   keywords: [
-    "full-stack engineer",
+    "full-stack developer",
+    "software engineer",
     "portfolio",
     "Next.js",
     "TypeScript",
+    "JavaScript",
+    "React",
     "DevOps",
     "software engineering",
     "enterprise architecture",
@@ -57,8 +60,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: SITE_URL || "/",
-    siteName: "Portfolio",
-    title: "Portfolio",
+    siteName: "Bryce Seefieldt | Portfolio",
+    title: "Bryce Seefieldt | Portfolio",
     description:
       "Enterprise-grade full-stack portfolio: interactive CV, verified projects, and engineering evidence (ADRs, threat models, runbooks).",
     images: [
@@ -66,17 +69,17 @@ export const metadata: Metadata = {
         url: "/og-image.svg",
         width: 1200,
         height: 630,
-        alt: "Portfolio — enterprise-grade full-stack engineering",
+        alt: "Portfolio — Full-stack Developer",
       },
     ],
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Portfolio",
-    description:
-      "Enterprise-grade full-stack portfolio: interactive CV, verified projects, and engineering evidence (ADRs, threat models, runbooks).",
-    images: ["/og-image.svg"],
-  },
+  // twitter: {
+  //   card: "summary_large_image",
+  //   title: "Portfolio",
+  //   description:
+  //     "Enterprise-grade full-stack portfolio: interactive CV, verified projects, and engineering evidence (ADRs, threat models, runbooks).",
+  //   images: ["/og-image.svg"],
+  // },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -134,22 +137,38 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-8 text-sm text-zinc-600 dark:text-zinc-400">
             <div className="flex flex-wrap items-center gap-3">
               {GITHUB_URL ? (
-                <a className="hover:text-zinc-950 dark:hover:text-white" href={GITHUB_URL}>
+                <a
+                  className="hover:text-zinc-950 dark:hover:text-white"
+                  href={GITHUB_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   GitHub
                 </a>
               ) : null}
               {LINKEDIN_URL ? (
-                <a className="hover:text-zinc-950 dark:hover:text-white" href={LINKEDIN_URL}>
+                <a
+                  className="hover:text-zinc-950 dark:hover:text-white"
+                  href={LINKEDIN_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   LinkedIn
                 </a>
               ) : null}
-              <a className="hover:text-zinc-950 dark:hover:text-white" href={DOCS_BASE_URL}>
-                Documentation (Evidence)
+              <a
+                className="hover:text-zinc-950 dark:hover:text-white"
+                href={DOCS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Engineering Docs
               </a>
             </div>
             <div>
-              This site is built with an enterprise evidence model: ADRs, threat models, runbooks,
-              and release notes are maintained in the Documentation App.
+              Bryce Seefieldt · Full-stack developer · Toronto
+              <br />
+              Built with Next.js, TypeScript, and Tailwind. Inspect the source on GitHub.
             </div>
           </div>
         </footer>

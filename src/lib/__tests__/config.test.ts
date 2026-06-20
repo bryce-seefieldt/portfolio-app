@@ -5,14 +5,20 @@ Unit tests for link construction helpers (docsUrl, githubUrl, docsGithubUrl, mai
 RATIONALE: Link helpers enforce evidence-first navigation without hardcoding environment-specific URLs.
 FAILURE MODE: Misconstructed links break reviewer paths and evidence discovery.
 */
+
+/* TO DO:
+- Review test coverage for all link helper functions, including edge cases (e.g., empty paths, malformed inputs).
+- Review and expand test coverage for environment variable parsing and normalization logic in config.ts.
+- Review and expand test coverage for SITE_URL, GITHUB_REPO_URL,  siteUrl,   githubRepoUrl,
+*/
 import { describe, it, expect } from "vitest";
 import {
-  DOCS_BASE_URL,
+  DOCS_URL,
   GITHUB_URL,
-  DOCS_GITHUB_URL,
+  GITHUB_DOCS_REPO_URL,
   docsUrl,
   githubUrl,
-  docsGithubUrl,
+  githubDocsRepoUrl,
   mailtoUrl,
 } from "../config";
 
@@ -20,32 +26,32 @@ describe("Link Construction Helpers", () => {
   describe("docsUrl", () => {
     it("should build URL with default base path", () => {
       const result = docsUrl("/portfolio/roadmap");
-      expect(result).toBe(`${DOCS_BASE_URL}/portfolio/roadmap`);
+      expect(result).toBe(`${DOCS_URL}/portfolio/roadmap`);
     });
 
     it("should strip leading slashes from pathname", () => {
       const result = docsUrl("portfolio/roadmap");
-      expect(result).toBe(`${DOCS_BASE_URL}/portfolio/roadmap`);
+      expect(result).toBe(`${DOCS_URL}/portfolio/roadmap`);
     });
 
     it("should handle empty pathname", () => {
       const result = docsUrl("");
-      expect(result).toBe(DOCS_BASE_URL);
+      expect(result).toBe(DOCS_URL);
     });
 
     it("should handle nested paths", () => {
       const result = docsUrl("portfolio/features");
-      expect(result).toBe(`${DOCS_BASE_URL}/portfolio/features`);
+      expect(result).toBe(`${DOCS_URL}/portfolio/features`);
     });
 
     it("should work with single leading slash", () => {
       const result = docsUrl("/portfolio");
-      expect(result).toBe(`${DOCS_BASE_URL}/portfolio`);
+      expect(result).toBe(`${DOCS_URL}/portfolio`);
     });
 
     it("should handle multiple leading slashes", () => {
       const result = docsUrl("///portfolio///test");
-      expect(result).toBe(`${DOCS_BASE_URL}/portfolio///test`);
+      expect(result).toBe(`${DOCS_URL}/portfolio///test`);
     });
   });
 
@@ -69,22 +75,22 @@ describe("Link Construction Helpers", () => {
     });
   });
 
-  describe("docsGithubUrl", () => {
+  describe("githubDocsRepoUrl", () => {
     it("should return placeholder when DOCS_GITHUB_URL not configured", () => {
-      const result = docsGithubUrl("blob/main/docs/portfolio/readme.md");
-      const base = DOCS_GITHUB_URL;
+      const result = githubDocsRepoUrl("blob/main/docs/portfolio/readme.md");
+      const base = GITHUB_DOCS_REPO_URL;
       expect(result).toBe(base ? `${base}/blob/main/docs/portfolio/readme.md` : "#");
     });
 
     it("should handle empty pathname", () => {
-      const result = docsGithubUrl("");
-      const base = DOCS_GITHUB_URL;
+      const result = githubDocsRepoUrl("");
+      const base = GITHUB_DOCS_REPO_URL;
       expect(result).toBe(base || "#");
     });
 
     it("should strip leading slashes from pathname", () => {
-      const result = docsGithubUrl("/blob/main/docs/portfolio/readme.md");
-      const base = DOCS_GITHUB_URL;
+      const result = githubDocsRepoUrl("/blob/main/docs/portfolio/readme.md");
+      const base = GITHUB_DOCS_REPO_URL;
       expect(result).toBe(base ? `${base}/blob/main/docs/portfolio/readme.md` : "#");
     });
   });

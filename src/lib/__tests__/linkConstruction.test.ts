@@ -6,12 +6,12 @@
 
 import { describe, it, expect } from "vitest";
 import {
-  DOCS_BASE_URL,
+  DOCS_URL,
   GITHUB_URL,
-  DOCS_GITHUB_URL,
+  GITHUB_DOCS_REPO_URL,
   docsUrl,
   githubUrl,
-  docsGithubUrl,
+  githubDocsRepoUrl,
   mailtoUrl,
 } from "../config";
 
@@ -19,27 +19,27 @@ describe("Link Construction Helpers", () => {
   describe("docsUrl", () => {
     it("should build URL with default base path", () => {
       const result = docsUrl("/portfolio/roadmap");
-      expect(result).toBe(`${DOCS_BASE_URL}/portfolio/roadmap`);
+      expect(result).toBe(`${DOCS_URL}/portfolio/roadmap`);
     });
 
     it("should strip leading slashes from pathname", () => {
       const result = docsUrl("portfolio/roadmap");
-      expect(result).toBe(`${DOCS_BASE_URL}/portfolio/roadmap`);
+      expect(result).toBe(`${DOCS_URL}/portfolio/roadmap`);
     });
 
     it("should handle empty pathname", () => {
       const result = docsUrl("");
-      expect(result).toBe(DOCS_BASE_URL);
+      expect(result).toBe(DOCS_URL);
     });
 
     it("should handle nested paths", () => {
       const result = docsUrl("portfolio/roadmap/issues/stage-3-1");
-      expect(result).toBe(`${DOCS_BASE_URL}/portfolio/roadmap/issues/stage-3-1`);
+      expect(result).toBe(`${DOCS_URL}/portfolio/roadmap/issues/stage-3-1`);
     });
 
     it("should work with leading slash", () => {
       const result = docsUrl("/docs/portfolio/roadmap");
-      expect(result).toBe(`${DOCS_BASE_URL}/docs/portfolio/roadmap`);
+      expect(result).toBe(`${DOCS_URL}/docs/portfolio/roadmap`);
     });
   });
 
@@ -63,22 +63,22 @@ describe("Link Construction Helpers", () => {
     });
   });
 
-  describe("docsGithubUrl", () => {
-    it("should return placeholder when DOCS_GITHUB_URL not configured", () => {
-      const result = docsGithubUrl("blob/main/docs/portfolio/readme.md");
-      const base = DOCS_GITHUB_URL;
+  describe("githubDocsRepoUrl", () => {
+    it("should return placeholder when GITHUB_DOCS_REPO_URL not configured", () => {
+      const result = githubDocsRepoUrl("blob/main/docs/portfolio/readme.md");
+      const base = GITHUB_DOCS_REPO_URL;
       expect(result).toBe(base ? `${base}/blob/main/docs/portfolio/readme.md` : "#");
     });
 
     it("should handle empty pathname", () => {
-      const result = docsGithubUrl("");
-      const base = DOCS_GITHUB_URL;
+      const result = githubDocsRepoUrl("");
+      const base = GITHUB_DOCS_REPO_URL;
       expect(result).toBe(base || "#");
     });
 
     it("should strip leading slashes from pathname", () => {
-      const result = docsGithubUrl("/blob/main/docs/portfolio/readme.md");
-      const base = DOCS_GITHUB_URL;
+      const result = githubDocsRepoUrl("/blob/main/docs/portfolio/readme.md");
+      const base = GITHUB_DOCS_REPO_URL;
       expect(result).toBe(base ? `${base}/blob/main/docs/portfolio/readme.md` : "#");
     });
   });

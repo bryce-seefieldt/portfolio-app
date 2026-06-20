@@ -20,7 +20,7 @@ describe("config variants", () => {
 
     const config = await import("../config");
     expect(config.SITE_URL).toBe("https://example.com");
-    expect(config.DOCS_BASE_URL).toBe("https://docs.example.com");
+    expect(config.DOCS_URL).toBe("https://docs.example.com");
   });
 
   it("should return base docs URL for empty path", async () => {
@@ -36,7 +36,7 @@ describe("config variants", () => {
     vi.resetModules();
 
     const config = await import("../config");
-    expect(config.DOCS_BASE_URL).toBe("/docs");
+    expect(config.DOCS_URL).toBe("/docs");
   });
 
   it("should build mailto URL with subject", async () => {
@@ -53,7 +53,7 @@ describe("config variants", () => {
 
     const config = await import("../config");
     expect(config.githubUrl("")).toBe("https://github.com/example");
-    expect(config.docsGithubUrl("")).toBe("https://github.com/example/docs");
+    expect(config.githubDocsRepoUrl("")).toBe("https://github.com/example/docs");
   });
 
   it("should build GitHub URLs when base is configured", async () => {
@@ -63,7 +63,7 @@ describe("config variants", () => {
 
     const config = await import("../config");
     expect(config.githubUrl("portfolio-app")).toBe("https://github.com/example/portfolio-app");
-    expect(config.docsGithubUrl("blob/main/readme.md")).toBe(
+    expect(config.githubDocsRepoUrl("blob/main/readme.md")).toBe(
       "https://github.com/example/docs/blob/main/readme.md",
     );
   });
@@ -94,6 +94,6 @@ describe("config variants", () => {
     vi.resetModules();
 
     const config = await import("../config");
-    expect(config.DOCS_BASE_URL).toBe("https://bryce.seefieldt.ca/docs");
+    expect(config.DOCS_URL).toBe("https://bryce.seefieldt.ca/docs");
   });
 });

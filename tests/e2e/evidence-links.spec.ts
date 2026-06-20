@@ -9,7 +9,8 @@ test.describe("Evidence Link Resolution", () => {
       await page.goto("/projects/portfolio-app");
 
       // Verify page loads
-      await expect(page).toHaveTitle(/Portfolio App/i);
+      await expect(page).toHaveTitle(/Portfolio/i);
+      await expect(page).toHaveURL(/\/projects\/portfolio-app/);
 
       // Verify main content renders
       await expect(page.locator("h1")).toContainText("Portfolio App");

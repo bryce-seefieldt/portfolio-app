@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ThemeToggle } from "./ThemeToggle";
-import { DOCS_BASE_URL, GITHUB_URL } from "@/lib/config";
+import { DOCS_URL, GITHUB_URL } from "@/lib/config";
 
 /**
  * NavigationEnhanced Component
@@ -77,27 +77,33 @@ export function NavigationEnhanced() {
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
         {/* Logo */}
         <Link href="/" className="font-semibold tracking-tight" onClick={closeMobileMenu}>
-          Portfolio
+          Bryce Seefieldt | Portfolio
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-4 md:flex">
           <NavLink href="/">Home</NavLink>
+          <NavLink href="/projects">Work</NavLink>
           <NavLink href="/cv">CV</NavLink>
-          <NavLink href="/projects">Projects</NavLink>
           <a
-            href={DOCS_BASE_URL}
+            href={DOCS_URL}
             className="text-sm text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            Evidence (Docs)
+            Engineering Docs
           </a>
           <NavLink href="/contact">Contact</NavLink>
           {GITHUB_URL ? (
             <a
               href={GITHUB_URL}
               className="text-sm text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
+              aria-label="GitHub"
+              title="GitHub"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              GitHub
+              <span aria-hidden="true">◦</span>
             </a>
           ) : null}
           <button
@@ -176,17 +182,19 @@ export function NavigationEnhanced() {
               Home
             </NavLink>
             <NavLink href="/cv" onClick={closeMobileMenu}>
-              CV
+              Work
             </NavLink>
             <NavLink href="/projects" onClick={closeMobileMenu}>
-              Projects
+              CV
             </NavLink>
             <a
-              href={DOCS_BASE_URL}
+              href={DOCS_URL}
               className="text-sm text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
               onClick={closeMobileMenu}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              Evidence (Docs)
+              Engineering Docs
             </a>
             <NavLink href="/contact" onClick={closeMobileMenu}>
               Contact
@@ -196,8 +204,12 @@ export function NavigationEnhanced() {
                 href={GITHUB_URL}
                 className="text-sm text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
                 onClick={closeMobileMenu}
+                aria-label="GitHub"
+                title="GitHub"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                GitHub
+                <span aria-hidden="true">◦</span>
               </a>
             ) : null}
             <div className="mt-2 flex items-center gap-2">

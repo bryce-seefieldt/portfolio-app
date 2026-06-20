@@ -8,11 +8,10 @@
 type Env = {
   // Public-facing
   NEXT_PUBLIC_SITE_URL?: string;
-  NEXT_PUBLIC_DOCS_BASE_URL?: string;
-
-  // Optional public links
+  NEXT_PUBLIC_DOCS_URL?: string;
   NEXT_PUBLIC_GITHUB_URL?: string;
-  NEXT_PUBLIC_DOCS_GITHUB_URL?: string;
+  NEXT_PUBLIC_GITHUB_REPO_URL?: string;
+  NEXT_PUBLIC_GITHUB_DOCS_REPO_URL?: string;
   NEXT_PUBLIC_LINKEDIN_URL?: string;
   NEXT_PUBLIC_CONTACT_EMAIL?: string;
 
@@ -89,13 +88,12 @@ function normalizeDocsBaseUrl(value?: string): string {
   return "/docs";
 }
 
-export const DOCS_BASE_URL: string = normalizeDocsBaseUrl(env.NEXT_PUBLIC_DOCS_BASE_URL);
-
-/**
- * Public profile links (optional). Prefer these over hardcoding URLs in components.
- */
+export const DOCS_URL: string = normalizeDocsBaseUrl(env.NEXT_PUBLIC_DOCS_URL);
 export const GITHUB_URL: string | null = asAbsoluteUrl(env.NEXT_PUBLIC_GITHUB_URL);
-export const DOCS_GITHUB_URL: string | null = asAbsoluteUrl(env.NEXT_PUBLIC_DOCS_GITHUB_URL);
+export const GITHUB_REPO_URL: string | null = asAbsoluteUrl(env.NEXT_PUBLIC_GITHUB_REPO_URL);
+export const GITHUB_DOCS_REPO_URL: string | null = asAbsoluteUrl(
+  env.NEXT_PUBLIC_GITHUB_DOCS_REPO_URL,
+);
 export const LINKEDIN_URL: string | null = asAbsoluteUrl(env.NEXT_PUBLIC_LINKEDIN_URL);
 
 /**
@@ -136,10 +134,21 @@ export function isDevelopment(): boolean {
 /**
  * Convenience builders
  */
+
+export function siteUrl(pathname: string): string {
+  if (!SITE_URL) {
+    console.warn("SITE_URL not configured, returning placeholder");
+    return "#";
+  }
+  // Accept "foo/bar", "/foo/bar", or "".
+  const p = pathname.replace(/^\/+/, "");
+  return p ? `${SITE_URL}/${p}` : SITE_URL;
+}
+
 export function docsUrl(pathname: string): string {
   // Accept "foo/bar", "/foo/bar", or "".
   const p = pathname.replace(/^\/+/, "");
-  return p ? `${DOCS_BASE_URL}/${p}` : DOCS_BASE_URL;
+  return p ? `${DOCS_URL}/${p}` : DOCS_URL;
 }
 
 export function githubUrl(pathname: string): string {
@@ -152,14 +161,24 @@ export function githubUrl(pathname: string): string {
   return p ? `${GITHUB_URL}/${p}` : GITHUB_URL;
 }
 
-export function docsGithubUrl(pathname: string): string {
-  // Build URL from DOCS_GITHUB_URL with optional path
-  if (!DOCS_GITHUB_URL) {
-    console.warn("DOCS_GITHUB_URL not configured, returning placeholder");
+export function githubRepoUrl(pathname: string): string {
+  // Build URL from GITHUB_REPO_URL with optional path
+  if (!GITHUB_REPO_URL) {
+    console.warn("GITHUB_REPO_URL not configured, returning placeholder");
     return "#";
   }
   const p = pathname.replace(/^\/+/, "");
-  return p ? `${DOCS_GITHUB_URL}/${p}` : DOCS_GITHUB_URL;
+  return p ? `${GITHUB_REPO_URL}/${p}` : GITHUB_REPO_URL;
+}
+
+export function githubDocsRepoUrl(pathname: string): string {
+  // Build URL from GITHUB_DOCS_REPO_URL with optional path
+  if (!GITHUB_DOCS_REPO_URL) {
+    console.warn("GITHUB_DOCS_REPO_URL not configured, returning placeholder");
+    return "#";
+  }
+  const p = pathname.replace(/^\/+/, "");
+  return p ? `${GITHUB_DOCS_REPO_URL}/${p}` : GITHUB_DOCS_REPO_URL;
 }
 
 export function mailtoUrl(email: string, subject?: string): string {

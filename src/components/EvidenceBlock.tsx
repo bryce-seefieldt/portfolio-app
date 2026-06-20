@@ -35,6 +35,8 @@ interface EvidenceCategory {
 
 export function EvidenceBlock({ project, className = "" }: EvidenceBlockProps) {
   const evidence = project.evidence;
+  const repoHref = project.repoUrl || evidence?.github || "#";
+  const isGithubRepo = repoHref.includes("github.com");
 
   // Evidence categories configuration
   const categories: EvidenceCategory[] = [
@@ -57,6 +59,8 @@ export function EvidenceBlock({ project, className = "" }: EvidenceBlockProps) {
         <a
           className="text-sm font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
           href={docsUrl(`/docs/${evidence.dossierPath}`)}
+          target="_blank"
+          rel="noopener noreferrer"
         >
           View Dossier →
         </a>
@@ -84,6 +88,8 @@ export function EvidenceBlock({ project, className = "" }: EvidenceBlockProps) {
         <a
           className="text-sm font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
           href={docsUrl(`/docs/${evidence.threatModelPath}`)}
+          target="_blank"
+          rel="noopener noreferrer"
         >
           View Threat Model →
         </a>
@@ -115,6 +121,8 @@ export function EvidenceBlock({ project, className = "" }: EvidenceBlockProps) {
                 key={index}
                 className="text-sm font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
                 href={docsUrl(`/${adr.url}`)}
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 {adr.title} →
               </a>
@@ -124,6 +132,8 @@ export function EvidenceBlock({ project, className = "" }: EvidenceBlockProps) {
           <a
             className="text-sm font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
             href={docsUrl(`/docs/${evidence.adrIndexPath}`)}
+            target="_blank"
+            rel="noopener noreferrer"
           >
             View ADR Index →
           </a>
@@ -155,6 +165,8 @@ export function EvidenceBlock({ project, className = "" }: EvidenceBlockProps) {
                 key={index}
                 className="text-sm font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
                 href={docsUrl(`/${runbook.url}`)}
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 {runbook.title} →
               </a>
@@ -164,6 +176,8 @@ export function EvidenceBlock({ project, className = "" }: EvidenceBlockProps) {
           <a
             className="text-sm font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
             href={docsUrl(`/docs/${evidence.runbooksPath}`)}
+            target="_blank"
+            rel="noopener noreferrer"
           >
             View Runbooks →
           </a>
@@ -190,7 +204,9 @@ export function EvidenceBlock({ project, className = "" }: EvidenceBlockProps) {
         project.repoUrl || evidence?.github ? (
           <a
             className="text-sm font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
-            href={project.repoUrl || evidence?.github || "#"}
+            href={repoHref}
+            target={isGithubRepo ? "_blank" : undefined}
+            rel={isGithubRepo ? "noopener noreferrer" : undefined}
           >
             View Repository →
           </a>

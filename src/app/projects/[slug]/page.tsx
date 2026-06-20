@@ -89,7 +89,12 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
           <div className="flex flex-wrap items-center gap-3 text-sm">
             {project.repoUrl ? (
-              <a className="underline" href={project.repoUrl}>
+              <a
+                className="underline"
+                href={project.repoUrl}
+                target={project.repoUrl.includes("github.com") ? "_blank" : undefined}
+                rel={project.repoUrl.includes("github.com") ? "noopener noreferrer" : undefined}
+              >
                 Repo
               </a>
             ) : (
@@ -174,7 +179,12 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
               <div className="mt-4 flex flex-col gap-3 text-sm text-zinc-700 dark:text-zinc-300">
                 <div>
                   <strong>Enforced quality gates:</strong> Open{" "}
-                  <a className="underline" href={githubUrl("blob/main/.github/workflows/ci.yml")}>
+                  <a
+                    className="underline"
+                    href={githubUrl("blob/main/.github/workflows/ci.yml")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     .github/workflows/ci.yml
                   </a>{" "}
                   → see <code>quality</code>, <code>secrets-scan</code>, <code>build-and-test</code>
@@ -183,7 +193,12 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
                 <div>
                   <strong>PR discipline:</strong> Open{" "}
-                  <a className="underline" href={githubUrl("settings/branches")}>
+                  <a
+                    className="underline"
+                    href={githubUrl("settings/branches")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     Branch Protection
                   </a>{" "}
                   → confirm require-PR + status-checks enabled.
@@ -195,6 +210,8 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                   <a
                     className="underline"
                     href={docsUrl("/docs/projects/portfolio-app/04-security#public-safety-rules")}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     public-safety rules
                   </a>
@@ -203,7 +220,12 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
                 <div>
                   <strong>Smoke tests:</strong> Check{" "}
-                  <a className="underline" href={githubUrl("actions")}>
+                  <a
+                    className="underline"
+                    href={githubUrl("actions")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     recent CI runs
                   </a>{" "}
                   → see Playwright smoke tests passing post-build.
@@ -211,7 +233,12 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
                 <div>
                   <strong>Dependencies:</strong> Open{" "}
-                  <a className="underline" href={githubUrl("blob/main/package.json")}>
+                  <a
+                    className="underline"
+                    href={githubUrl("blob/main/package.json")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     package.json
                   </a>{" "}
                   → see Next 15+, React 19, Tailwind 4, TypeScript 5.

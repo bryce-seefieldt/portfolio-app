@@ -3,10 +3,16 @@ import Link from "next/link";
 import { Callout } from "@/components/Callout";
 import { Section } from "@/components/Section";
 import { ScrollFadeIn } from "@/components/ScrollFadeIn";
-import { DOCS_BASE_URL, docsUrl, GITHUB_URL, LINKEDIN_URL } from "@/lib/config";
+import { DOCS_URL, docsUrl, GITHUB_URL, LINKEDIN_URL } from "@/lib/config";
 import { TIMELINE } from "@/data/cv";
 
 export default function CVPage() {
+  const isNewTabTarget = (href: string): boolean =>
+    href.startsWith(DOCS_URL) ||
+    href.startsWith("/docs") ||
+    href.includes("github.com") ||
+    href.includes("linkedin.com");
+
   return (
     <div className="flex flex-col gap-8">
       <ScrollFadeIn>
@@ -26,18 +32,30 @@ export default function CVPage() {
               Browse projects
             </Link>
             <a
-              href={DOCS_BASE_URL}
+              href={DOCS_URL}
               className="text-sm font-medium text-zinc-800 underline hover:text-zinc-950 dark:text-zinc-200 dark:hover:text-white"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               Open evidence docs
             </a>
             {GITHUB_URL ? (
-              <a className="text-sm font-medium underline" href={GITHUB_URL}>
+              <a
+                className="text-sm font-medium underline"
+                href={GITHUB_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 GitHub
               </a>
             ) : null}
             {LINKEDIN_URL ? (
-              <a className="text-sm font-medium underline" href={LINKEDIN_URL}>
+              <a
+                className="text-sm font-medium underline"
+                href={LINKEDIN_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 LinkedIn
               </a>
             ) : null}
@@ -62,20 +80,32 @@ export default function CVPage() {
                 <a
                   className="underline"
                   href={docsUrl("/docs/security/threat-models/portfolio-app")}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   STRIDE analysis
                 </a>
               </li>
               <li>
                 Scan operational maturity:{" "}
-                <a className="underline" href={docsUrl("/docs/operations/runbooks/")}>
+                <a
+                  className="underline"
+                  href={docsUrl("/docs/operations/runbooks/")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   runbooks
                 </a>{" "}
                 (deploy, rollback, CI triage, secrets incident)
               </li>
               <li>
                 Browse architectural decisions:{" "}
-                <a className="underline" href={docsUrl("/docs/architecture/adr/")}>
+                <a
+                  className="underline"
+                  href={docsUrl("/docs/architecture/adr/")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   ADR index
                 </a>
               </li>
@@ -111,6 +141,8 @@ export default function CVPage() {
                     <a
                       className="underline hover:text-zinc-950 dark:hover:text-white"
                       href={proof.href}
+                      target={isNewTabTarget(proof.href) ? "_blank" : undefined}
+                      rel={isNewTabTarget(proof.href) ? "noopener noreferrer" : undefined}
                     >
                       {proof.text}
                     </a>
@@ -129,19 +161,34 @@ export default function CVPage() {
               <h4 className="font-medium text-zinc-900 dark:text-white">Project Evidence</h4>
               <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
                 <li>
-                  <a className="underline" href={docsUrl("/docs/projects/portfolio-app/")}>
+                  <a
+                    className="underline"
+                    href={docsUrl("/docs/projects/portfolio-app/")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     Portfolio App Dossier
                   </a>{" "}
                   — Complete project documentation
                 </li>
                 <li>
-                  <a className="underline" href={docsUrl("/docs/projects/portfolio-docs-app/")}>
+                  <a
+                    className="underline"
+                    href={docsUrl("/docs/projects/portfolio-docs-app/")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     Documentation App Dossier
                   </a>{" "}
                   — Docusaurus documentation site
                 </li>
                 <li>
-                  <a className="underline" href={docsUrl("/docs/portfolio/roadmap")}>
+                  <a
+                    className="underline"
+                    href={docsUrl("/docs/portfolio/roadmap")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     Program Roadmap
                   </a>{" "}
                   — Multi-phase delivery plan
@@ -155,19 +202,34 @@ export default function CVPage() {
               </h4>
               <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
                 <li>
-                  <a className="underline" href={docsUrl("/docs/architecture/adr/")}>
+                  <a
+                    className="underline"
+                    href={docsUrl("/docs/architecture/adr/")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     ADR Index
                   </a>{" "}
                   — Architecture decision records
                 </li>
                 <li>
-                  <a className="underline" href={docsUrl("/docs/security/threat-models/")}>
+                  <a
+                    className="underline"
+                    href={docsUrl("/docs/security/threat-models/")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     Threat Models
                   </a>{" "}
                   — STRIDE security analysis
                 </li>
                 <li>
-                  <a className="underline" href={docsUrl("/docs/operations/runbooks/")}>
+                  <a
+                    className="underline"
+                    href={docsUrl("/docs/operations/runbooks/")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     Operational Runbooks
                   </a>{" "}
                   — Deploy, rollback, triage procedures

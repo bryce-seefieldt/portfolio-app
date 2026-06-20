@@ -7,15 +7,19 @@ function ContactLink({
   href,
   label,
   sublabel,
+  newTab = false,
 }: {
   href: string;
   label: string;
   sublabel?: string;
+  newTab?: boolean;
 }) {
   return (
     <a
       href={href}
       className="flex flex-col gap-1 rounded-xl border border-zinc-200 p-4 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900"
+      target={newTab ? "_blank" : undefined}
+      rel={newTab ? "noopener noreferrer" : undefined}
     >
       <div className="font-medium">{label}</div>
       {sublabel ? <div className="text-sm text-zinc-600 dark:text-zinc-400">{sublabel}</div> : null}
@@ -50,6 +54,7 @@ export default function ContactPage() {
                   href={LINKEDIN_URL}
                   label="LinkedIn"
                   sublabel="Best for professional introductions and context."
+                  newTab
                 />
               ) : null}
 
@@ -58,6 +63,7 @@ export default function ContactPage() {
                   href={GITHUB_URL}
                   label="GitHub"
                   sublabel="Best for technical discussions and reviewing code."
+                  newTab
                 />
               ) : null}
 

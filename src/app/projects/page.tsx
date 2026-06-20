@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Section } from "@/components/Section";
 import { ScrollFadeIn } from "@/components/ScrollFadeIn";
 import { getFeaturedProjects, PROJECTS } from "@/data/projects";
-import { DOCS_BASE_URL } from "@/lib/config";
+import { DOCS_URL } from "@/lib/config";
 
 function Tag({ children }: { children: React.ReactNode }) {
   return (
@@ -44,7 +44,12 @@ export default function ProjectsPage() {
           </p>
           <div className="text-sm text-zinc-600 dark:text-zinc-400">
             Evidence engine:{" "}
-            <a className="underline hover:text-zinc-950 dark:hover:text-white" href={DOCS_BASE_URL}>
+            <a
+              className="underline hover:text-zinc-950 dark:hover:text-white"
+              href={DOCS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               open Documentation App
             </a>
           </div>
@@ -87,7 +92,12 @@ export default function ProjectsPage() {
                     View details
                   </Link>
                   {p.repoUrl ? (
-                    <a className="underline" href={p.repoUrl}>
+                    <a
+                      className="underline"
+                      href={p.repoUrl}
+                      target={p.repoUrl.includes("github.com") ? "_blank" : undefined}
+                      rel={p.repoUrl.includes("github.com") ? "noopener noreferrer" : undefined}
+                    >
                       Repo
                     </a>
                   ) : null}
