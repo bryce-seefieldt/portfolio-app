@@ -3,16 +3,16 @@
 
 const REQUIRED = [
   {
-    key: "NEXT_PUBLIC_DOCS_BASE_URL",
-    get: () => process.env.NEXT_PUBLIC_DOCS_BASE_URL,
+    key: "NEXT_PUBLIC_DOCS_URL",
+    get: () => process.env.NEXT_PUBLIC_DOCS_URL,
   },
   {
     key: "NEXT_PUBLIC_GITHUB_URL",
     get: () => process.env.NEXT_PUBLIC_GITHUB_URL,
   },
   {
-    key: "NEXT_PUBLIC_DOCS_GITHUB_URL",
-    get: () => process.env.NEXT_PUBLIC_DOCS_GITHUB_URL,
+    key: "NEXT_PUBLIC_GITHUB_DOCS_REPO_URL",
+    get: () => process.env.NEXT_PUBLIC_GITHUB_DOCS_REPO_URL,
   },
 ];
 
