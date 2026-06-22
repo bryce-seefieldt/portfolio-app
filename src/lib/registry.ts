@@ -29,10 +29,14 @@ function interpolate(value: string | null | undefined): string | null {
 
   // Read from process.env directly for better reliability with tsx/node
   const DOCS_BASE_URL =
-    process.env.NEXT_PUBLIC_DOCS_BASE_URL?.trim()?.replace(/\/+$/, "") || "/docs";
+    process.env.NEXT_PUBLIC_DOCS_URL?.trim()?.replace(/\/+$/, "") ||
+    process.env.NEXT_PUBLIC_DOCS_BASE_URL?.trim()?.replace(/\/+$/, "") ||
+    "/docs";
   const GITHUB_URL = process.env.NEXT_PUBLIC_GITHUB_URL?.trim()?.replace(/\/+$/, "") || "";
   const DOCS_GITHUB_URL =
-    process.env.NEXT_PUBLIC_DOCS_GITHUB_URL?.trim()?.replace(/\/+$/, "") || "";
+    process.env.NEXT_PUBLIC_GITHUB_DOCS_REPO_URL?.trim()?.replace(/\/+$/, "") ||
+    process.env.NEXT_PUBLIC_DOCS_GITHUB_URL?.trim()?.replace(/\/+$/, "") ||
+    "";
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim()?.replace(/\/+$/, "") || "";
 
   const result = value

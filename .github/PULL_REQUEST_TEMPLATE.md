@@ -27,12 +27,13 @@
 
 ## CI Status
 
-- [ ] `ci / quality` passed (lint, format, typecheck)
-- [ ] `ci / secrets-scan` passed (PR-only gate)
-- [ ] `ci / test` passed (unit + E2E tests)
-- [ ] `ci / link-validation` passed (registry + evidence links; Stage 3.5)
-- [ ] `ci / build` passed (depends on quality, test, link-validation)
-- [ ] `codeql` checks passed
+- [ ] All CI Checks passed:
+  - [x] `ci / quality` passed (lint, format, typecheck)
+  - [x]`ci / secrets-scan` passed (PR-only gate)
+  - [x]`ci / test` passed (unit + E2E tests)
+  - [x]`ci / link-validation` passed (registry + evidence links; Stage 3.5)
+  - [x]`ci / build` passed (depends on quality, test, link-validation)
+  - [x]`codeql` checks passed
 
 ## Documentation
 
