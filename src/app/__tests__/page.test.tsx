@@ -44,20 +44,19 @@ describe("HomePage", () => {
 
     render(<HomePage />);
 
-    expect(screen.getByText("Start with the CV")).toBeInTheDocument();
-    expect(screen.getByText("Browse projects")).toBeInTheDocument();
-    expect(screen.getByText("Open evidence docs")).toBeInTheDocument();
-    expect(screen.getByText("GitHub")).toBeInTheDocument();
-    expect(screen.getByText("LinkedIn")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "See the work" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Read the CV" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Review the Portfolio Engineering Docs" }),
+    ).toBeInTheDocument();
   });
 
-  it("should omit external links when not configured", () => {
+  it("should keep the LinkedIn link out of the page body", () => {
     configValues.GITHUB_URL = null;
     configValues.LINKEDIN_URL = null;
 
     render(<HomePage />);
 
-    expect(screen.queryByText("GitHub")).toBeNull();
     expect(screen.queryByText("LinkedIn")).toBeNull();
   });
 });

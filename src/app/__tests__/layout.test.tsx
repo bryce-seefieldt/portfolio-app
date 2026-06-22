@@ -71,12 +71,12 @@ describe("RootLayout", () => {
     render(node as React.ReactElement);
 
     expect(screen.getByText("Content")).toBeInTheDocument();
-    expect(screen.getByText("Documentation (Evidence)")).toBeInTheDocument();
+    expect(screen.getByText("Engineering Docs")).toBeInTheDocument();
     expect(screen.getByText("GitHub")).toBeInTheDocument();
     expect(screen.getByText("LinkedIn")).toBeInTheDocument();
   });
 
-  it("should omit optional profile links when missing", async () => {
+  it("should omit LinkedIn when missing", async () => {
     configValues.GITHUB_URL = null;
     configValues.LINKEDIN_URL = null;
 
@@ -84,7 +84,7 @@ describe("RootLayout", () => {
 
     render(node as React.ReactElement);
 
-    expect(screen.queryByText("GitHub")).toBeNull();
     expect(screen.queryByText("LinkedIn")).toBeNull();
+    expect(screen.getByText("GitHub")).toBeInTheDocument();
   });
 });
