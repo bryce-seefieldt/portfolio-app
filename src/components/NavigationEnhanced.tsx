@@ -3,9 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ThemeToggle } from "./ThemeToggle";
-import { DOCS_BASE_URL, GITHUB_URL } from "@/lib/config";
-
-const GITHUB_BASE_URL = "https://github.com/bryce-seefieldt";
+import { DOCS_BASE_URL, GITHUB_URL, GITHUB_BASE_URL } from "@/lib/config";
 
 /**
  * NavigationEnhanced Component
@@ -45,7 +43,7 @@ function NavLink({ href, children, onClick }: NavLinkProps) {
 export function NavigationEnhanced() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const githubHref = GITHUB_URL ?? GITHUB_BASE_URL;
+  const githubHref = GITHUB_BASE_URL ?? GITHUB_URL ?? "https://github.com/bryce-seefieldt";
 
   // Detect scroll for visual feedback (shadow on scroll)
   useEffect(() => {
