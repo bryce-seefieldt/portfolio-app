@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Callout } from "@/components/Callout";
 import { Section } from "@/components/Section";
 import { ScrollFadeIn } from "@/components/ScrollFadeIn";
-import { DOCS_BASE_URL, GITHUB_URL, LINKEDIN_URL, docsUrl } from "@/lib/config";
+import { DOCS_BASE_URL, docsUrl } from "@/lib/config";
 
 function PrimaryButton({ href, children }: { href: string; children: React.ReactNode }) {
   return (
@@ -40,10 +40,10 @@ export default function HomePage() {
           </h1>
 
           <p className="max-w-3xl text-base text-zinc-700 dark:text-zinc-300">
-            Full-stack developer with a background leading enterprise technology projects. I've focused
-            my career on modernizing systems and improving processes. I build and deliver to an
-            enterprise standard: tested, secured, documented, and shipped through a real pipeline.
-            Take a look around. The proof is one click deep.
+            Full-stack developer with a background leading enterprise technology projects. I&apos;ve
+            focused my career on modernizing systems and improving processes. I build and deliver to
+            an enterprise standard: tested, secured, documented, and shipped through a real
+            pipeline. Take a look around. The proof is one click deep.
           </p>
 
           {/* PRIMARY CTA ROW */}
@@ -78,20 +78,19 @@ export default function HomePage() {
         {/* CALLOUT: HOW TO EVALUATE */}
         <Callout>
           <div className="flex flex-col gap-2">
-          <Section
-            title="Evaluation Path"
-            subtitle="Short on time? Here&apos;s the three-minute version:"
+            <Section
+              title="Evaluation Path"
+              subtitle="Short on time? Here's the three-minute version:"
             >
-
               <ol className="list-decimal pl-5">
                 <li>
                   <strong>
                     Skim the{" "}
                     <Link className="underline" href="/cv">
                       CV
-                    </Link>{" "}  
+                    </Link>{" "}
                   </strong>
-                  :   Scope, impact, and enterprise delivery by the numbers.
+                  : Scope, impact, and enterprise delivery by the numbers.
                 </li>
                 <li>
                   <strong>
@@ -100,15 +99,17 @@ export default function HomePage() {
                       Work
                     </Link>{" "}
                   </strong>
-                  :    Each one links to how it was actually built, not just what it does.
+                  : Each one links to how it was actually built, not just what it does.
                 </li>
                 <li>
-                  <strong>Dig a little deeper in the{" "}
-                  <a className="underline" href={docsUrl("projects/portfolio-app/")}>
-                    Engineering Docs
-                  </a>{" "}</strong>
-                  :    The docs hold the architecture decisions, threat models, and runbooks
-                  behind every feature on this site.
+                  <strong>
+                    Dig a little deeper in the{" "}
+                    <a className="underline" href={docsUrl("projects/portfolio-app/")}>
+                      Engineering Docs
+                    </a>{" "}
+                  </strong>
+                  : The docs hold the architecture decisions, threat models, and runbooks behind
+                  every feature on this site.
                 </li>
               </ol>
             </Section>
@@ -125,26 +126,29 @@ export default function HomePage() {
           >
             <ul className="list-disc pl-5 text-sm text-zinc-700 dark:text-zinc-300">
               <li>
-                <strong>Range Across the Stack</strong><br />
-                Next.js App Router, React, and TypeScript on the front; APIs, 
-                data, and cloud deployment behind them. Confidence and intentionality at every layer.
+                <strong>Range Across the Stack</strong>
+                <br />
+                Next.js App Router, React, and TypeScript on the front; APIs, data, and cloud
+                deployment behind them. Confidence and intentionality at every layer.
               </li>
               <li>
-                <strong>Decisions That Hold Up</strong><br />
-                Every meaningful choice gets reasoned through and written
-                down, so the system stays understandable as it grows. That&apos;s the difference
-                between code that works and code a team can live with.
+                <strong>Decisions That Hold Up</strong>
+                <br />
+                Every meaningful choice gets reasoned through and written down, so the system stays
+                understandable as it grows. That&apos;s the difference between code that works and
+                code a team can live with.
               </li>
               <li>
-                <strong>Security as a Starting Point</strong><br />
-                Hardened HTTP headers, content security policy,
-                supply-chain monitoring, and a threat model. Built in from the first commit, not
-                bolted on later.
+                <strong>Security as a Starting Point</strong>
+                <br />
+                Hardened HTTP headers, content security policy, supply-chain monitoring, and a
+                threat model. Built in from the first commit, not bolted on later.
               </li>
               <li>
-                <strong>Built to be Operated</strong><br />
-                Deploy and rollback runbooks, performance budgets, and a plan
-                for when something breaks. Because in production, something always does.
+                <strong>Built to be Operated</strong>
+                <br />
+                Deploy and rollback runbooks, performance budgets, and a plan for when something
+                breaks. Because in production, something always does.
               </li>
             </ul>
           </Section>
@@ -157,11 +161,10 @@ export default function HomePage() {
           >
             <ul className="list-disc pl-5 text-sm text-zinc-700 dark:text-zinc-300">
               <li>
-                2,500+ users served by the cloud print platform I led, across the Toronto-wide campus.
+                2,500+ users served by the cloud print platform I led, across the Toronto-wide
+                campus.
               </li>
-              <li>
-                50% reduction in print-related support tickets within three months of launch.
-              </li>
+              <li>50% reduction in print-related support tickets within three months of launch.</li>
               <li>
                 150+ enterprise services I documented and brought under a robust Disaster Recovery
                 and Business Continuity Plan.
@@ -225,18 +228,29 @@ export default function HomePage() {
         <ScrollFadeIn delay={300}>
           <Section title="Let's talk." subtitle="">
             <ul className="list-disc pl-5 text-sm text-zinc-700 dark:text-zinc-300">
-                I&apos;m looking for a full-stack role where engineering judgment and a track record
-                of modernizing how work gets done both matter.<br /><br />
-
-                If that sounds like your team, I&apos;d like to hear from you. And yes, everything
-                on this site is open source, so look as closely as you like.<br /><br />
-
-                View the <Link className="underline" href="/cv">CV</Link> and <Link className="underline" href={DOCS_BASE_URL}>GitHub</Link> for additional context.<br />
+              I&apos;m looking for a full-stack role where engineering judgment and a track record
+              of modernizing how work gets done both matter.
+              <br />
+              <br />
+              If that sounds like your team, I&apos;d like to hear from you. And yes, everything on
+              this site is open source, so look as closely as you like.
+              <br />
+              <br />
+              View the{" "}
+              <Link className="underline" href="/cv">
+                CV
+              </Link>{" "}
+              and{" "}
+              <Link className="underline" href={DOCS_BASE_URL}>
+                GitHub
+              </Link>{" "}
+              for additional context.
+              <br />
             </ul>
             <div className="mt-4">
               <Link className="underline" href="/contact">
-              Get in touch
-              </Link>{" "}  
+                Get in touch
+              </Link>{" "}
             </div>
           </Section>
         </ScrollFadeIn>

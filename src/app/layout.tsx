@@ -137,12 +137,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 GitHub
               </a>
               {LINKEDIN_URL ? (
-                  <a
-                    className="hover:text-zinc-950 dark:hover:text-white"
-                    href={LINKEDIN_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                <a
+                  className="hover:text-zinc-950 dark:hover:text-white"
+                  href={LINKEDIN_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   LinkedIn
                 </a>
               ) : null}
