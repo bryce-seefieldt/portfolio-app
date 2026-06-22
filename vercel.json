@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/docs",
+      "destination": "https://bns-portfolio-docs.vercel.app/docs"
+    },
+    {
+      "source": "/docs/:path*",
+      "destination": "https://bns-portfolio-docs.vercel.app/docs/:path*"
+    }
+  ]
+}

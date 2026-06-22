@@ -26,22 +26,22 @@ test.describe("Evidence Link Resolution", () => {
       await page.goto("/projects/portfolio-app");
 
       // Verify all 5 evidence categories are present
-      await expect(page.locator("text=Dossier")).toBeVisible();
-      await expect(page.locator("text=Threat Model")).toBeVisible();
-      await expect(page.locator("text=ADRs")).toBeVisible();
-      await expect(page.locator("text=Runbooks")).toBeVisible();
-      await expect(page.locator("text=GitHub Repository")).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Project Dossier" })).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Threat Model" })).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Architecture Decisions" })).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Operational Runbooks" })).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Source Code" })).toBeVisible();
     });
 
     test("should render BadgeGroup with correct badges", async ({ page }) => {
       await page.goto("/projects/portfolio-app");
 
       // Verify gold standard badge for portfolio-app
-      await expect(page.locator("text=Gold Standard")).toBeVisible();
+      await expect(page.getByText("Gold Standard", { exact: true }).first()).toBeVisible();
 
       // Verify other expected badges
-      await expect(page.locator("text=Docs Available")).toBeVisible();
-      await expect(page.locator("text=Threat Model")).toBeVisible();
+      await expect(page.getByText("Docs Available", { exact: true }).first()).toBeVisible();
+      await expect(page.getByTitle("STRIDE security analysis available").first()).toBeVisible();
     });
 
     test("should have clickable evidence links", async ({ page }) => {
@@ -57,7 +57,9 @@ test.describe("Evidence Link Resolution", () => {
       await page.goto("/projects/portfolio-app");
 
       // Verify link elements have proper href attributes
-      const evidenceLinks = page.locator('[class*="evidence"] a, [class*="Evidence"] a');
+      const evidenceLinks = page.getByRole("link", {
+        name: /View (Dossier|Threat Model|ADR Index|Runbooks|Repository)/,
+      });
       const firstLink = evidenceLinks.first();
 
       // Check that href attribute exists
@@ -100,26 +102,17 @@ test.describe("Evidence Link Resolution", () => {
   });
 
   test.describe("Component Rendering", () => {
-    test("should render EvidenceBlock with grid layout", async ({ page }) => {
+    test("should render evidence links for each category", async ({ page }) => {
       await page.goto("/projects/portfolio-app");
 
-      // Verify evidence categories are in a grid container
-      const evidenceSection = page.locator('[class*="Evidence"]');
-      await expect(evidenceSection).toBeVisible();
-
-      // Verify multiple cards are rendered
-      const cards = page.locator('[class*="Evidence"] [class*="rounded"]');
-      const count = await cards.count();
-      expect(count).toBeGreaterThanOrEqual(3);
-    });
-
-    test("should render badges with proper styling", async ({ page }) => {
-      await page.goto("/projects/portfolio-app");
-
-      // Verify badge elements exist and are visible
-      const badges = page.locator('[class*="badge"], [class*="Badge"]');
-      const count = await badges.count();
-      expect(count).toBeGreaterThan(0);
+      // Verify evidence links are present for core categories
+      await expect(page.getByRole("link", { name: /View Dossier/ })).toBeVisible();
+      await expect(page.getByRole("link", { name: /View Threat Model/ })).toBeVisible();
+      const adrIndexLinks = page.getByRole("link", { name: /View ADR Index/ });
+      const adrLinks = page.getByRole("link", { name: /ADR-/ });
+      const adrCount = (await adrIndexLinks.count()) + (await adrLinks.count());
+      expect(adrCount).toBeGreaterThan(0);
+      await expect(page.getByRole("link", { name: /View Repository/ })).toBeVisible();
     });
 
     test("should render clickable links without errors", async ({ page }) => {
@@ -165,7 +158,7 @@ test.describe("Evidence Link Resolution", () => {
       // Verify consistent rendering across browsers
       await expect(page.locator("h1")).toContainText("Portfolio App");
       await expect(page.locator("text=Evidence Artifacts")).toBeVisible();
-      await expect(page.locator("text=Gold Standard")).toBeVisible();
+      await expect(page.getByText("Gold Standard", { exact: true }).first()).toBeVisible();
     });
   });
 

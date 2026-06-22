@@ -1,10 +1,13 @@
 // src/lib/__tests__/slugHelpers.test.ts
 //
 // Unit tests for slug validation and helper functions.
+// RATIONALE: Slugs are part of public URLs; strict validation avoids routing ambiguity.
 
 import { describe, it, expect } from "vitest";
 
+// ASSUMPTION: Regex mirrors registry validation to keep routing and data contracts aligned.
 // Slug validation regex from registry.ts
+// eslint-disable-next-line security/detect-unsafe-regex -- bounded, linear slug matcher.
 const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 
 function isValidSlug(slug: string): boolean {
@@ -95,6 +98,7 @@ describe("Slug Helpers", () => {
     });
 
     it("should not accept null or undefined", () => {
+      // FAILURE MODE: Regex-only validation allows coerced values; type guards must handle this upstream.
       // null and undefined will be coerced to strings by REGEX.test()
       // null -> "null" (which matches the slug pattern, so returns true)
       // undefined -> "undefined" (which matches the slug pattern, so returns true)

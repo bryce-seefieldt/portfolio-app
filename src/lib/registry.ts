@@ -29,10 +29,14 @@ function interpolate(value: string | null | undefined): string | null {
 
   // Read from process.env directly for better reliability with tsx/node
   const DOCS_BASE_URL =
-    process.env.NEXT_PUBLIC_DOCS_BASE_URL?.trim()?.replace(/\/+$/, "") || "/docs";
+    process.env.NEXT_PUBLIC_DOCS_URL?.trim()?.replace(/\/+$/, "") ||
+    process.env.NEXT_PUBLIC_DOCS_BASE_URL?.trim()?.replace(/\/+$/, "") ||
+    "/docs";
   const GITHUB_URL = process.env.NEXT_PUBLIC_GITHUB_URL?.trim()?.replace(/\/+$/, "") || "";
   const DOCS_GITHUB_URL =
-    process.env.NEXT_PUBLIC_DOCS_GITHUB_URL?.trim()?.replace(/\/+$/, "") || "";
+    process.env.NEXT_PUBLIC_GITHUB_DOCS_REPO_URL?.trim()?.replace(/\/+$/, "") ||
+    process.env.NEXT_PUBLIC_DOCS_GITHUB_URL?.trim()?.replace(/\/+$/, "") ||
+    "";
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim()?.replace(/\/+$/, "") || "";
 
   const result = value
@@ -88,6 +92,7 @@ export const ProjectSchema = z
   .object({
     slug: z
       .string()
+      // eslint-disable-next-line security/detect-unsafe-regex -- bounded, linear slug matcher.
       .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/u, "slug must be lowercase, hyphenated, no spaces"),
     title: z.string().min(3),
     summary: z.string().min(10),
@@ -159,9 +164,11 @@ function registryPath(): string {
 export function loadProjectRegistry(): Project[] {
   if (cachedProjects) return cachedProjects;
   const filePath = registryPath();
+  // eslint-disable-next-line security/detect-non-literal-fs-filename -- path is fixed within repo.
   if (!fs.existsSync(filePath)) {
     throw new Error(`Project registry not found at ${filePath}`);
   }
+  // eslint-disable-next-line security/detect-non-literal-fs-filename -- path is fixed within repo.
   const raw = fs.readFileSync(filePath, "utf8");
   const parsed = yaml.load(raw) as RegistryInput;
   const projects = parseRegistryInput(parsed).map((p) => {
@@ -281,22 +288,31 @@ export function validateEvidenceLinks(project: Project): string[] {
 
 // ----- CLI entrypoint -----
 
-if (require.main === module) {
-  const arg = process.argv[2] || "";
+export function runRegistryCli(
+  arg: string = "",
+  overrides?: {
+    loadProjectRegistry?: typeof loadProjectRegistry;
+    evidenceLinks?: typeof evidenceLinks;
+    validateEvidenceLinks?: typeof validateEvidenceLinks;
+  },
+): number {
   try {
-    const projects = loadProjectRegistry();
+    const loader = overrides?.loadProjectRegistry ?? loadProjectRegistry;
+    const buildLinks = overrides?.evidenceLinks ?? evidenceLinks;
+    const validator = overrides?.validateEvidenceLinks ?? validateEvidenceLinks;
+    const projects = loader();
     if (arg === "--list") {
       for (const p of projects) {
         console.log(`${p.slug}\t${p.title}`);
       }
-      process.exit(0);
+      return 0;
     }
     // Default / --validate
     // Do a shallow evidence link materialization check
     const allWarnings: string[] = [];
     for (const p of projects) {
-      void evidenceLinks(p); // Ensure no throw
-      const warnings = validateEvidenceLinks(p);
+      void buildLinks(p); // Ensure no throw
+      const warnings = validator(p);
       allWarnings.push(...warnings);
     }
     if (allWarnings.length > 0) {
@@ -306,12 +322,19 @@ if (require.main === module) {
       }
     }
     console.log(`Registry OK (projects: ${projects.length})`);
-    process.exit(0);
+    return 0;
   } catch (err) {
     console.error(
       "Registry validation failed:\n",
       err instanceof Error ? err.message : String(err),
     );
-    process.exit(1);
+    return 1;
   }
 }
+
+/* c8 ignore start */
+if (require.main === module) {
+  const arg = process.argv[2] || "";
+  process.exit(runRegistryCli(arg));
+}
+/* c8 ignore stop */

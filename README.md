@@ -18,12 +18,19 @@ The Portfolio App provides:
 
 The design goal is for reviewers to evaluate the portfolio like a real service: clear UX, stable routes, and verifiable evidence trails.
 
+## Reviewer quickstart
+
+- Reviewer guide: https://bryce.seefieldt.ca/docs/portfolio/reviewer-guide
+- Portfolio App dossier: https://bryce.seefieldt.ca/docs/projects/portfolio-app/
+
 ## Documentation App (Evidence Engine)
 
 Enterprise-grade documentation is hosted separately to preserve a clean product surface and maintain governance discipline.
 
 - Docs base URL is configured via: `NEXT_PUBLIC_DOCS_BASE_URL`
+- The `/docs/*` path is proxied to the portfolio-docs origin via Vercel edge rewrites in `vercel.json` (no env var required for routing)
 - The code constructs evidence links through: `src/lib/config.ts`
+- Code commentary standard: https://bryce.seefieldt.ca/docs/engineering/commentary-standard (examples: https://bryce.seefieldt.ca/docs/reference/commentary-examples)
 
 ## Tech stack
 
@@ -36,6 +43,7 @@ Enterprise-grade documentation is hosted separately to preserve a clean product 
   - `src/lib/registry.ts` (YAML-backed registry loader with Zod validation and env interpolation)
   - `src/data/projects.yml` (canonical project registry data)
   - `src/data/projects.ts` (typed export of the validated registry)
+- `vercel.json` — Vercel edge-layer rewrites: proxies `/docs` and `/docs/:path*` to `bns-portfolio-docs.vercel.app`
 
 ## Data-driven project registry (Stage 3.1)
 
@@ -86,16 +94,29 @@ See `.env.example` for the public-safe configuration contract.
 
 All variables prefixed with `NEXT_PUBLIC_` are exposed to the browser. Do not place secrets, tokens, private endpoints, or sensitive values in `NEXT_PUBLIC_*`.
 
-## Governance (Implemented)
+## Governance
 
 Phase 1–3 governance is enforced:
 
 - Required CI checks with stable names:
   - `ci / quality` (lint, format:check, typecheck)
-  - `ci / link-validation` (registry validation + evidence link checks; Stage 3.5)
+  - `ci / link-validation` (registry validation + full Playwright E2E suite: routes, evidence links, security headers, CSRF, rate-limiting)
   - `ci / build` (Next.js build; depends on quality and link-validation)
+- Live external-link monitor is intentionally separate from required PR checks:
+  - `external-link-monitor / check-external-evidence-links` (scheduled + on-demand live HTTP checks against evidence URLs)
+  - This avoids flaky PR failures caused by third-party uptime/rate-limits while still monitoring real connectivity.
 - Deterministic installs in CI: `pnpm install --frozen-lockfile`
 - Supply chain and static analysis: CodeQL (JS/TS) and Dependabot (weekly; majors excluded)
+- Audit posture: CI blocks on high/critical advisories; low/medium are logged and require a ticket or risk register entry if they persist
+
+## Security
+
+- OWASP security headers and CSP configured in [next.config.ts](next.config.ts) (DENY framing, nosniff, strict referrer policy, restricted permissions, CSP with analytics exception)
+- CSP is enforced with per-request nonces (proxy) and applied to inline scripts
+- Mutation endpoints require Zod validation, CSRF checks, and rate limiting
+- Public-safe environment contract documented in [.env.example](.env.example); all `NEXT_PUBLIC_*` values are client-visible
+- Threat model and security posture documented in [docs/60-projects/portfolio-app/04-security.md](https://bryce.seefieldt.ca/docs/60-projects/portfolio-app/04-security.md) and [docs/40-security/threat-models/portfolio-app-threat-model-v2.md](https://bryce.seefieldt.ca/docs/40-security/threat-models/portfolio-app-threat-model-v2.md)
+- Dependency vulnerability response handled via [docs/50-operations/runbooks/rbk-portfolio-dependency-vulnerability.md](https://bryce.seefieldt.ca/docs/50-operations/runbooks/rbk-portfolio-dependency-vulnerability.md); secrets incidents via [docs/50-operations/runbooks/rbk-portfolio-secrets-incident.md](https://bryce.seefieldt.ca/docs/50-operations/runbooks/rbk-portfolio-secrets-incident.md)
 
 ### Local quality contract
 
@@ -109,7 +130,17 @@ pnpm verify
 pnpm verify:quick
 
 # Manual sequence (if verify script unavailable):
-pnpm format:write && pnpm lint && pnpm typecheck && pnpm registry:validate && pnpm build && pnpm test
+pnpm format:write && pnpm lint && pnpm typecheck && pnpm audit && pnpm registry:validate && pnpm build && pnpm test
+```
+
+Optional audit flags:
+
+```bash
+# Audit all severities (low+)
+pnpm verify -- --audit-all
+
+# Customize audit threshold
+pnpm verify -- --audit-level=critical
 ```
 
 **What each verification command does:**
@@ -120,16 +151,18 @@ pnpm format:write && pnpm lint && pnpm typecheck && pnpm registry:validate && pn
 2. Auto-formats code (`format:write` then `format:check`)
 3. Runs ESLint with zero-warning enforcement
 4. Validates TypeScript types
-5. Quick scan for secrets
-6. Validates the project registry (YAML + Zod schema)
-7. Builds the Next.js app
-8. Runs Vitest unit tests (70+ tests: registry validation, slug helpers, link construction)
-9. Runs Playwright link validation (12 checks: evidence link resolution, route coverage)
-10. Provides detailed troubleshooting guidance for any failures
+5. Runs dependency audit (`pnpm audit --audit-level=high`)
+6. Lightweight pattern-based secret scan (local-only; CI runs TruffleHog)
+7. Validates the project registry (YAML + Zod schema)
+8. Builds the Next.js app
+9. Performance verification (bundle size + cache headers; uses docs/performance-baseline.yml)
+10. Runs Vitest unit tests (70+ tests: registry validation, slug helpers, link construction)
+11. Runs Playwright link validation (58 checks: evidence links, routes, metadata)
+12. Provides detailed troubleshooting guidance for any failures
 
 **Quick verification** (`pnpm verify:quick`) — Fast iteration during development (~60-90s):
 
-- Runs steps 1-7 above, **skips unit and link validation tests** (steps 8-9)
+- Runs steps 1-8 above, **skips performance checks and all tests** (steps 9-11)
 - Use when making frequent small changes and need rapid feedback
 - Run full `pnpm verify` before final commit/push
 
@@ -151,6 +184,9 @@ pnpm typecheck         # TypeScript type checking
 pnpm format:check      # Check if files are formatted
 pnpm format:write      # Auto-format all files with Prettier
 pnpm quality           # Combined: lint + format:check + typecheck
+pnpm audit             # Dependency audit (high severity)
+pnpm analyze:bundle    # Run Next.js bundle analyzer (ANALYZE=true pnpm build)
+pnpm analyze:build     # Time the production build locally with duration summary
 ```
 
 **Unit tests (Vitest):**
@@ -165,9 +201,9 @@ pnpm test:debug        # Debug mode with inspector
 **E2E tests (Playwright):**
 
 ```bash
-pnpm playwright test   # Run all E2E tests (12 tests)
-pnpm playwright test --ui # Run tests in interactive UI mode
-pnpm playwright test --debug # Debug mode with inspector
+pnpm test:e2e        # Run all E2E tests
+pnpm test:e2e:ui     # Run tests in interactive UI mode
+pnpm test:e2e:debug  # Debug mode with inspector
 npx playwright show-report # View HTML test report
 ```
 
@@ -176,6 +212,7 @@ npx playwright show-report # View HTML test report
 ```bash
 pnpm secrets:scan      # Scan for accidentally committed secrets (TruffleHog)
                        # Requires TruffleHog CLI binary (see installation below)
+pnpm audit             # Dependency audit (high severity)
 ```
 
 **TruffleHog installation (Optional, Runs in CI Workdlow):**
@@ -225,14 +262,15 @@ Secrets will still be scanned in CI (GitHub Actions), but setting up the local h
 ```bash
 pnpm registry:validate # Validate projects.yml schema and integrity
 pnpm registry:list     # List all projects with interpolated values
-pnpm links:check       # Run Playwright link validation (evidence URL smoke tests)
+pnpm links:check       # Run deterministic Playwright E2E validation (DOM presence + internal routes/APIs)
+pnpm links:check:external # Run live HTTP checks for external evidence links (best-effort monitor)
 ```
 
 **Comprehensive validation:**
 
 ```bash
 pnpm verify            # Full pre-deploy validation (all checks + tests)
-pnpm verify:quick      # Fast validation (all checks, skip tests)
+pnpm verify:quick      # Fast validation (skip performance checks and tests; still builds)
 ```
 
 ### Pre-deploy checklist (step-by-step)
@@ -253,11 +291,14 @@ pnpm typecheck         # TypeScript must have no errors
 # 4. Validate data integrity
 pnpm registry:validate # Projects YAML must be valid
 
-# 5. Validate evidence links (Stage 3.5)
-pnpm links:check       # Playwright link validation (must connect to /docs)
-
-# 6. Ensure production build works
+# 5. Ensure production build works
 pnpm build
+
+# 6. Run unit tests
+pnpm test:unit
+
+# 7. Validate evidence links (Stage 3.5)
+pnpm links:check       # Playwright link validation (must connect to /docs)
 
 # 7. Run unit tests
 pnpm test:unit
@@ -284,7 +325,7 @@ The Portfolio App uses a **staging-first deployment workflow** to ensure changes
 | ----------- | ----------- | ------------------------------------------ | ----------------------------------------- |
 | Preview     | PR branches | Auto-generated (`*.vercel.app`)            | PR review and feature validation          |
 | Staging     | `staging`   | `https://staging-bns-portfolio.vercel.app` | Pre-production validation and smoke tests |
-| Production  | `main`      | `https://bns-portfolio.vercel.app`         | Live public site                          |
+| Production  | `main`      | `https://bryce.seefieldt.ca`               | Live public site                          |
 
 ### Local Development → Staging → Production Workflow
 

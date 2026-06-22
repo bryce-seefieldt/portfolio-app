@@ -1,7 +1,10 @@
 // src/lib/__tests__/config.test.ts
-//
-// Unit tests for link construction helpers (docsUrl, githubUrl, docsGithubUrl, mailtoUrl).
 
+/*
+Unit tests for link construction helpers (docsUrl, githubUrl, docsGithubUrl, mailtoUrl).
+RATIONALE: Link helpers enforce evidence-first navigation without hardcoding environment-specific URLs.
+FAILURE MODE: Misconstructed links break reviewer paths and evidence discovery.
+*/
 import { describe, it, expect } from "vitest";
 import {
   DOCS_BASE_URL,
@@ -31,8 +34,8 @@ describe("Link Construction Helpers", () => {
     });
 
     it("should handle nested paths", () => {
-      const result = docsUrl("portfolio/roadmap/issues/stage-3-1");
-      expect(result).toBe(`${DOCS_BASE_URL}/portfolio/roadmap/issues/stage-3-1`);
+      const result = docsUrl("portfolio/features");
+      expect(result).toBe(`${DOCS_BASE_URL}/portfolio/features`);
     });
 
     it("should work with single leading slash", () => {

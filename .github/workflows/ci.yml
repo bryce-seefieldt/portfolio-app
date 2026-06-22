@@ -15,10 +15,10 @@ concurrency:
 
 # Public, non-secret env needed for registry interpolation during CI builds
 env:
-  NEXT_PUBLIC_DOCS_BASE_URL: https://bns-portfolio-docs.vercel.app
+  NEXT_PUBLIC_DOCS_BASE_URL: https://bryce.seefieldt.ca/docs
   NEXT_PUBLIC_GITHUB_URL: https://github.com/bryce-seefieldt/portfolio-app
   NEXT_PUBLIC_DOCS_GITHUB_URL: https://github.com/bryce-seefieldt/portfolio-docs
-  NEXT_PUBLIC_SITE_URL: https://bns-portfolio.vercel.app
+  NEXT_PUBLIC_SITE_URL: https://bryce.seefieldt.ca
 
 jobs:
   quality:
@@ -32,10 +32,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
         with:
           version: "10.0.0"
 
@@ -72,6 +72,12 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
+      - name: Audit gate (high/critical)
+        run: pnpm audit --audit-level=high
+
+      - name: Audit visibility (all severities)
+        run: pnpm audit --audit-level=low || true
+
   # Phase 2 Enhancement: Secrets scanning gate
   # Ref: Threat model — Information Disclosure mitigation (hardened control)
   secrets-scan:
@@ -85,7 +91,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: TruffleHog Secret Scanning
         uses: trufflesecurity/trufflehog@main
@@ -98,7 +104,7 @@ jobs:
   build:
     name: build
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 12
     # Require quality, test, and link validation jobs
     needs: [quality, test, link-validation]
     # Allow skipping when secrets-scan is conditional (not run on push events)
@@ -109,10 +115,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
         with:
           version: "10.0.0"
 
@@ -145,32 +151,20 @@ jobs:
             exit 1
           fi
 
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
-
-      - name: Start dev server
-        run: pnpm dev &
-
-      - name: Wait for server to be ready
-        run: npx wait-on http://localhost:3000
-
-      - name: Run E2E tests
-        run: pnpm test:e2e
-
   link-validation:
     name: link-validation
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     needs: [quality]
     permissions:
       contents: read
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
         with:
           version: "10.0.0"
 
@@ -183,10 +177,20 @@ jobs:
       - name: Install deps (frozen)
         run: pnpm install --frozen-lockfile
 
+      - name: Restore Playwright browser cache
+        id: playwright-cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
       - name: Registry validation
         run: pnpm registry:validate
 
       - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
 
       - name: Start dev server
@@ -200,7 +204,7 @@ jobs:
 
       - name: Upload Playwright report (on failure)
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-report
           path: playwright-report
@@ -211,17 +215,17 @@ jobs:
   test:
     name: test
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     needs: [quality]
     permissions:
       contents: read
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
         with:
           version: "10.0.0"
 
@@ -233,6 +237,14 @@ jobs:
 
       - name: Install deps (frozen)
         run: pnpm install --frozen-lockfile
+
+      - name: Restore Playwright browser cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
 
       - name: Run unit tests
         run: pnpm test:unit
@@ -251,7 +263,7 @@ jobs:
 
       - name: Upload coverage reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-report
           path: coverage/

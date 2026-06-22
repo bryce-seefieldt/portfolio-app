@@ -1,6 +1,7 @@
 // src/lib/__tests__/registry.test.ts
 //
 // Unit tests for registry validation, slug rules, and schema enforcement.
+// RATIONALE: Schema validation is the first line of defense against broken evidence data.
 
 import { describe, it, expect } from "vitest";
 import { ProjectSchema, TechStackItemSchema, EvidenceLinksSchema } from "../registry";

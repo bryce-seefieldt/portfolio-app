@@ -9,10 +9,9 @@ type Env = {
   // Public-facing
   NEXT_PUBLIC_SITE_URL?: string;
   NEXT_PUBLIC_DOCS_BASE_URL?: string;
-
-  // Optional public links
   NEXT_PUBLIC_GITHUB_URL?: string;
   NEXT_PUBLIC_DOCS_GITHUB_URL?: string;
+  NEXT_PUBLIC_GITHUB_BASE_URL?: string;
   NEXT_PUBLIC_LINKEDIN_URL?: string;
   NEXT_PUBLIC_CONTACT_EMAIL?: string;
 
@@ -58,17 +57,44 @@ export const SITE_URL: string | null = asAbsoluteUrl(env.NEXT_PUBLIC_SITE_URL);
  * Supports either:
  * - docs path on same domain (e.g., https://yourdomain.com/docs)
  * - docs subdomain (e.g., https://docs.yourdomain.com)
+ * - local path (e.g., /docs)
  *
  * For local dev, you may leave this unset and it will default to "/docs".
  */
-export const DOCS_BASE_URL: string = normalizeBaseUrl(
-  env.NEXT_PUBLIC_DOCS_BASE_URL?.trim() || "/docs",
-);
+function normalizeDocsBaseUrl(value?: string): string {
+  const trimmed = value?.trim();
+  if (!trimmed) return "/docs";
+
+  const absolute = asAbsoluteUrl(trimmed);
+  if (absolute) {
+    const docsHost = new URL(absolute).hostname.toLowerCase();
+    const siteHost = SITE_URL ? new URL(SITE_URL).hostname.toLowerCase() : null;
+
+    // Safety rail: never expose the preview docs origin on the production app domain.
+    if (
+      docsHost === "bns-portfolio-docs.vercel.app" &&
+      (env.VERCEL_ENV === "production" || siteHost === "bryce.seefieldt.ca")
+    ) {
+      return "https://bryce.seefieldt.ca/docs";
+    }
+
+    return normalizeBaseUrl(absolute);
+  }
+
+  if (trimmed.startsWith("/")) {
+    return normalizeBaseUrl(trimmed);
+  }
+
+  return "/docs";
+}
+
+export const DOCS_BASE_URL: string = normalizeDocsBaseUrl(env.NEXT_PUBLIC_DOCS_BASE_URL);
 
 /**
  * Public profile links (optional). Prefer these over hardcoding URLs in components.
  */
 export const GITHUB_URL: string | null = asAbsoluteUrl(env.NEXT_PUBLIC_GITHUB_URL);
+export const GITHUB_BASE_URL: string | null = asAbsoluteUrl(env.NEXT_PUBLIC_GITHUB_BASE_URL);
 export const DOCS_GITHUB_URL: string | null = asAbsoluteUrl(env.NEXT_PUBLIC_DOCS_GITHUB_URL);
 export const LINKEDIN_URL: string | null = asAbsoluteUrl(env.NEXT_PUBLIC_LINKEDIN_URL);
 
@@ -124,6 +150,15 @@ export function githubUrl(pathname: string): string {
   }
   const p = pathname.replace(/^\/+/, "");
   return p ? `${GITHUB_URL}/${p}` : GITHUB_URL;
+}
+export function githubBaseUrl(pathname: string): string {
+  // Build URL from GITHUB_BASE_URL with optional path
+  if (!GITHUB_BASE_URL) {
+    console.warn("GITHUB_BASE_URL not configured, returning placeholder");
+    return "#";
+  }
+  const p = pathname.replace(/^\/+/, "");
+  return p ? `${GITHUB_BASE_URL}/${p}` : GITHUB_BASE_URL;
 }
 
 export function docsGithubUrl(pathname: string): string {

@@ -7,7 +7,39 @@ const withBundleAnalyzerConfig = withBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
+// CSP is enforced per-request in proxy to support nonces.
+const securityHeaders = [
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "X-XSS-Protection", value: "1; mode=block" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "Permissions-Policy", value: "geolocation=(), microphone=(), camera=()" },
+  {
+    key: "Strict-Transport-Security",
+    value: "max-age=31536000; includeSubDomains; preload",
+  },
+];
+
+const cacheHeader = {
+  key: "Cache-Control",
+  value: "public, max-age=3600, stale-while-revalidate=86400",
+};
+
 const nextConfig: NextConfig = {
+  // Dev: Configure allowed origins for WSL2/Docker environments
+  // IP 172.19.254.176 is from Docker/WSL2 internal network
+  // This typically happens when accessing the dev server from Windows host through WSL2
+  // See: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+  /*
+  allowedDevOrigins: [
+    "localhost",
+    "127.0.0.1",
+    "*.local",
+    "host.docker.internal",
+    "*.docker.internal",
+    // WSL2/Docker subnet - typically 172.16.0.0/12, but you can be more specific
+    // if you know your exact range (e.g., "172.19.*" if supported)
+  ],*/
   // Performance: Enable React Compiler for optimized rendering
   reactCompiler: true,
 
@@ -28,16 +60,21 @@ const nextConfig: NextConfig = {
   // Security: Remove X-Powered-By header
   poweredByHeader: false,
 
+  // Observability: Health check and structured logging
+  // - Health endpoint: /api/health (GET) returns status, environment, commit, build time
+  // - Structured logging: src/lib/observability.ts provides JSON logging for monitoring
+  // - Environment variables used: VERCEL_ENV, VERCEL_GIT_COMMIT_SHA, BUILD_TIME
+  // See: `docs/60-projects/portfolio-app/08-observability.md`
+
+  // Routing: /docs/* is proxied to the Docusaurus docs site via vercel.json rewrites.
+  // This is handled at the Vercel edge layer (not Next.js) to avoid build-time env var
+  // dependencies and Vercel loop detection issues. See vercel.json for the rewrite config.
+
   // Caching: Configure HTTP Cache-Control headers
   headers: async () => [
     {
       source: "/:path*",
-      headers: [
-        {
-          key: "Cache-Control",
-          value: "public, max-age=3600, stale-while-revalidate=86400",
-        },
-      ],
+      headers: [...securityHeaders, cacheHeader],
     },
   ],
 };

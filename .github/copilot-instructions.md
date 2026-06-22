@@ -63,14 +63,19 @@ Before proposing changes, review and internalize the existing architecture and c
   - global layout + navigation
 - `src/app/page.tsx`
   - evidence-first landing page
+- `vercel.json`
+  - Vercel edge-layer routing: rewrites `/docs` and `/docs/:path*` to the portfolio-docs origin (`bns-portfolio-docs.vercel.app`)
+  - Evaluated at Vercel's edge before Next.js sees the request; takes precedence over Next.js routing for matching paths
+  - **Do not add `/docs` rewrites in `next.config.ts`**: build-time env var dependencies caused an `INFINITE_LOOP_DETECTED` (508) production incident — routing belongs here, not in `rewrites()` in `next.config.ts`
 
 ### 2.2 Conventions
 
 - Use the import alias `@/*` for internal imports (configured in `tsconfig.json`).
 - Keep route pages simple and reviewer-focused. Deep technical details belong in the Documentation App.
 - Prefer small, composable components under `src/components/`.
+- Follow the code commentary standard: https://bryce.seefieldt.ca/docs/engineering/commentary-standard (examples: https://bryce.seefieldt.ca/docs/reference/commentary-examples).
 
-**Phase status:** Phase 3 Stages 3.1–3.3 are complete (registry, evidence components, unit/E2E coverage integrated into CI); Stage 3.4 documentation alignment is next.
+**Phase status:** Phases 1-7 are complete. Current work focuses on incremental hardening, content quality, and evidence freshness while preserving established CI and governance contracts.
 
 ---
 
@@ -96,21 +101,33 @@ You must never:
 - Avoid introducing new dependencies without clear benefit.
 - Any dependency addition must be justified in the PR description and should not expand attack surface unnecessarily.
 
+### 3.4 React2Shell hardening guardrails
+
+- Treat React/Next.js as a backend surface; never deserialize untrusted payloads into rich objects.
+- All mutation endpoints must validate input with Zod and reject unknown shapes.
+- Use CSRF protection and rate limiting on any non-idempotent routes.
+- Inline scripts must include CSP nonces; do not reintroduce `unsafe-inline` for scripts.
+- Do not add generic "execute" or dynamic evaluation helpers.
+
 ---
 
 ## 4) Delivery governance and CI gates
 
-### 4.1 Required checks (do not break these)
+### 4.1 CI checks and naming stability (do not break these)
 
-The following GitHub checks are required for merge and must remain stable:
+The CI pipeline checks below are part of the delivery contract and must remain stable:
 
 - `ci / quality`
+- `ci / test`
+- `ci / link-validation`
 - `ci / build`
+
+`secrets-scan` is a PR-only gate; keep it intact unless governance documentation and workflow behavior are updated together.
 
 **Do not rename**:
 
 - the GitHub Actions workflow name `ci`
-- the job names `quality` and `build` (or their displayed names)
+- the job names `quality`, `test`, `link-validation`, and `build` (or their displayed names)
 
 If a change would rename or re-scope these checks, you must:
 
@@ -124,6 +141,22 @@ CI installs must use:
 - `pnpm install --frozen-lockfile`
 
 Lockfile changes must be committed intentionally and reviewed in PRs.
+
+### 4.2.1 Dependabot PR CI failures
+
+When a Dependabot PR causes CI job failures (e.g., `ci / quality`, `ci / build`, `ci / test`), treat it as a stop-the-line event. Do not merge with failing checks.
+
+**Remediation procedure:** Follow the **Temporary Exception Policy (Dependabot)** section in the Portfolio CI Triage runbook in the Documentation App:
+[`docs/50-operations/runbooks/rbk-portfolio-ci-triage.md`](https://bryce.seefieldt.ca/docs/operations/runbooks/rbk-portfolio-ci-triage)
+
+Key steps:
+
+- Identify root cause in GitHub Actions logs (e.g., `ERR_PNPM_BROKEN_LOCKFILE`, action incompatibility)
+- Roll back the failing action to its prior pinned SHA in `.github/workflows/ci.yml`
+- Add a temporary ignore rule in `.github/dependabot.yml` with an expiry date and tracking issue
+- Document the exception with exit criteria; do not leave open-ended ignores
+
+**Note:** The companion portfolio-docs repo owns the canonical exception policy and tracking. Cross-reference any exception opened in this repo with the portfolio-docs tracking issue.
 
 ### 4.3 Local quality contract (must stay valid)
 
@@ -282,7 +315,7 @@ When phase work spans both repositories:
 4. Reference docs issue in docs PRs (`Closes #Y`)
 5. Verify both PRs merged before marking phase stage complete
 
-**Reference:** See [Template Usage Guide](https://bns-portfolio-docs.vercel.app/docs/_meta/templates) for full details on all templates.
+**Reference:** See [Template Usage Guide](https://bryce.seefieldt.ca/docs/_meta/templates) for full details on all templates.
 
 ---
 
@@ -294,6 +327,7 @@ Rulesets enforce at minimum:
 
 - PR required before merge
 - required checks: `ci / quality` and `ci / build`
+- pipeline prerequisites: `ci / test` and `ci / link-validation`
 - block force-push
 - prevent deletion
 - require conversation resolution (recommended)
@@ -336,7 +370,7 @@ Use `NEXT_PUBLIC_DOCS_BASE_URL` to construct links to published docs.
 
 **Examples:**
 
-- ✅ `NEXT_PUBLIC_DOCS_BASE_URL + "docs/portfolio/roadmap"` → `https://bns-portfolio-docs.vercel.app/docs/portfolio/roadmap`
+- ✅ `NEXT_PUBLIC_DOCS_BASE_URL + "docs/portfolio/roadmap"` → `https://bryce.seefieldt.ca/docs/portfolio/roadmap`
 - ✅ `docsUrl("portfolio/architecture")` (use the helper function)
 - ❌ `NEXT_PUBLIC_DOCS_BASE_URL + "docs/00-portfolio/roadmap.md"` (wrong prefix + extension)
 - ❌ `NEXT_PUBLIC_DOCS_BASE_URL + "portfolio.roadmap"` (wrong separator)
@@ -385,10 +419,10 @@ Ensure these `NEXT_PUBLIC_*` variables are defined (checked in CI):
 
 ```typescript
 // .env.example
-NEXT_PUBLIC_DOCS_BASE_URL=https://bns-portfolio-docs.vercel.app/docs/
+NEXT_PUBLIC_DOCS_BASE_URL=https://bryce.seefieldt.ca/docs
 NEXT_PUBLIC_DOCS_GITHUB_URL=https://github.com/bryce-seefieldt/portfolio-docs/
 NEXT_PUBLIC_GITHUB_URL=https://github.com/bryce-seefieldt/portfolio-app
-NEXT_PUBLIC_SITE_URL=https://bns-portfolio.vercel.app/
+NEXT_PUBLIC_SITE_URL=https://bryce.seefieldt.ca/
 ```
 
 ### 6.5 Documentation updates expectation
@@ -1095,10 +1129,10 @@ Do NOT add tests for:
 
 ### 9.9 Test Reference Documentation
 
-- **Comprehensive Testing Guide:** [docs/70-reference/testing-guide.md](https://bns-portfolio-docs.vercel.app/docs/reference/testing-guide)
+- **Comprehensive Testing Guide:** [docs/70-reference/testing-guide.md](https://bryce.seefieldt.ca/docs/reference/testing-guide)
 - **Vitest Documentation:** https://vitest.dev
 - **Playwright Documentation:** https://playwright.dev
-- **Implementation Issue:** [stage-3-3-app-issue.md](https://bns-portfolio-docs.vercel.app/docs/portfolio/roadmap/issues/stage-3-3-app-issue)
+- **Implementation Issue:** [stage-3-3-app-issue.md](https://bryce.seefieldt.ca/docs/portfolio/roadmap/issues/stage-3-3-app-issue)
 
 ---
 
@@ -1120,6 +1154,7 @@ Symptoms:
 - merges blocked or unexpectedly allowed
   Mitigation:
 - ensure workflow name `ci` and jobs `quality`/`build` are stable
+- ensure workflow name `ci` and jobs `quality`/`test`/`build` are stable
 - run CI on PR and `main`
 - update GitHub ruleset required checks if a deliberate change is made (requires governance documentation)
 
@@ -1143,7 +1178,7 @@ Every PR must include:
 - **Rationale**: why
 - **Evidence**:
   - local: `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, `pnpm build`
-  - CI: confirm `ci / quality` and `ci / build` pass
+  - CI: confirm `ci / quality`, `ci / test`, and `ci / build` pass
 - **Security note**: “No secrets added; no sensitive endpoints introduced.”
 - **Documentation impact**: list any Documentation App updates needed
 
@@ -1163,7 +1198,7 @@ Do not change or introduce the following without an explicit request and documen
 - Analytics/telemetry
 - Large UI frameworks or component libraries
 - Significant URL structure changes (routes/slugs)
-- Renaming required CI checks (`ci / quality`, `ci / build`)
+- Renaming required CI checks (`ci / quality`, `ci / test`, `ci / build`)
 - Removing CodeQL or Dependabot baselines
 
 ---

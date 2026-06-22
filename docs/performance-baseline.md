@@ -5,9 +5,13 @@
 **Environment:** Local production build  
 **Status:** ✅ Baseline Established
 
+> **📊 Machine-Readable Baseline:** The canonical baseline metrics are defined in [`performance-baseline.yml`](./performance-baseline.yml), which serves as the single source of truth for automated verification scripts and CI workflows. This document provides human-readable context and analysis.
+
 ---
 
 ## Build Performance Metrics
+
+> **Note:** These values are also defined in [`performance-baseline.yml`](./performance-baseline.yml) for automated consumption. When updating baselines, modify both files to maintain consistency.
 
 ### Compilation & Generation
 
@@ -42,6 +46,8 @@
 ---
 
 ## Bundle Size Baseline
+
+> **Note:** Bundle size baselines and thresholds are defined in [`performance-baseline.yml`](./performance-baseline.yml) for use by verification scripts and CI workflows.
 
 ### Methodology
 
@@ -95,6 +101,8 @@ Based on production-grade Next.js deployments and static generation:
 
 ### Performance Targets for CI
 
+> **Note:** CI thresholds are maintained in [`performance-baseline.yml`](./performance-baseline.yml) to ensure consistency across all automation.
+
 | Threshold         | Condition        | Action                                |
 | ----------------- | ---------------- | ------------------------------------- |
 | **Build Time**    | >20% increase    | Warning in CI logs                    |
@@ -115,12 +123,19 @@ Based on production-grade Next.js deployments and static generation:
 
 ### Caching Strategy Active
 
-✅ **HTTP Cache-Control Headers:**
+✅ **App Router Caching Strategy:**
 
-- Value: `public, max-age=3600, stale-while-revalidate=86400`
-- Browser cache: 1 hour
-- Stale-while-revalidate: 24 hours (high availability)
-- Vercel Edge Cache: Respects headers automatically
+- HTML Response Headers: `no-store, must-revalidate` (App Router default)
+- ISR Revalidation: `revalidate: 3600` (1 hour) via route segment config
+- Vercel Edge Network: Caches based on `revalidate` setting, not HTTP headers
+- Static Assets (JS/CSS/images): Aggressive caching with long max-age
+
+**Note:** Next.js App Router uses a different caching model than Pages Router:
+
+- HTTP Cache-Control headers from `next.config.ts` apply to static assets, not app routes
+- HTML caching is controlled by route segment config (`export const revalidate`)
+- Vercel Edge Network respects the `revalidate` setting for ISR functionality
+- This approach provides better control over revalidation while maintaining performance
 
 ✅ **Image Optimization Enabled:**
 
@@ -217,6 +232,46 @@ Baseline metrics established. Ready for:
 - [ ] Deploy to staging and collect 24h analytics data
 - [ ] Verify Core Web Vitals in Vercel dashboard
 - [ ] Create performance runbook (portfolio-docs)
+
+---
+
+## File Structure & Maintenance
+
+### performance-baseline.yml (Machine-Readable)
+
+**Purpose:** Single source of truth for automated scripts and CI workflows
+
+**Consumers:**
+
+- `scripts/verify-local.sh` - Local verification
+- `.github/workflows/ci.yml` - CI bundle size checks
+- Future automation tools
+
+**Format:** YAML with explicit key-value pairs for easy parsing
+
+**When to update:** When baselines or thresholds change (e.g., after intentional bundle growth)
+
+### performance-baseline.md (Human-Readable)
+
+**Purpose:** Comprehensive documentation with context, methodology, and historical analysis
+
+**Audience:** Developers, reviewers, documentation readers
+
+**Format:** Markdown with tables, explanations, and rationale
+
+**When to update:** When baselines change OR when adding new insights/analysis
+
+### Keeping Files in Sync
+
+**Critical:** When updating baseline values, BOTH files must be modified:
+
+1. **Update YAML first:** Modify `performance-baseline.yml` with new values
+2. **Update Markdown:** Update corresponding tables in `performance-baseline.md`
+3. **Update metadata:** Change `baseline_date` in YAML and "Date Recorded" in Markdown
+4. **Verify:** Run `pnpm verify` to confirm script correctly reads new values
+5. **Commit together:** Include both files in the same commit
+
+**Validation:** The verify script will display the baseline source and date at runtime, confirming it's reading from the YAML file.
 
 ---
 
