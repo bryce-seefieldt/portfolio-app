@@ -84,11 +84,13 @@ export function NavigationEnhanced() {
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-4 md:flex">
           <NavLink href="/">Home</NavLink>
-          <NavLink href="/cv">Work</NavLink>
-          <NavLink href="/projects">CV</NavLink>
+          <NavLink href="/projects">Work</NavLink>
+          <NavLink href="/cv">CV</NavLink>
           <a
             href={DOCS_BASE_URL}
             className="text-sm text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             Engineering Docs
           </a>
@@ -177,16 +179,18 @@ export function NavigationEnhanced() {
             <NavLink href="/" onClick={closeMobileMenu}>
               Home
             </NavLink>
-            <NavLink href="/cv" onClick={closeMobileMenu}>
+            <NavLink href="/projects" onClick={closeMobileMenu}>
               Work
             </NavLink>
-            <NavLink href="/projects" onClick={closeMobileMenu}>
+            <NavLink href="/cv" onClick={closeMobileMenu}>
               CV
             </NavLink>
             <a
               href={DOCS_BASE_URL}
               className="text-sm text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
               onClick={closeMobileMenu}
+              target="_blank"
+              rel="noopener noreferrer"
             >
               Engineering Docs
             </a>

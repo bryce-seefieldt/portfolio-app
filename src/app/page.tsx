@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Callout } from "@/components/Callout";
 import { Section } from "@/components/Section";
 import { ScrollFadeIn } from "@/components/ScrollFadeIn";
-import { DOCS_BASE_URL, docsUrl } from "@/lib/config";
+import { DOCS_BASE_URL, docsUrl, GITHUB_BASE_URL } from "@/lib/config";
 
 function PrimaryButton({ href, children }: { href: string; children: React.ReactNode }) {
   return (
@@ -28,6 +28,7 @@ function SecondaryLink({ href, children }: { href: string; children: React.React
 }
 
 export default function HomePage() {
+  const githubHref = GITHUB_BASE_URL ?? "https://github.com/bryce-seefieldt";
   return (
     <div className="flex flex-col gap-8">
       {/* HERO */}
@@ -53,6 +54,8 @@ export default function HomePage() {
             <a
               className="text-sm font-medium text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
               href={DOCS_BASE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
             >
               Review the Portfolio Engineering Docs
             </a>
@@ -104,7 +107,12 @@ export default function HomePage() {
                 <li>
                   <strong>
                     Dig a little deeper in the{" "}
-                    <a className="underline" href={docsUrl("projects/portfolio-app/")}>
+                    <a
+                      className="underline"
+                      href={docsUrl("projects/portfolio-app/")}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       Engineering Docs
                     </a>{" "}
                   </strong>
@@ -191,13 +199,28 @@ export default function HomePage() {
                   and a three-stage deployment pipeline.
                 </div>
                 <div className="mt-3 flex flex-wrap items-center gap-3">
-                  <a className="underline" href={docsUrl("projects/portfolio-docs-app/")}>
+                  <a
+                    className="underline"
+                    href={docsUrl("projects/portfolio-docs-app/")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     → How it&apos;s built
                   </a>
-                  <a className="underline" href={docsUrl("architecture/adr/")}>
+                  <a
+                    className="underline"
+                    href={docsUrl("security/threat-models/portfolio-app-threat-model")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     → Threat model
                   </a>
-                  <a className="underline" href={docsUrl("operations/runbooks/")}>
+                  <a
+                    className="underline"
+                    href={docsUrl("operations/runbooks/")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     → Operational runbooks
                   </a>
                 </div>
@@ -210,12 +233,19 @@ export default function HomePage() {
                   models, and operational runbooks behind every claim on this site.
                 </div>
                 <div className="mt-3 flex flex-wrap items-center gap-3">
-                  <a className="underline" href={docsUrl("projects/portfolio-app/")}>
+                  <a
+                    className="underline"
+                    href={docsUrl("projects/portfolio-app/")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     → Read the docs
                   </a>
                   <a
                     className="underline"
-                    href={docsUrl("security/threat-models/portfolio-app-threat-model")}
+                    href={docsUrl("architecture/adr/")}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     → Architecture decisions
                   </a>
@@ -241,7 +271,12 @@ export default function HomePage() {
                 CV
               </Link>{" "}
               and{" "}
-              <Link className="underline" href={DOCS_BASE_URL}>
+              <Link
+                className="underline"
+                href={githubHref}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 GitHub
               </Link>{" "}
               for additional context.
