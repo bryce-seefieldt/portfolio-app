@@ -102,7 +102,7 @@ describe("Project Page Metadata", () => {
       // RATIONALE: Social previews depend on Open Graph fields and must be consistent across projects.
       it("should include Open Graph object", async () => {
         const mockProject = createMockProject({
-          title: "Portfolio App",
+          title: "Bryce Seefieldt | Portfolio",
           summary: "A comprehensive portfolio application.",
         });
 
@@ -186,7 +186,7 @@ describe("Project Page Metadata", () => {
           params: Promise.resolve({ slug: "test-project" }),
         })) as Metadata;
 
-        expect(metadata.openGraph?.siteName).toBe("Portfolio");
+        expect(metadata.openGraph?.siteName).toBe("Bryce Seefieldt | Portfolio");
       });
     });
 

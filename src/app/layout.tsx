@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import Script from "next/script";
 import { NavigationEnhanced } from "@/components/NavigationEnhanced";
 import { BackToTop } from "@/components/BackToTop";
 import { headers } from "next/headers";
@@ -13,7 +14,7 @@ import {
   formatSchemaAsScript,
 } from "@/lib/structured-data";
 
-const APP_TITLE = "Portfolio";
+const APP_TITLE = "Bryce Seefieldt | Portfolio";
 const APP_DESCRIPTION =
   "Enterprise-grade full-stack portfolio: interactive CV, verified projects, and engineering evidence (ADRs, threat models, runbooks).";
 const OG_IMAGE = "/og-image.svg";
@@ -70,7 +71,7 @@ export const metadata: Metadata = {
         url: OG_IMAGE,
         width: 1200,
         height: 630,
-        alt: "Portfolio — enterprise-grade full-stack engineering",
+        alt: "Bryce Seefieldt | Full-Stack Portfolio",
       },
     ],
   },
@@ -84,6 +85,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const scriptNonce = process.env.NODE_ENV === "production" ? nonce : undefined;
   const githubHref = GITHUB_BASE_URL ?? FALLBACK_GITHUB_URL;
   const jsonLdScripts = [generatePersonSchema(), generateWebsiteSchema()];
 
@@ -94,35 +96,25 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             This ensures the correct theme is applied immediately on page load,
             preventing a visible flash when the page loads in the wrong theme.
             Uses stored preference or system preference as fallback. */}
-        <script
-          nonce={nonce}
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
+          nonce={scriptNonce}
           suppressHydrationWarning
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  const saved = localStorage.getItem('theme');
-                  const isDark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
-                  if (isDark) {
-                    document.documentElement.classList.add('dark');
-                  }
-                } catch (e) {}
-              })();
-            `,
-          }}
-        />
+        >{`(function(){try{const saved=localStorage.getItem('theme');const isDark=saved?saved==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(isDark){document.documentElement.classList.add('dark');}}catch(e){}})();`}</Script>
 
         {/* JSON-LD Structured Data for SEO */}
         {jsonLdScripts.map((schema, idx) => (
-          <script
-            key={idx}
+          <Script
+            key={`json-ld-${idx}`}
+            id={`json-ld-${idx}`}
+            strategy="beforeInteractive"
             type="application/ld+json"
-            nonce={nonce}
+            nonce={scriptNonce}
             suppressHydrationWarning
-            dangerouslySetInnerHTML={{
-              __html: formatSchemaAsScript(schema),
-            }}
-          />
+          >
+            {formatSchemaAsScript(schema)}
+          </Script>
         ))}
       </head>
       <body className="min-h-dvh bg-white text-zinc-950 dark:bg-zinc-950 dark:text-zinc-50">

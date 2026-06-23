@@ -78,7 +78,7 @@ export function NavigationEnhanced() {
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
         {/* Logo */}
         <Link href="/" className="font-semibold tracking-tight" onClick={closeMobileMenu}>
-          Portfolio
+          Bryce Seefieldt | Portfolio
         </Link>
 
         {/* Desktop Navigation */}

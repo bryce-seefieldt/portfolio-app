@@ -54,7 +54,7 @@ export async function generateMetadata({
       description: project.summary,
       type: "website",
       url: projectUrl,
-      siteName: "Portfolio",
+      siteName: "Bryce Seefieldt | Portfolio",
     },
     twitter: {
       card: "summary_large_image",
