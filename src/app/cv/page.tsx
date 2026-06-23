@@ -1,17 +1,16 @@
 import Link from "next/link";
 import { ScrollFadeIn } from "@/components/ScrollFadeIn";
-import { GITHUB_BASE_URL, LINKEDIN_URL } from "@/lib/config";
+import { GITHUB_BASE_URL, LINKEDIN_URL, DOCS_BASE_URL } from "@/lib/config";
 
 export default function CVPage() {
   return (
     <main className="flex flex-col gap-8">
       <ScrollFadeIn>
         <header className="flex flex-col gap-4">
-          <h1 className="text-3xl font-semibold tracking-tight">Bryce Seefieldt</h1>
 
-          <p className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
+          <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
             Full-Stack Developer
-          </p>
+          </h2>
 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
             {GITHUB_BASE_URL ? (
@@ -42,8 +41,7 @@ export default function CVPage() {
             >
               Portfolio home
             </a>
-            {/* TODO: Add /public/bryce-seefieldt-cv.pdf when the latest resume PDF is available. */}
-            <a className="font-medium underline" download href="/bryce-seefieldt-cv.pdf">
+            <a className="font-medium underline" download href="/portfolio-app/public/Bryce_Seefieldt_Full_Stack_Developer.pdf">
               Download PDF resume
             </a>
           </div>
@@ -52,7 +50,7 @@ export default function CVPage() {
 
       <ScrollFadeIn delay={50}>
         <section className="space-y-3">
-          <h2 className="text-2xl font-semibold tracking-tight">Summary</h2>
+          <h3 className="text-2xl font-semibold tracking-tight">Summary</h3>
           <p className="max-w-4xl text-zinc-700 dark:text-zinc-300">
             Full-stack developer who works comfortably across the whole stack, from the interface a
             user clicks to the pipeline that ships it. Eighteen months leading enterprise technology
@@ -66,7 +64,7 @@ export default function CVPage() {
 
       <ScrollFadeIn delay={100}>
         <section className="space-y-6">
-          <h2 className="text-2xl font-semibold tracking-tight">Experience</h2>
+          <h3 className="text-2xl font-semibold tracking-tight">Experience</h3>
 
           <article className="space-y-3">
             <h3 className="text-xl font-semibold">IT Services Specialist</h3>
@@ -153,7 +151,7 @@ export default function CVPage() {
 
       <ScrollFadeIn delay={150}>
         <section className="space-y-6">
-          <h2 className="text-2xl font-semibold tracking-tight">Education</h2>
+          <h3 className="text-2xl font-semibold tracking-tight">Education</h3>
 
           <article className="space-y-3">
             <h3 className="text-xl font-semibold">
@@ -195,7 +193,7 @@ export default function CVPage() {
 
       <ScrollFadeIn delay={200}>
         <section className="space-y-4">
-          <h2 className="text-2xl font-semibold tracking-tight">Technical Skills</h2>
+          <h3 className="text-2xl font-semibold tracking-tight">Technical Skills</h3>
 
           <ul className="space-y-2 text-sm text-zinc-700 dark:text-zinc-300">
             <li>
@@ -240,7 +238,8 @@ export default function CVPage() {
               projects
             </Link>{" "}
             and{" "}
-            <a className="underline" href="/docs" target="_blank" rel="noopener noreferrer">
+            <a className="underline" href={DOCS_BASE_URL}
+            target="_blank" rel="noopener noreferrer">
               engineering docs
             </a>{" "}
             go deep. Or{" "}
@@ -251,7 +250,7 @@ export default function CVPage() {
           </p>
 
           <section className="space-y-2">
-            <h2 className="text-2xl font-semibold tracking-tight">References</h2>
+            <h3 className="text-2xl font-semibold tracking-tight">References</h3>
             <p className="text-sm text-zinc-700 dark:text-zinc-300">
               Available on request. Reference letter from the Chief Information Officer, OCAD
               University, available for review.

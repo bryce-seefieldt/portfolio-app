@@ -43,7 +43,7 @@ function NavLink({ href, children, onClick }: NavLinkProps) {
 export function NavigationEnhanced() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const githubHref = GITHUB_BASE_URL ?? GITHUB_URL ?? "https://github.com/bryce-seefieldt";
+  const githubHref = GITHUB_BASE_URL ?? "https://github.com/bryce-seefieldt";
 
   // Detect scroll for visual feedback (shadow on scroll)
   useEffect(() => {
