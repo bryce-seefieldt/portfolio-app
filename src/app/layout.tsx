@@ -6,7 +6,7 @@ import { BackToTop } from "@/components/BackToTop";
 import { headers } from "next/headers";
 import "./globals.css";
 
-import { DOCS_BASE_URL, GITHUB_URL, LINKEDIN_URL, SITE_URL } from "@/lib/config";
+import { DOCS_BASE_URL, GITHUB_BASE_URL, LINKEDIN_URL, SITE_URL } from "@/lib/config";
 import {
   generatePersonSchema,
   generateWebsiteSchema,
@@ -84,7 +84,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const nonce = (await headers()).get("x-nonce") ?? undefined;
-  const githubHref = GITHUB_URL ?? FALLBACK_GITHUB_URL;
+  const githubHref = GITHUB_BASE_URL ?? FALLBACK_GITHUB_URL;
   const jsonLdScripts = [generatePersonSchema(), generateWebsiteSchema()];
 
   return (
@@ -133,7 +133,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <footer className="border-t border-zinc-200 dark:border-zinc-800">
           <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-8 text-sm text-zinc-600 dark:text-zinc-400">
             <div className="flex flex-wrap items-center gap-3">
-              <a className="hover:text-zinc-950 dark:hover:text-white" href={githubHref}>
+              <a
+                className="hover:text-zinc-950 dark:hover:text-white"
+                href={githubHref}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 GitHub
               </a>
               {LINKEDIN_URL ? (
@@ -146,7 +151,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   LinkedIn
                 </a>
               ) : null}
-              <a className="hover:text-zinc-950 dark:hover:text-white" href={DOCS_BASE_URL}>
+              <a
+                className="hover:text-zinc-950 dark:hover:text-white"
+                href={DOCS_BASE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Engineering Docs
               </a>
             </div>

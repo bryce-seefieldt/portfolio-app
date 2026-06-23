@@ -1,21 +1,25 @@
 // src/app/contact/page.tsx
 import { Section } from "@/components/Section";
 import { ScrollFadeIn } from "@/components/ScrollFadeIn";
-import { CONTACT_EMAIL, GITHUB_URL, LINKEDIN_URL, mailtoUrl } from "@/lib/config";
+import { CONTACT_EMAIL, GITHUB_BASE_URL, LINKEDIN_URL, mailtoUrl } from "@/lib/config";
 
 function ContactLink({
   href,
   label,
   sublabel,
+  openInNewTab,
 }: {
   href: string;
   label: string;
   sublabel?: string;
+  openInNewTab?: boolean;
 }) {
   return (
     <a
       href={href}
       className="flex flex-col gap-1 rounded-xl border border-zinc-200 p-4 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900"
+      target={openInNewTab ? "_blank" : undefined}
+      rel={openInNewTab ? "noopener noreferrer" : undefined}
     >
       <div className="font-medium">{label}</div>
       {sublabel ? <div className="text-sm text-zinc-600 dark:text-zinc-400">{sublabel}</div> : null}
@@ -24,7 +28,7 @@ function ContactLink({
 }
 
 export default function ContactPage() {
-  const hasAny = Boolean(CONTACT_EMAIL || GITHUB_URL || LINKEDIN_URL);
+  const hasAny = Boolean(CONTACT_EMAIL || GITHUB_BASE_URL || LINKEDIN_URL);
 
   return (
     <div className="flex flex-col gap-8">
@@ -50,14 +54,16 @@ export default function ContactPage() {
                   href={LINKEDIN_URL}
                   label="LinkedIn"
                   sublabel="Best for professional introductions and context."
+                  openInNewTab
                 />
               ) : null}
 
-              {GITHUB_URL ? (
+              {GITHUB_BASE_URL ? (
                 <ContactLink
-                  href={GITHUB_URL}
+                  href={GITHUB_BASE_URL}
                   label="GitHub"
                   sublabel="Best for technical discussions and reviewing code."
+                  openInNewTab
                 />
               ) : null}
 
@@ -78,7 +84,7 @@ export default function ContactPage() {
                   <code>NEXT_PUBLIC_LINKEDIN_URL</code>
                 </li>
                 <li>
-                  <code>NEXT_PUBLIC_GITHUB_URL</code>
+                  <code>NEXT_PUBLIC_GITHUB_BASE_URL</code>
                 </li>
                 <li>
                   <code>NEXT_PUBLIC_CONTACT_EMAIL</code>

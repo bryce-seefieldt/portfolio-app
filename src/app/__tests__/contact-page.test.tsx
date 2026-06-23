@@ -7,7 +7,7 @@ async function loadPage(config: Record<string, string | null>) {
   vi.resetModules();
   vi.doMock("@/lib/config", () => ({
     CONTACT_EMAIL: config.CONTACT_EMAIL,
-    GITHUB_URL: config.GITHUB_URL,
+    GITHUB_BASE_URL: config.GITHUB_BASE_URL,
     LINKEDIN_URL: config.LINKEDIN_URL,
     mailtoUrl: (email: string, subject: string) => `mailto:${email}?subject=${subject}`,
   }));
@@ -20,7 +20,7 @@ describe("ContactPage", () => {
   it("should render setup guidance when no contact links configured", async () => {
     const ContactPage = await loadPage({
       CONTACT_EMAIL: null,
-      GITHUB_URL: null,
+      GITHUB_BASE_URL: null,
       LINKEDIN_URL: null,
     });
 
@@ -31,7 +31,7 @@ describe("ContactPage", () => {
   it("should render contact links when configured", async () => {
     const ContactPage = await loadPage({
       CONTACT_EMAIL: "hello@example.com",
-      GITHUB_URL: "https://github.com/example",
+      GITHUB_BASE_URL: "https://github.com/example-base",
       LINKEDIN_URL: "https://linkedin.example.com",
     });
 
