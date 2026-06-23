@@ -26,12 +26,12 @@ vi.mock("@/components/BackToTop", () => ({
 const configValues = vi.hoisted(
   (): {
     DOCS_BASE_URL: string;
-    GITHUB_URL: string | null;
+    GITHUB_BASE_URL: string | null;
     LINKEDIN_URL: string | null;
     SITE_URL: string;
   } => ({
     DOCS_BASE_URL: "https://docs.example.com",
-    GITHUB_URL: "https://github.com/example",
+    GITHUB_BASE_URL: "https://github.com/example-base",
     LINKEDIN_URL: "https://linkedin.example.com",
     SITE_URL: "https://example.com",
   }),
@@ -41,8 +41,8 @@ vi.mock("@/lib/config", () => ({
   get DOCS_BASE_URL() {
     return configValues.DOCS_BASE_URL;
   },
-  get GITHUB_URL() {
-    return configValues.GITHUB_URL;
+  get GITHUB_BASE_URL() {
+    return configValues.GITHUB_BASE_URL;
   },
   get LINKEDIN_URL() {
     return configValues.LINKEDIN_URL;
@@ -63,7 +63,7 @@ import RootLayout from "../layout";
 // RATIONALE: Root layout must render navigation, footer, and main slot.
 describe("RootLayout", () => {
   it("should render children and footer links", async () => {
-    configValues.GITHUB_URL = "https://github.com/example";
+    configValues.GITHUB_BASE_URL = "https://github.com/example-base";
     configValues.LINKEDIN_URL = "https://linkedin.example.com";
 
     const node = await RootLayout({ children: <div>Content</div> });
@@ -77,7 +77,7 @@ describe("RootLayout", () => {
   });
 
   it("should omit LinkedIn when missing", async () => {
-    configValues.GITHUB_URL = null;
+    configValues.GITHUB_BASE_URL = null;
     configValues.LINKEDIN_URL = null;
 
     const node = await RootLayout({ children: <div>Content</div> });

@@ -93,8 +93,10 @@ export const DOCS_BASE_URL: string = normalizeDocsBaseUrl(env.NEXT_PUBLIC_DOCS_B
 /**
  * Public profile links (optional). Prefer these over hardcoding URLs in components.
  */
-export const GITHUB_URL: string | null = asAbsoluteUrl(env.NEXT_PUBLIC_GITHUB_URL);
 export const GITHUB_BASE_URL: string | null = asAbsoluteUrl(env.NEXT_PUBLIC_GITHUB_BASE_URL);
+export const GITHUB_REPO_URL: string | null = asAbsoluteUrl(env.NEXT_PUBLIC_GITHUB_URL);
+// Backward compatibility alias for existing non-page usage.
+export const GITHUB_URL: string | null = GITHUB_REPO_URL;
 export const DOCS_GITHUB_URL: string | null = asAbsoluteUrl(env.NEXT_PUBLIC_DOCS_GITHUB_URL);
 export const LINKEDIN_URL: string | null = asAbsoluteUrl(env.NEXT_PUBLIC_LINKEDIN_URL);
 
@@ -143,13 +145,13 @@ export function docsUrl(pathname: string): string {
 }
 
 export function githubUrl(pathname: string): string {
-  // Build URL from GITHUB_URL with optional path
-  if (!GITHUB_URL) {
-    console.warn("GITHUB_URL not configured, returning placeholder");
+  // Build URL from repository base URL with optional path.
+  if (!GITHUB_REPO_URL) {
+    console.warn("GITHUB_REPO_URL not configured, returning placeholder");
     return "#";
   }
   const p = pathname.replace(/^\/+/, "");
-  return p ? `${GITHUB_URL}/${p}` : GITHUB_URL;
+  return p ? `${GITHUB_REPO_URL}/${p}` : GITHUB_REPO_URL;
 }
 export function githubBaseUrl(pathname: string): string {
   // Build URL from GITHUB_BASE_URL with optional path

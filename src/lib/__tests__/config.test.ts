@@ -8,10 +8,12 @@ FAILURE MODE: Misconstructed links break reviewer paths and evidence discovery.
 import { describe, it, expect } from "vitest";
 import {
   DOCS_BASE_URL,
-  GITHUB_URL,
+  GITHUB_BASE_URL,
+  GITHUB_REPO_URL,
   DOCS_GITHUB_URL,
   docsUrl,
   githubUrl,
+  githubBaseUrl,
   docsGithubUrl,
   mailtoUrl,
 } from "../config";
@@ -50,22 +52,42 @@ describe("Link Construction Helpers", () => {
   });
 
   describe("githubUrl", () => {
-    it("should return placeholder when GITHUB_URL not configured", () => {
+    it("should return placeholder when GITHUB_REPO_URL not configured", () => {
       const result = githubUrl("portfolio-app");
-      const base = GITHUB_URL;
+      const base = GITHUB_REPO_URL;
       expect(result).toBe(base ? `${base}/portfolio-app` : "#");
     });
 
     it("should handle empty pathname", () => {
       const result = githubUrl("");
-      const base = GITHUB_URL;
+      const base = GITHUB_REPO_URL;
       expect(result).toBe(base || "#");
     });
 
     it("should strip leading slashes from pathname", () => {
       const result = githubUrl("/portfolio-app");
-      const base = GITHUB_URL;
+      const base = GITHUB_REPO_URL;
       expect(result).toBe(base ? `${base}/portfolio-app` : "#");
+    });
+  });
+
+  describe("githubBaseUrl", () => {
+    it("should return placeholder when GITHUB_BASE_URL not configured", () => {
+      const result = githubBaseUrl("bryce-seefieldt");
+      const base = GITHUB_BASE_URL;
+      expect(result).toBe(base ? `${base}/bryce-seefieldt` : "#");
+    });
+
+    it("should handle empty pathname", () => {
+      const result = githubBaseUrl("");
+      const base = GITHUB_BASE_URL;
+      expect(result).toBe(base || "#");
+    });
+
+    it("should strip leading slashes from pathname", () => {
+      const result = githubBaseUrl("/bryce-seefieldt");
+      const base = GITHUB_BASE_URL;
+      expect(result).toBe(base ? `${base}/bryce-seefieldt` : "#");
     });
   });
 

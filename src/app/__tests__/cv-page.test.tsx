@@ -12,63 +12,92 @@ vi.mock("next/link", () => ({
 }));
 
 const configValues: {
-  DOCS_BASE_URL: string;
-  GITHUB_URL: string | null;
+  GITHUB_BASE_URL: string | null;
   LINKEDIN_URL: string | null;
 } = {
-  DOCS_BASE_URL: "https://docs.example.com",
-  GITHUB_URL: "https://github.com/example",
+  GITHUB_BASE_URL: "https://github.com/example-base",
   LINKEDIN_URL: "https://linkedin.example.com",
 };
 
 vi.mock("@/lib/config", () => ({
-  get DOCS_BASE_URL() {
-    return configValues.DOCS_BASE_URL;
-  },
-  get GITHUB_URL() {
-    return configValues.GITHUB_URL;
+  get GITHUB_BASE_URL() {
+    return configValues.GITHUB_BASE_URL;
   },
   get LINKEDIN_URL() {
     return configValues.LINKEDIN_URL;
   },
-  docsUrl: (path: string) => `https://docs.example.com${path}`,
-}));
-
-vi.mock("@/data/cv", () => ({
-  TIMELINE: [
-    {
-      title: "Role",
-      organization: "Org",
-      period: "2026",
-      description: "Desc",
-      keyCapabilities: ["Capability"],
-      proofs: [{ text: "Proof", href: "https://docs.example.com/docs/projects/portfolio-app" }],
-    },
-  ],
 }));
 
 import CVPage from "../cv/page";
 
-// RATIONALE: CV page must render evidence-first timeline entries.
+// RATIONALE: CV page should remain a traditional, scannable resume.
 describe("CVPage", () => {
-  it("should render timeline entries and proofs", () => {
-    configValues.GITHUB_URL = "https://github.com/example";
+  it("should render the traditional CV structure and key content", () => {
+    configValues.GITHUB_BASE_URL = "https://github.com/example-base";
     configValues.LINKEDIN_URL = "https://linkedin.example.com";
 
     render(<CVPage />);
 
-    expect(screen.getByText("Experience & Capabilities")).toBeInTheDocument();
-    expect(screen.getByText("Role")).toBeInTheDocument();
-    expect(screen.getByText("Proof")).toHaveAttribute(
+    expect(screen.getByRole("heading", { level: 1, name: "Bryce Seefieldt" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Summary" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Experience" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Education" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Technical Skills" })).toBeInTheDocument();
+
+    expect(
+      screen.getByRole("heading", { level: 3, name: "IT Services Specialist" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /moving 50 multifunction printers across 10 buildings to serve 2,500\+ users/i,
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/eliminated a \$10,000-per-year licensing cost/i)).toBeInTheDocument();
+    expect(screen.getByText(/documented 150\+ services in the CMDB/i)).toBeInTheDocument();
+
+    expect(
+      screen.getByRole("heading", { level: 3, name: "Publishing Administrator" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 3, name: "Founder and Principal Consultant" }),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole("heading", {
+        level: 3,
+        name: "Honours Bachelor of Technology in Software Development",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 3, name: "Foundations of Project Management" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 3, name: "Music Production and Engineering" }),
+    ).toBeInTheDocument();
+
+    expect(screen.getByText(/Languages:/i)).toBeInTheDocument();
+    expect(screen.getByText(/Cloud & DevOps:/i)).toBeInTheDocument();
+    expect(screen.getByText(/Design & UX:/i)).toBeInTheDocument();
+
+    expect(screen.getByRole("link", { name: "Download PDF resume" })).toHaveAttribute(
       "href",
-      "https://docs.example.com/docs/projects/portfolio-app",
+      "/bryce-seefieldt-cv.pdf",
     );
+    expect(screen.getByRole("link", { name: "projects" })).toHaveAttribute("href", "/projects");
+    expect(screen.getByRole("link", { name: "engineering docs" })).toHaveAttribute("href", "/docs");
+    expect(screen.getByRole("link", { name: "get in touch" })).toHaveAttribute("href", "/contact");
+
+    expect(screen.queryByText("CIO / IT Executive + Full-Stack Developer")).toBeNull();
+    expect(screen.queryByText("Suggested reviewer path")).toBeNull();
+    expect(screen.queryByText("Evidence Hubs")).toBeNull();
+    expect(screen.queryByText("Proofs & Evidence")).toBeNull();
+
     expect(screen.getByText("GitHub")).toBeInTheDocument();
     expect(screen.getByText("LinkedIn")).toBeInTheDocument();
   });
 
   it("should omit optional profile links when missing", () => {
-    configValues.GITHUB_URL = null;
+    configValues.GITHUB_BASE_URL = null;
     configValues.LINKEDIN_URL = null;
 
     render(<CVPage />);

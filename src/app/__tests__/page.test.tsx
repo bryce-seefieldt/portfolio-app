@@ -14,12 +14,10 @@ vi.mock("next/link", () => ({
 const configValues: {
   DOCS_BASE_URL: string;
   GITHUB_BASE_URL: string | null;
-  GITHUB_URL: string | null;
   LINKEDIN_URL: string | null;
 } = {
   DOCS_BASE_URL: "https://docs.example.com",
   GITHUB_BASE_URL: "https://github.com/example-base",
-  GITHUB_URL: "https://github.com/example",
   LINKEDIN_URL: "https://linkedin.example.com",
 };
 
@@ -29,9 +27,6 @@ vi.mock("@/lib/config", () => ({
   },
   get GITHUB_BASE_URL() {
     return configValues.GITHUB_BASE_URL;
-  },
-  get GITHUB_URL() {
-    return configValues.GITHUB_URL;
   },
   get LINKEDIN_URL() {
     return configValues.LINKEDIN_URL;
@@ -44,7 +39,7 @@ import HomePage from "../page";
 // RATIONALE: Home page must expose primary reviewer CTAs.
 describe("HomePage", () => {
   it("should render primary CTAs", () => {
-    configValues.GITHUB_URL = "https://github.com/example";
+    configValues.GITHUB_BASE_URL = "https://github.com/example-base";
     configValues.LINKEDIN_URL = "https://linkedin.example.com";
 
     render(<HomePage />);
@@ -57,7 +52,7 @@ describe("HomePage", () => {
   });
 
   it("should keep the LinkedIn link out of the page body", () => {
-    configValues.GITHUB_URL = null;
+    configValues.GITHUB_BASE_URL = null;
     configValues.LINKEDIN_URL = null;
 
     render(<HomePage />);
