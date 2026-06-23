@@ -621,8 +621,10 @@ elif [ $BUILD_EXIT_CODE -eq 0 ]; then
   print_info "Running unit tests (registry, slug helpers, link construction)..."
   echo ""
   
-  UNIT_TEST_OUTPUT=$(pnpm test:unit 2>&1 || true)
+  set +e
+  UNIT_TEST_OUTPUT=$(pnpm test:unit 2>&1)
   UNIT_TEST_EXIT_CODE=$?
+  set -e
   
   if [ $UNIT_TEST_EXIT_CODE -eq 0 ]; then
     print_success "All unit tests passed"
@@ -684,8 +686,10 @@ elif [ $BUILD_EXIT_CODE -eq 0 ]; then
         print_info "Running Playwright link checks (pnpm links:check)..."
         echo ""
         
-        E2E_TEST_OUTPUT=$(pnpm links:check 2>&1 || true)
+        set +e
+        E2E_TEST_OUTPUT=$(pnpm links:check 2>&1)
         E2E_TEST_EXIT_CODE=$?
+        set -e
         
         # Kill dev server
         stop_process "$DEV_SERVER_PID"
