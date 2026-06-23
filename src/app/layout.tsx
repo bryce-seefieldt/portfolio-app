@@ -13,6 +13,12 @@ import {
   formatSchemaAsScript,
 } from "@/lib/structured-data";
 
+const APP_TITLE = "Portfolio";
+const APP_DESCRIPTION =
+  "Enterprise-grade full-stack portfolio: interactive CV, verified projects, and engineering evidence (ADRs, threat models, runbooks).";
+const OG_IMAGE = "/og-image.svg";
+const FALLBACK_GITHUB_URL = "https://github.com/bryce-seefieldt";
+
 /**
  * Viewport configuration for responsive rendering optimization.
  * Ensures proper device scaling and responsive behavior across all screen sizes.
@@ -24,11 +30,10 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Portfolio",
-    template: "%s | Portfolio",
+    default: APP_TITLE,
+    template: `%s | ${APP_TITLE}`,
   },
-  description:
-    "Enterprise-grade full-stack portfolio: interactive CV, verified projects, and engineering evidence (ADRs, threat models, runbooks).",
+  description: APP_DESCRIPTION,
   metadataBase: SITE_URL ? new URL(SITE_URL) : undefined,
   alternates: {
     canonical: SITE_URL || "/",
@@ -57,13 +62,12 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: SITE_URL || "/",
-    siteName: "Portfolio",
-    title: "Portfolio",
-    description:
-      "Enterprise-grade full-stack portfolio: interactive CV, verified projects, and engineering evidence (ADRs, threat models, runbooks).",
+    siteName: APP_TITLE,
+    title: APP_TITLE,
+    description: APP_DESCRIPTION,
     images: [
       {
-        url: "/og-image.svg",
+        url: OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Portfolio — enterprise-grade full-stack engineering",
@@ -72,15 +76,16 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Portfolio",
-    description:
-      "Enterprise-grade full-stack portfolio: interactive CV, verified projects, and engineering evidence (ADRs, threat models, runbooks).",
-    images: ["/og-image.svg"],
+    title: APP_TITLE,
+    description: APP_DESCRIPTION,
+    images: [OG_IMAGE],
   },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const githubHref = GITHUB_URL ?? FALLBACK_GITHUB_URL;
+  const jsonLdScripts = [generatePersonSchema(), generateWebsiteSchema()];
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -108,22 +113,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
 
         {/* JSON-LD Structured Data for SEO */}
-        <script
-          type="application/ld+json"
-          nonce={nonce}
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{
-            __html: formatSchemaAsScript(generatePersonSchema()),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          nonce={nonce}
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{
-            __html: formatSchemaAsScript(generateWebsiteSchema()),
-          }}
-        />
+        {jsonLdScripts.map((schema, idx) => (
+          <script
+            key={idx}
+            type="application/ld+json"
+            nonce={nonce}
+            suppressHydrationWarning
+            dangerouslySetInnerHTML={{
+              __html: formatSchemaAsScript(schema),
+            }}
+          />
+        ))}
       </head>
       <body className="min-h-dvh bg-white text-zinc-950 dark:bg-zinc-950 dark:text-zinc-50">
         <NavigationEnhanced />
@@ -133,23 +133,26 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <footer className="border-t border-zinc-200 dark:border-zinc-800">
           <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-8 text-sm text-zinc-600 dark:text-zinc-400">
             <div className="flex flex-wrap items-center gap-3">
-              {GITHUB_URL ? (
-                <a className="hover:text-zinc-950 dark:hover:text-white" href={GITHUB_URL}>
-                  GitHub
-                </a>
-              ) : null}
+              <a className="hover:text-zinc-950 dark:hover:text-white" href={githubHref}>
+                GitHub
+              </a>
               {LINKEDIN_URL ? (
-                <a className="hover:text-zinc-950 dark:hover:text-white" href={LINKEDIN_URL}>
+                <a
+                  className="hover:text-zinc-950 dark:hover:text-white"
+                  href={LINKEDIN_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   LinkedIn
                 </a>
               ) : null}
               <a className="hover:text-zinc-950 dark:hover:text-white" href={DOCS_BASE_URL}>
-                Documentation (Evidence)
+                Engineering Docs
               </a>
             </div>
-            <div>
-              This site is built with an enterprise evidence model: ADRs, threat models, runbooks,
-              and release notes are maintained in the Documentation App.
+            <div className="space-y-1">
+              <p>Bryce Seefieldt · Full-stack developer · Toronto</p>
+              <p>Built with Next.js, TypeScript, and Tailwind. Inspect the source on GitHub.</p>
             </div>
           </div>
         </footer>

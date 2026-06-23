@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Callout } from "@/components/Callout";
 import { Section } from "@/components/Section";
 import { ScrollFadeIn } from "@/components/ScrollFadeIn";
-import { DOCS_BASE_URL, GITHUB_URL, LINKEDIN_URL, docsUrl } from "@/lib/config";
+import { DOCS_BASE_URL, docsUrl, GITHUB_BASE_URL } from "@/lib/config";
 
 function PrimaryButton({ href, children }: { href: string; children: React.ReactNode }) {
   return (
@@ -28,38 +28,41 @@ function SecondaryLink({ href, children }: { href: string; children: React.React
 }
 
 export default function HomePage() {
+  const githubHref = GITHUB_BASE_URL ?? "https://github.com/bryce-seefieldt";
   return (
     <div className="flex flex-col gap-8">
       {/* HERO */}
       <ScrollFadeIn>
         <header className="flex flex-col gap-4">
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            Full-stack engineering • Enterprise SDLC • Evidence-first delivery
-          </p>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400">Full-stack developer · Toronto</p>
 
           <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            A reviewer-ready portfolio with traceable engineering evidence.
+            Confidence across the whole stack. Intention at every layer.
           </h1>
 
           <p className="max-w-3xl text-base text-zinc-700 dark:text-zinc-300">
-            This site is the portfolio front door. The proof—ADRs, threat models, runbooks, and
-            release notes—lives in the companion Documentation App for fast validation.
+            Full-stack developer with a background leading enterprise technology projects. I&apos;ve
+            focused my career on modernizing systems and improving processes. I build and deliver to
+            an enterprise standard: tested, secured, documented, and shipped through a real
+            pipeline. Take a look around. The proof is one click deep.
           </p>
 
           {/* PRIMARY CTA ROW */}
           <div className="flex flex-wrap items-center gap-3">
-            <PrimaryButton href="/cv">Start with the CV</PrimaryButton>
-            <SecondaryLink href="/projects">Browse projects</SecondaryLink>
+            <PrimaryButton href="/projects">See the work</PrimaryButton>
+            <SecondaryLink href="/cv">Read the CV</SecondaryLink>
             <a
               className="text-sm font-medium text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
               href={DOCS_BASE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              Open evidence docs
+              Review the Portfolio Engineering Docs
             </a>
           </div>
-
+          <br />
           {/* EXTERNAL LINKS */}
-          <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-600 dark:text-zinc-400">
+          {/* <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-600 dark:text-zinc-400">
             {GITHUB_URL ? (
               <a className="hover:text-zinc-950 dark:hover:text-white" href={GITHUB_URL}>
                 GitHub
@@ -71,37 +74,53 @@ export default function HomePage() {
               </a>
             ) : null}
             <span className="text-zinc-400 dark:text-zinc-600">•</span>
-            <span>Evidence-first delivery model</span>
-          </div>
+            <span>Enterprise delivery, with proof one click deep</span>
+          </div> */}
         </header>
 
         {/* CALLOUT: HOW TO EVALUATE */}
         <Callout>
           <div className="flex flex-col gap-2">
-            <div className="font-medium">How to evaluate this portfolio (fast path)</div>
-            <ol className="list-decimal pl-5">
-              <li>
-                Read the{" "}
-                <Link className="underline" href="/cv">
-                  CV
-                </Link>{" "}
-                for impact, scope, and seniority signals.
-              </li>
-              <li>
-                Open a project page in{" "}
-                <Link className="underline" href="/projects">
-                  Projects
-                </Link>{" "}
-                and follow the evidence links.
-              </li>
-              <li>
-                In the Documentation App, review the{" "}
-                <a className="underline" href={docsUrl("projects/portfolio-app/")}>
-                  Portfolio App dossier
-                </a>{" "}
-                plus at least one ADR and runbook.
-              </li>
-            </ol>
+            <Section
+              title="Evaluation Path"
+              subtitle="Short on time? Here's the three-minute version:"
+            >
+              <ol className="list-decimal pl-5">
+                <li>
+                  <strong>
+                    Skim the{" "}
+                    <Link className="underline" href="/cv">
+                      CV
+                    </Link>{" "}
+                  </strong>
+                  : Scope, impact, and enterprise delivery by the numbers.
+                </li>
+                <li>
+                  <strong>
+                    Open a project in{" "}
+                    <Link className="underline" href="/projects">
+                      Work
+                    </Link>{" "}
+                  </strong>
+                  : Each one links to how it was actually built, not just what it does.
+                </li>
+                <li>
+                  <strong>
+                    Dig a little deeper in the{" "}
+                    <a
+                      className="underline"
+                      href={docsUrl("projects/portfolio-app/")}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Engineering Docs
+                    </a>{" "}
+                  </strong>
+                  : The docs hold the architecture decisions, threat models, and runbooks behind
+                  every feature on this site.
+                </li>
+              </ol>
+            </Section>
           </div>
         </Callout>
       </ScrollFadeIn>
@@ -110,49 +129,57 @@ export default function HomePage() {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <ScrollFadeIn>
           <Section
-            title="What this portfolio proves"
-            subtitle="Designed to be reviewed like a real production service."
+            title="Definining Quality"
+            subtitle="This site is a personal project, built and run like a production service. Here's what that means in practice:"
           >
             <ul className="list-disc pl-5 text-sm text-zinc-700 dark:text-zinc-300">
-              <li>Modern TypeScript web engineering (Next.js App Router).</li>
-              <li>Enterprise SDLC: PR discipline, CI quality gates, and release governance.</li>
               <li>
-                Security posture: safe-publication rules, supply chain hygiene, threat modeling.
+                <strong>Range Across the Stack</strong>
+                <br />
+                Next.js App Router, React, and TypeScript on the front; APIs, data, and cloud
+                deployment behind them. Confidence and intentionality at every layer.
               </li>
-              <li>Operational readiness: deploy/rollback runbooks and failure-mode triage.</li>
+              <li>
+                <strong>Decisions That Hold Up</strong>
+                <br />
+                Every meaningful choice gets reasoned through and written down, so the system stays
+                understandable as it grows. That&apos;s the difference between code that works and
+                code a team can live with.
+              </li>
+              <li>
+                <strong>Security as a Starting Point</strong>
+                <br />
+                Hardened HTTP headers, content security policy, supply-chain monitoring, and a
+                threat model. Built in from the first commit, not bolted on later.
+              </li>
+              <li>
+                <strong>Built to be Operated</strong>
+                <br />
+                Deploy and rollback runbooks, performance budgets, and a plan for when something
+                breaks. Because in production, something always does.
+              </li>
             </ul>
           </Section>
         </ScrollFadeIn>
 
         <ScrollFadeIn delay={100}>
           <Section
-            title="Evidence engine"
-            subtitle="Deep technical documentation lives in the companion docs site."
+            title="By the numbers"
+            subtitle="Enterprise delivery, stakeholder by stakeholder, system by system. The full story is in the CV."
           >
             <ul className="list-disc pl-5 text-sm text-zinc-700 dark:text-zinc-300">
               <li>
-                Architecture decisions (ADRs):{" "}
-                <a className="underline" href={docsUrl("10-architecture/adr/")}>
-                  view ADR index
-                </a>
+                2,500+ users served by the cloud print platform I led, across the Toronto-wide
+                campus.
+              </li>
+              <li>50% reduction in print-related support tickets within three months of launch.</li>
+              <li>
+                150+ enterprise services I documented and brought under a robust Disaster Recovery
+                and Business Continuity Plan.
               </li>
               <li>
-                Threat models:{" "}
-                <a className="underline" href={docsUrl("40-security/threat-models/")}>
-                  view threat models
-                </a>
-              </li>
-              <li>
-                Runbooks:{" "}
-                <a className="underline" href={docsUrl("50-operations/runbooks/")}>
-                  view runbooks
-                </a>
-              </li>
-              <li>
-                Roadmap:{" "}
-                <a className="underline" href={docsUrl("00-portfolio/roadmap")}>
-                  portfolio program roadmap
-                </a>
+                $10K / year in licensing cost and admin overhead eliminated by the migration I
+                delivered.
               </li>
             </ul>
           </Section>
@@ -160,42 +187,67 @@ export default function HomePage() {
 
         <ScrollFadeIn delay={200}>
           <Section
-            title="Featured work"
-            subtitle="Data-driven projects with evidence links and reviewer-ready dossiers."
+            title="Selected work"
+            subtitle="Two live systems you can inspect end to end. More in the full work index."
           >
             <div className="flex flex-col gap-3 text-sm text-zinc-700 dark:text-zinc-300">
               <div className="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
-                <div className="font-medium">Portfolio Documentation App</div>
+                <div className="font-medium">This site</div>
                 <div className="mt-1 text-zinc-600 dark:text-zinc-400">
-                  Docusaurus evidence engine: dossiers, ADRs, threat models, runbooks.
+                  A Next.js and TypeScript application, built and operated like production software.
+                  Pull-request workflow, automated testing across two browsers, security hardening,
+                  and a three-stage deployment pipeline.
                 </div>
                 <div className="mt-3 flex flex-wrap items-center gap-3">
-                  <a className="underline" href={docsUrl("projects/portfolio-docs-app/")}>
-                    Read dossier
+                  <a
+                    className="underline"
+                    href={docsUrl("projects/portfolio-docs-app/")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    → How it&apos;s built
                   </a>
-                  <a className="underline" href={docsUrl("architecture/adr/")}>
-                    ADRs
+                  <a
+                    className="underline"
+                    href={docsUrl("security/threat-models/portfolio-app-threat-model")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    → Threat model
                   </a>
-                  <a className="underline" href={docsUrl("operations/runbooks/")}>
-                    Runbooks
+                  <a
+                    className="underline"
+                    href={docsUrl("operations/runbooks/")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    → Operational runbooks
                   </a>
                 </div>
               </div>
 
               <div className="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
-                <div className="font-medium">Portfolio App (this site)</div>
+                <div className="font-medium">The engineering docs</div>
                 <div className="mt-1 text-zinc-600 dark:text-zinc-400">
-                  Next.js + TypeScript web application designed to be reviewed like production.
+                  A companion documentation system holding the architecture decisions, threat
+                  models, and operational runbooks behind every claim on this site.
                 </div>
                 <div className="mt-3 flex flex-wrap items-center gap-3">
-                  <a className="underline" href={docsUrl("projects/portfolio-app/")}>
-                    Read dossier
+                  <a
+                    className="underline"
+                    href={docsUrl("projects/portfolio-app/")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    → Read the docs
                   </a>
                   <a
                     className="underline"
-                    href={docsUrl("security/threat-models/portfolio-app-threat-model")}
+                    href={docsUrl("architecture/adr/")}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    Threat model
+                    → Architecture decisions
                   </a>
                 </div>
               </div>
@@ -204,19 +256,36 @@ export default function HomePage() {
         </ScrollFadeIn>
 
         <ScrollFadeIn delay={300}>
-          <Section
-            title="Phase 5 focus"
-            subtitle="Professionalization, validation, and release readiness."
-          >
+          <Section title="Let's talk." subtitle="">
             <ul className="list-disc pl-5 text-sm text-zinc-700 dark:text-zinc-300">
-              <li>Refine narrative clarity and reviewer entry points.</li>
-              <li>Audit evidence and remove unsupported claims.</li>
-              <li>Finalize a v1.0 release with known limitations documented.</li>
+              I&apos;m looking for a full-stack role where engineering judgment and a track record
+              of modernizing how work gets done both matter.
+              <br />
+              <br />
+              If that sounds like your team, I&apos;d like to hear from you. And yes, everything on
+              this site is open source, so look as closely as you like.
+              <br />
+              <br />
+              View the{" "}
+              <Link className="underline" href="/cv">
+                CV
+              </Link>{" "}
+              and{" "}
+              <Link
+                className="underline"
+                href={githubHref}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                GitHub
+              </Link>{" "}
+              for additional context.
+              <br />
             </ul>
             <div className="mt-4">
-              <a className="underline" href={docsUrl("00-portfolio/roadmap")}>
-                See the roadmap
-              </a>
+              <Link className="underline" href="/contact">
+                Get in touch
+              </Link>{" "}
             </div>
           </Section>
         </ScrollFadeIn>

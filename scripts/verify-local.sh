@@ -621,8 +621,10 @@ elif [ $BUILD_EXIT_CODE -eq 0 ]; then
   print_info "Running unit tests (registry, slug helpers, link construction)..."
   echo ""
   
-  UNIT_TEST_OUTPUT=$(pnpm test:unit 2>&1 || true)
+  set +e
+  UNIT_TEST_OUTPUT=$(pnpm test:unit 2>&1)
   UNIT_TEST_EXIT_CODE=$?
+  set -e
   
   if [ $UNIT_TEST_EXIT_CODE -eq 0 ]; then
     print_success "All unit tests passed"
@@ -659,13 +661,16 @@ if [ "$SKIP_TESTS" = true ]; then
 elif [ $BUILD_EXIT_CODE -eq 0 ]; then
   # Check if Playwright is installed
   if [ ! -d "node_modules/@playwright/test" ]; then
-    print_warning "Playwright not installed - skipping link validation"
-    print_info "Install with: pnpm install && npx playwright install --with-deps"
+    print_failure "Playwright not installed"
+    print_troubleshooting "  1. Install dependencies: pnpm install --frozen-lockfile
+  2. Install Playwright browsers: npx playwright install --with-deps
+  3. Re-run: pnpm verify"
   else
     # Check if browsers are installed
     if ! npx playwright --version &> /dev/null; then
-      print_warning "Playwright browsers not installed"
-      print_info "Install with: npx playwright install --with-deps"
+      print_failure "Playwright browsers not installed"
+      print_troubleshooting "  1. Install browsers: npx playwright install --with-deps
+  2. Re-run: pnpm verify"
     else
       print_success "Playwright installed"
       
@@ -684,8 +689,10 @@ elif [ $BUILD_EXIT_CODE -eq 0 ]; then
         print_info "Running Playwright link checks (pnpm links:check)..."
         echo ""
         
-        E2E_TEST_OUTPUT=$(pnpm links:check 2>&1 || true)
+        set +e
+        E2E_TEST_OUTPUT=$(pnpm links:check 2>&1)
         E2E_TEST_EXIT_CODE=$?
+        set -e
         
         # Kill dev server
         stop_process "$DEV_SERVER_PID"

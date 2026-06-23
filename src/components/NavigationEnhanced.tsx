@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ThemeToggle } from "./ThemeToggle";
-import { DOCS_BASE_URL, GITHUB_URL } from "@/lib/config";
+import { DOCS_BASE_URL, GITHUB_URL, GITHUB_BASE_URL } from "@/lib/config";
 
 /**
  * NavigationEnhanced Component
@@ -43,6 +43,7 @@ function NavLink({ href, children, onClick }: NavLinkProps) {
 export function NavigationEnhanced() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const githubHref = GITHUB_BASE_URL ?? GITHUB_URL ?? "https://github.com/bryce-seefieldt";
 
   // Detect scroll for visual feedback (shadow on scroll)
   useEffect(() => {
@@ -83,24 +84,27 @@ export function NavigationEnhanced() {
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-4 md:flex">
           <NavLink href="/">Home</NavLink>
+          <NavLink href="/projects">Work</NavLink>
           <NavLink href="/cv">CV</NavLink>
-          <NavLink href="/projects">Projects</NavLink>
           <a
             href={DOCS_BASE_URL}
             className="text-sm text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            Evidence (Docs)
+            Engineering Docs
           </a>
           <NavLink href="/contact">Contact</NavLink>
-          {GITHUB_URL ? (
-            <a
-              href={GITHUB_URL}
-              className="text-sm text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
-            >
-              GitHub
-            </a>
-          ) : null}
-          <button
+          <a
+            href={githubHref}
+            className="text-sm text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
+          {/* TO DO: Add search button here in the future, currently disabled as search is not implemented. */}
+          {/* <button
             type="button"
             className="rounded-lg p-2 text-zinc-500 transition-colors hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
             aria-label="Search (coming soon)"
@@ -121,7 +125,7 @@ export function NavigationEnhanced() {
                 d="M21 21l-4.35-4.35m2.1-5.4a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z"
               />
             </svg>
-          </button>
+          </button> */}
           <ThemeToggle />
         </nav>
 
@@ -175,31 +179,34 @@ export function NavigationEnhanced() {
             <NavLink href="/" onClick={closeMobileMenu}>
               Home
             </NavLink>
+            <NavLink href="/projects" onClick={closeMobileMenu}>
+              Work
+            </NavLink>
             <NavLink href="/cv" onClick={closeMobileMenu}>
               CV
-            </NavLink>
-            <NavLink href="/projects" onClick={closeMobileMenu}>
-              Projects
             </NavLink>
             <a
               href={DOCS_BASE_URL}
               className="text-sm text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
               onClick={closeMobileMenu}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              Evidence (Docs)
+              Engineering Docs
             </a>
             <NavLink href="/contact" onClick={closeMobileMenu}>
               Contact
             </NavLink>
-            {GITHUB_URL ? (
-              <a
-                href={GITHUB_URL}
-                className="text-sm text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
-                onClick={closeMobileMenu}
-              >
-                GitHub
-              </a>
-            ) : null}
+            <a
+              href={githubHref}
+              className="text-sm text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
+              onClick={closeMobileMenu}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub
+            </a>
+
             <div className="mt-2 flex items-center gap-2">
               <span className="text-sm text-zinc-600 dark:text-zinc-400">Theme:</span>
               <ThemeToggle />

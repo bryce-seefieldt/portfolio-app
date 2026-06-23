@@ -18,15 +18,20 @@ vi.mock("../ThemeToggle", () => ({
 
 const configValues: {
   DOCS_BASE_URL: string;
+  GITHUB_BASE_URL: string | null;
   GITHUB_URL: string | null;
 } = {
   DOCS_BASE_URL: "https://docs.example.com",
+  GITHUB_BASE_URL: "https://github.com/example-base",
   GITHUB_URL: "https://github.com/example",
 };
 
 vi.mock("@/lib/config", () => ({
   get DOCS_BASE_URL() {
     return configValues.DOCS_BASE_URL;
+  },
+  get GITHUB_BASE_URL() {
+    return configValues.GITHUB_BASE_URL;
   },
   get GITHUB_URL() {
     return configValues.GITHUB_URL;
@@ -37,14 +42,15 @@ vi.mock("@/lib/config", () => ({
 describe("NavigationEnhanced", () => {
   it("should render primary links", () => {
     configValues.GITHUB_URL = "https://github.com/example";
+    configValues.GITHUB_BASE_URL = "https://github.com/example-base";
 
     render(<NavigationEnhanced />);
 
     expect(screen.getAllByText("Home").length).toBeGreaterThan(0);
+    expect(screen.getByText("Work")).toBeInTheDocument();
     expect(screen.getByText("CV")).toBeInTheDocument();
-    expect(screen.getByText("Projects")).toBeInTheDocument();
     expect(screen.getByText("Contact")).toBeInTheDocument();
-    expect(screen.getByText("Evidence (Docs)")).toBeInTheDocument();
+    expect(screen.getByText("Engineering Docs")).toBeInTheDocument();
     expect(screen.getByText("GitHub")).toBeInTheDocument();
   });
 
@@ -85,11 +91,16 @@ describe("NavigationEnhanced", () => {
     expect(screen.getByRole("button", { name: "Open menu" })).toBeInTheDocument();
   });
 
-  it("should omit GitHub link when not configured", () => {
+  it("should fall back to the base GitHub URL when profile URL is missing", () => {
     configValues.GITHUB_URL = null;
+    configValues.GITHUB_BASE_URL = "https://github.com/example-base";
 
     render(<NavigationEnhanced />);
 
-    expect(screen.queryByText("GitHub")).toBeNull();
+    expect(screen.getByText("GitHub")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "GitHub" })).toHaveAttribute(
+      "href",
+      "https://github.com/example-base",
+    );
   });
 });
