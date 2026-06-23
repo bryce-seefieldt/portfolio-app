@@ -13,10 +13,12 @@ vi.mock("next/link", () => ({
 
 const configValues: {
   DOCS_BASE_URL: string;
+  GITHUB_BASE_URL: string | null;
   GITHUB_URL: string | null;
   LINKEDIN_URL: string | null;
 } = {
   DOCS_BASE_URL: "https://docs.example.com",
+  GITHUB_BASE_URL: "https://github.com/example-base",
   GITHUB_URL: "https://github.com/example",
   LINKEDIN_URL: "https://linkedin.example.com",
 };
@@ -24,6 +26,9 @@ const configValues: {
 vi.mock("@/lib/config", () => ({
   get DOCS_BASE_URL() {
     return configValues.DOCS_BASE_URL;
+  },
+  get GITHUB_BASE_URL() {
+    return configValues.GITHUB_BASE_URL;
   },
   get GITHUB_URL() {
     return configValues.GITHUB_URL;
