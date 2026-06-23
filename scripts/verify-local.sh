@@ -661,13 +661,16 @@ if [ "$SKIP_TESTS" = true ]; then
 elif [ $BUILD_EXIT_CODE -eq 0 ]; then
   # Check if Playwright is installed
   if [ ! -d "node_modules/@playwright/test" ]; then
-    print_warning "Playwright not installed - skipping link validation"
-    print_info "Install with: pnpm install && npx playwright install --with-deps"
+    print_failure "Playwright not installed"
+    print_troubleshooting "  1. Install dependencies: pnpm install --frozen-lockfile
+  2. Install Playwright browsers: npx playwright install --with-deps
+  3. Re-run: pnpm verify"
   else
     # Check if browsers are installed
     if ! npx playwright --version &> /dev/null; then
-      print_warning "Playwright browsers not installed"
-      print_info "Install with: npx playwright install --with-deps"
+      print_failure "Playwright browsers not installed"
+      print_troubleshooting "  1. Install browsers: npx playwright install --with-deps
+  2. Re-run: pnpm verify"
     else
       print_success "Playwright installed"
       
