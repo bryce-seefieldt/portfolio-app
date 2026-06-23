@@ -93,6 +93,7 @@ All foundational infrastructure is complete and stable:
 ### 3.2 Where We Left Off: Test & Verification Hardening
 
 **Most recent work (June 2026):**
+
 - Fixed unit test mock drift in `NavigationEnhanced.test.tsx`, `layout.test.tsx`, `page.test.tsx` to align with current component config dependencies (added `GITHUB_BASE_URL` export).
 - Fixed local verification script (`scripts/verify-local.sh`) to preserve test exit codes instead of masking failures with `|| true`, bringing local behavior in line with CI.
 - Tightened Playwright dependency checks in local verify to fail hard (not warn/skip) when Playwright package or browser binaries are missing, enforcing stricter parity with CI.
@@ -156,6 +157,7 @@ None blocking deployment. The following are enhancements for Phase 2:
 ### Phase 2 Entry Point for Next Agent:
 
 When resuming Phase 2 work:
+
 1. Review `notes.md` in this repo for specific content and design preferences
 2. Consult `src/app/page.tsx` and `src/app/cv/page.tsx` for current placeholder structure
 3. Reference the Documentation App's existing project dossiers as templates
