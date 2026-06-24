@@ -36,18 +36,10 @@ export default function CVPage() {
             ) : null}
             <a
               className="font-medium underline"
-              href="https://bryce.seefieldt.ca"
-              rel="noopener noreferrer"
-              target="_blank"
+              download="Bryce_Seefieldt_Full_Stack_Developer.pdf"
+              href="/Bryce_Seefieldt_Full_Stack_Developer.pdf"
             >
-              Portfolio home
-            </a>
-            <a
-              className="font-medium underline"
-              download
-              href="/portfolio-app/public/Bryce_Seefieldt_Full_Stack_Developer.pdf"
-            >
-              Download PDF resume
+              Download PDF
             </a>
           </div>
         </header>
