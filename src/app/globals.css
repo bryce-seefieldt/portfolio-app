@@ -170,6 +170,16 @@ html:not(.light) .glow-accent {
     0 0 20px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
+.dial-accent-arc {
+  opacity: 0.42;
+}
+
+html:not(.light) .dial-accent-arc {
+  filter: drop-shadow(0 0 2px color-mix(in srgb, var(--accent) 80%, transparent))
+    drop-shadow(0 0 5px color-mix(in srgb, var(--accent) 58%, transparent))
+    drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 34%, transparent));
+}
+
 @media (min-width: 640px) {
   .type-display {
     font-size: 3.5rem;

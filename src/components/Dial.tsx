@@ -39,7 +39,7 @@ export function Dial({ value, caption, className = "" }: DialProps) {
           cx="43"
           cy="43"
           r="30"
-          fill="none"
+          fill="color-mix(in srgb, var(--bg) 28%, var(--surface) 72%)"
           stroke="currentColor"
           strokeWidth="1"
           opacity="0.6"
@@ -50,32 +50,54 @@ export function Dial({ value, caption, className = "" }: DialProps) {
           cy="43"
           r="29.5"
           fill="none"
-          stroke="rgba(0, 0, 0, 0.2)"
-          strokeWidth="1"
+          stroke="rgba(0, 0, 0, 0.34)"
+          strokeWidth="1.4"
+          opacity="0.95"
+        />
+        <circle
+          cx="43"
+          cy="43"
+          r="27.75"
+          fill="none"
+          stroke="rgba(0, 0, 0, 0.16)"
+          strokeWidth="2.2"
+          opacity="0.75"
+        />
+        <circle
+          cx="42.2"
+          cy="42.2"
+          r="28.4"
+          fill="none"
+          stroke="rgba(255, 255, 255, 0.08)"
+          strokeWidth="0.9"
           opacity="0.8"
         />
 
         {/* Optional: Subtle accent value-arc highlighting current value zone (dark mode) */}
         <circle
+          className="dial-accent-arc"
           cx="43"
           cy="43"
           r="25"
           fill="none"
           stroke="var(--accent)"
-          strokeWidth="1"
+          strokeWidth="1.8"
           strokeDasharray="157 628"
           strokeDashoffset={157 - (safeValue / 100) * 157}
-          opacity="0.15"
+          opacity="0.42"
           strokeLinecap="round"
         />
 
         {/* Ticks: rotated 90 degrees counter-clockwise to align with needle sweep */}
         {Array.from({ length: 11 }).map((_, idx) => {
+          const isMajorTick = idx % 5 === 0;
           const tickAngle = (-210 + idx * 24) * (Math.PI / 180);
-          const x1 = 43 + Math.cos(tickAngle) * 27;
-          const y1 = 43 + Math.sin(tickAngle) * 27;
-          const x2 = 43 + Math.cos(tickAngle) * 33;
-          const y2 = 43 + Math.sin(tickAngle) * 33;
+          const innerRadius = isMajorTick ? 25.5 : 26.5;
+          const outerRadius = isMajorTick ? 34.5 : 33.5;
+          const x1 = 43 + Math.cos(tickAngle) * innerRadius;
+          const y1 = 43 + Math.sin(tickAngle) * innerRadius;
+          const x2 = 43 + Math.cos(tickAngle) * outerRadius;
+          const y2 = 43 + Math.sin(tickAngle) * outerRadius;
           return (
             <line
               key={idx}
@@ -84,8 +106,9 @@ export function Dial({ value, caption, className = "" }: DialProps) {
               x2={x2}
               y2={y2}
               stroke="currentColor"
-              strokeWidth="1"
-              opacity={idx % 5 === 0 ? 0.9 : 0.55}
+              strokeWidth={isMajorTick ? 1.55 : 1.2}
+              strokeLinecap="round"
+              opacity={isMajorTick ? 0.98 : 0.78}
             />
           );
         })}
@@ -98,11 +121,11 @@ export function Dial({ value, caption, className = "" }: DialProps) {
             y1="43"
             x2="43"
             y2="16"
-            stroke="rgba(0, 0, 0, 0.3)"
-            strokeWidth="2.5"
+            stroke="rgba(0, 0, 0, 0.42)"
+            strokeWidth="3.2"
             strokeLinecap="round"
-            transform={`rotate(${angle + 1.5} 43 43)`}
-            opacity="0.4"
+            transform={`rotate(${angle + 2.25} 43 43) translate(1.1 1.4)`}
+            opacity="0.62"
           />
           {/* Main needle */}
           <line
