@@ -14,9 +14,11 @@ vi.mock("next/link", () => ({
 const configValues: {
   GITHUB_BASE_URL: string | null;
   LINKEDIN_URL: string | null;
+  DOCS_BASE_URL: string;
 } = {
   GITHUB_BASE_URL: "https://github.com/example-base",
   LINKEDIN_URL: "https://linkedin.example.com",
+  DOCS_BASE_URL: "/docs",
 };
 
 vi.mock("@/lib/config", () => ({
@@ -25,6 +27,9 @@ vi.mock("@/lib/config", () => ({
   },
   get LINKEDIN_URL() {
     return configValues.LINKEDIN_URL;
+  },
+  get DOCS_BASE_URL() {
+    return configValues.DOCS_BASE_URL;
   },
 }));
 
@@ -38,11 +43,14 @@ describe("CVPage", () => {
 
     render(<CVPage />);
 
-    expect(screen.getByRole("heading", { level: 1, name: "Bryce Seefieldt" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 2, name: "Summary" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 2, name: "Experience" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 2, name: "Education" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 2, name: "Technical Skills" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: "Curriculum Vitae" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Full-Stack Developer" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 3, name: "Summary" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 3, name: "Experience" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 3, name: "Education" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 3, name: "Technical Skills" })).toBeInTheDocument();
 
     expect(
       screen.getByRole("heading", { level: 3, name: "IT Services Specialist" }),
@@ -81,7 +89,7 @@ describe("CVPage", () => {
 
     expect(screen.getByRole("link", { name: "Download PDF resume" })).toHaveAttribute(
       "href",
-      "/bryce-seefieldt-cv.pdf",
+      "/portfolio-app/public/Bryce_Seefieldt_Full_Stack_Developer.pdf",
     );
     expect(screen.getByRole("link", { name: "projects" })).toHaveAttribute("href", "/projects");
     expect(screen.getByRole("link", { name: "engineering docs" })).toHaveAttribute("href", "/docs");

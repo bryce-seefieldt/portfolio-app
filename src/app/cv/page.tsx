@@ -7,6 +7,8 @@ export default function CVPage() {
     <main className="flex flex-col gap-8">
       <ScrollFadeIn>
         <header className="flex flex-col gap-4">
+          <h1 className="text-3xl font-semibold tracking-tight">Curriculum Vitae</h1>
+
           <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
             Full-Stack Developer
           </h2>
