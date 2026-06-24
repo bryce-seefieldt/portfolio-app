@@ -259,7 +259,7 @@ export default function HomePage() {
           <Section title="Let's talk." subtitle="">
             <ul className="list-disc pl-5 text-sm text-zinc-700 dark:text-zinc-300">
               I&apos;m looking for a full-stack role where engineering judgment and a track record
-              of modernizing how work gets done both matter.
+              of modernizing how work gets done, both matter.
               <br />
               <br />
               If that sounds like your team, I&apos;d like to hear from you. And yes, everything on

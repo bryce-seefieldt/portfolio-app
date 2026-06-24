@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { NavigationEnhanced } from "@/components/NavigationEnhanced";
 import { BackToTop } from "@/components/BackToTop";
 import { headers } from "next/headers";
@@ -13,11 +14,32 @@ import {
   formatSchemaAsScript,
 } from "@/lib/structured-data";
 
-const APP_TITLE = "Portfolio";
+const APP_TITLE = "Bryce Seefieldt | Portfolio";
 const APP_DESCRIPTION =
   "Enterprise-grade full-stack portfolio: interactive CV, verified projects, and engineering evidence (ADRs, threat models, runbooks).";
 const OG_IMAGE = "/og-image.svg";
 const FALLBACK_GITHUB_URL = "https://github.com/bryce-seefieldt";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-space-grotesk",
+  display: "swap",
+});
+
+const jetBrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
+});
 
 /**
  * Viewport configuration for responsive rendering optimization.
@@ -70,7 +92,7 @@ export const metadata: Metadata = {
         url: OG_IMAGE,
         width: 1200,
         height: 630,
-        alt: "Portfolio — enterprise-grade full-stack engineering",
+        alt: "Bryce Seefieldt | Full-Stack Portfolio",
       },
     ],
   },
@@ -83,32 +105,22 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
+  await headers();
   const githubHref = GITHUB_BASE_URL ?? FALLBACK_GITHUB_URL;
   const jsonLdScripts = [generatePersonSchema(), generateWebsiteSchema()];
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         {/* Theme initialization script: runs before paint to prevent flash of wrong theme.
             This ensures the correct theme is applied immediately on page load,
             preventing a visible flash when the page loads in the wrong theme.
             Uses stored preference or system preference as fallback. */}
         <script
-          nonce={nonce}
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  const saved = localStorage.getItem('theme');
-                  const isDark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
-                  if (isDark) {
-                    document.documentElement.classList.add('dark');
-                  }
-                } catch (e) {}
-              })();
-            `,
+            __html:
+              "(function(){try{const saved=localStorage.getItem('theme');const isLight=saved==='light';if(isLight){document.documentElement.classList.add('light');document.documentElement.classList.remove('dark');}else{document.documentElement.classList.remove('light');document.documentElement.classList.add('dark');}}catch(e){document.documentElement.classList.add('dark');}})();",
           }}
         />
 
@@ -117,15 +129,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <script
             key={idx}
             type="application/ld+json"
-            nonce={nonce}
             suppressHydrationWarning
-            dangerouslySetInnerHTML={{
-              __html: formatSchemaAsScript(schema),
-            }}
-          />
+            dangerouslySetInnerHTML={{ __html: formatSchemaAsScript(schema) }}
+          ></script>
         ))}
       </head>
-      <body className="min-h-dvh bg-white text-zinc-950 dark:bg-zinc-950 dark:text-zinc-50">
+      <body
+        className={`${inter.variable} ${spaceGrotesk.variable} ${jetBrainsMono.variable} font-body min-h-dvh`}
+      >
         <NavigationEnhanced />
 
         <main className="mx-auto max-w-5xl px-4 py-10">{children}</main>
