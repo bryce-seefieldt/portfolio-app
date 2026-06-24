@@ -31,6 +31,36 @@ export default function DesignTokensPreviewPage() {
           production page structure.
         </p>
       </Panel>
+
+      {/* Dial alignment verification: multiple fixed values */}
+      <Panel label="DIAL ALIGNMENT VERIFICATION" variant="default">
+        <div className="flex flex-wrap items-end justify-start gap-8">
+          <div className="flex flex-col items-center">
+            <Dial value={0} />
+            <div className="type-label text-ink-muted mt-2">0</div>
+          </div>
+          <div className="flex flex-col items-center">
+            <Dial value={25} />
+            <div className="type-label text-ink-muted mt-2">25</div>
+          </div>
+          <div className="flex flex-col items-center">
+            <Dial value={50} />
+            <div className="type-label text-ink-muted mt-2">50</div>
+          </div>
+          <div className="flex flex-col items-center">
+            <Dial value={75} />
+            <div className="type-label text-ink-muted mt-2">75</div>
+          </div>
+          <div className="flex flex-col items-center">
+            <Dial value={100} />
+            <div className="type-label text-ink-muted mt-2">100</div>
+          </div>
+        </div>
+        <p className="type-caption text-ink-muted mt-6">
+          Verify: ticks align with needle at each value; dimensional bezel, recessed face, and
+          shadowed needle visible; accent arc highlights current zone (dark mode).
+        </p>
+      </Panel>
     </div>
   );
 }

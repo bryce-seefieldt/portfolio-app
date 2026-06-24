@@ -157,15 +157,17 @@ body {
   font-weight: 500;
 }
 
-/* Subtle phosphor glow, active in dark mode only */
+/* Enhanced phosphor bloom glow for readout value in dark mode */
 .glow-accent {
   text-shadow: none;
 }
 
 html:not(.light) .glow-accent {
   text-shadow:
-    0 0 6px color-mix(in srgb, var(--accent) 28%, transparent),
-    0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);
+    0 0 2px color-mix(in srgb, var(--accent) 80%, transparent),
+    0 0 6px color-mix(in srgb, var(--accent) 60%, transparent),
+    0 0 12px color-mix(in srgb, var(--accent) 40%, transparent),
+    0 0 20px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
 @media (min-width: 640px) {
