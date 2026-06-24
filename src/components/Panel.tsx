@@ -25,10 +25,18 @@ export function Panel({
   className = "",
 }: PanelProps) {
   const variantClass = variant === "inset" ? "bg-surface-2" : "bg-surface";
+  const sheenStyle =
+    variant === "default"
+      ? {
+          backgroundImage:
+            "linear-gradient(135deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0.11) 24%, rgba(255, 255, 255, 0.03) 48%, transparent 72%)",
+        }
+      : undefined;
 
   return (
     <section
       className={`border-line text-ink relative rounded-md border px-5 pt-6 pb-5 ${variantClass} ${className}`.trim()}
+      style={sheenStyle}
     >
       {label ? <div className="type-label text-ink-muted mb-4">{label}</div> : null}
 
