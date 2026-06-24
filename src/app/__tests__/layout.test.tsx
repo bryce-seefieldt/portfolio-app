@@ -58,6 +58,12 @@ vi.mock("@/lib/structured-data", () => ({
   formatSchemaAsScript: () => "{}",
 }));
 
+vi.mock("next/font/google", () => ({
+  Inter: () => ({ variable: "--font-inter" }),
+  Space_Grotesk: () => ({ variable: "--font-space-grotesk" }),
+  JetBrains_Mono: () => ({ variable: "--font-jetbrains-mono" }),
+}));
+
 import RootLayout from "../layout";
 
 // RATIONALE: Root layout must render navigation, footer, and main slot.
