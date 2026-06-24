@@ -87,10 +87,9 @@ describe("CVPage", () => {
     expect(screen.getByText(/Cloud & DevOps:/i)).toBeInTheDocument();
     expect(screen.getByText(/Design & UX:/i)).toBeInTheDocument();
 
-    expect(screen.getByRole("link", { name: "Download PDF resume" })).toHaveAttribute(
-      "href",
-      "/portfolio-app/public/Bryce_Seefieldt_Full_Stack_Developer.pdf",
-    );
+    const pdfDownloadLink = screen.getByRole("link", { name: "Download PDF" });
+    expect(pdfDownloadLink).toHaveAttribute("href", "/Bryce_Seefieldt_Full_Stack_Developer.pdf");
+    expect(pdfDownloadLink).toHaveAttribute("download", "Bryce_Seefieldt_Full_Stack_Developer.pdf");
     expect(screen.getByRole("link", { name: "projects" })).toHaveAttribute("href", "/projects");
     expect(screen.getByRole("link", { name: "engineering docs" })).toHaveAttribute("href", "/docs");
     expect(screen.getByRole("link", { name: "get in touch" })).toHaveAttribute("href", "/contact");

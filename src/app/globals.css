@@ -1,114 +1,46 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
-/**
- * CSS Variables Theme System
- *
- * Light theme is the default (:root).
- * Dark theme overrides variables when 'dark' class is present on <html> element.
- *
- * All color and theme properties use CSS variables for maintainability and performance.
- * Smooth transitions are applied for theme switching.
- */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-accent: var(--accent);
+  --color-accent-warn: var(--accent-warn);
+  --color-line: var(--line);
+  --color-rivet: var(--rivet);
 
-/* ============================================================================
-   Light Theme (Default)
-   ========================================================================= */
-
-:root {
-  /* Primary Colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f9f9f9;
-  --bg-tertiary: #f0f0f0;
-
-  /* Text Colors */
-  --text-primary: #000000;
-  --text-secondary: #595959;
-  --text-tertiary: #8c8c8c;
-  --text-muted: #a8a8a8;
-
-  /* Border & Divider */
-  --border-primary: #e5e5e5;
-  --border-secondary: #d9d9d9;
-  --divider: #f0f0f0;
-
-  /* Interactive Elements */
-  --accent-primary: #0066cc;
-  --accent-hover: #0052a3;
-  --accent-light: #e6f2ff;
-
-  /* UI Components */
-  --button-bg: #f5f5f5;
-  --button-hover: #e6e6e6;
-  --button-text: #000000;
-
-  --input-bg: #ffffff;
-  --input-border: #d9d9d9;
-  --input-text: #000000;
-
-  /* Shadow */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-
-  /* Effects */
-  --backdrop: rgba(0, 0, 0, 0.5);
-  --overlay: rgba(255, 255, 255, 0.8);
-
-  /* Animation */
-  --transition-fast: 150ms ease;
-  --transition-base: 250ms ease;
-  --transition-slow: 350ms ease;
+  --font-display: var(--font-space-grotesk);
+  --font-body: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
-/* ============================================================================
-   Dark Theme
-   ========================================================================= */
+/* Dark mode tokens (default) */
+:root {
+  --bg: #0d0f0c;
+  --surface: #15180f;
+  --surface-2: #1c2114;
+  --ink: #d6e8c8;
+  --ink-muted: #7e8c6b;
+  --accent: #4fe08a;
+  --accent-warn: #e8a24f;
+  --line: #28301e;
+  --rivet: #3a4329;
+}
 
-html.dark {
-  /* Primary Colors */
-  --bg-primary: #0a0a0a;
-  --bg-secondary: #1a1a1a;
-  --bg-tertiary: #272727;
-
-  /* Text Colors */
-  --text-primary: #ffffff;
-  --text-secondary: #b0b0b0;
-  --text-tertiary: #808080;
-  --text-muted: #606060;
-
-  /* Border & Divider */
-  --border-primary: #2d2d2d;
-  --border-secondary: #404040;
-  --divider: #1f1f1f;
-
-  /* Interactive Elements */
-  --accent-primary: #3d9eff;
-  --accent-hover: #2a85db;
-  --accent-light: #1a3a52;
-
-  /* UI Components */
-  --button-bg: #2d2d2d;
-  --button-hover: #3d3d3d;
-  --button-text: #ffffff;
-
-  --input-bg: #1a1a1a;
-  --input-border: #404040;
-  --input-text: #ffffff;
-
-  /* Shadow (darker, more subtle) */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-
-  /* Effects */
-  --backdrop: rgba(0, 0, 0, 0.8);
-  --overlay: rgba(10, 10, 10, 0.9);
-
-  /* Animation */
-  --transition-fast: 150ms ease;
-  --transition-base: 250ms ease;
-  --transition-slow: 350ms ease;
+/* Light mode tokens (explicit opt-in via .light) */
+html.light {
+  --bg: #f4f1e8;
+  --surface: #fbfaf4;
+  --surface-2: #ede9da;
+  --ink: #1c1b17;
+  --ink-muted: #5c584c;
+  --accent: #1f6f54;
+  --accent-warn: #b4521e;
+  --line: #d8d2c0;
+  --rivet: #c3bba3;
 }
 
 /* ============================================================================
@@ -147,13 +79,115 @@ html {
 }
 
 body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  background-color: var(--bg);
+  color: var(--ink);
   font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
-    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    var(--font-body),
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography scale utilities */
+.type-display {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 2.5rem;
+  line-height: 1.05;
+  font-weight: 600;
+}
+
+.type-h1 {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 2rem;
+  line-height: 1.1;
+  font-weight: 600;
+}
+
+.type-h2 {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.type-h3 {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 1.25rem;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+.type-body-lg {
+  font-family: var(--font-inter), sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.type-body {
+  font-family: var(--font-inter), sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.type-caption {
+  font-family: var(--font-inter), sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.type-label {
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.type-readout {
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 1.5rem;
+  line-height: 1;
+  font-weight: 500;
+}
+
+/* Subtle phosphor glow, active in dark mode only */
+.glow-accent {
+  text-shadow: none;
+}
+
+html:not(.light) .glow-accent {
+  text-shadow:
+    0 0 6px color-mix(in srgb, var(--accent) 28%, transparent),
+    0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+@media (min-width: 640px) {
+  .type-display {
+    font-size: 3.5rem;
+  }
+
+  .type-h1 {
+    font-size: 2.5rem;
+  }
+
+  .type-h2 {
+    font-size: 1.875rem;
+  }
+
+  .type-body-lg {
+    font-size: 1.125rem;
+  }
+
+  .type-readout {
+    font-size: 2rem;
+  }
 }
 
 /* ============================================================================
