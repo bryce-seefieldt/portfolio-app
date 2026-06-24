@@ -7,7 +7,6 @@ export default function CVPage() {
     <main className="flex flex-col gap-8">
       <ScrollFadeIn>
         <header className="flex flex-col gap-4">
-
           <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
             Full-Stack Developer
           </h2>
@@ -41,7 +40,11 @@ export default function CVPage() {
             >
               Portfolio home
             </a>
-            <a className="font-medium underline" download href="/portfolio-app/public/Bryce_Seefieldt_Full_Stack_Developer.pdf">
+            <a
+              className="font-medium underline"
+              download
+              href="/portfolio-app/public/Bryce_Seefieldt_Full_Stack_Developer.pdf"
+            >
               Download PDF resume
             </a>
           </div>
@@ -238,8 +241,7 @@ export default function CVPage() {
               projects
             </Link>{" "}
             and{" "}
-            <a className="underline" href={DOCS_BASE_URL}
-            target="_blank" rel="noopener noreferrer">
+            <a className="underline" href={DOCS_BASE_URL} target="_blank" rel="noopener noreferrer">
               engineering docs
             </a>{" "}
             go deep. Or{" "}

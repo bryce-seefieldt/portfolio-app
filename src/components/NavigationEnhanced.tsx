@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ThemeToggle } from "./ThemeToggle";
-import { DOCS_BASE_URL, GITHUB_URL, GITHUB_BASE_URL } from "@/lib/config";
+import { DOCS_BASE_URL, GITHUB_BASE_URL } from "@/lib/config";
 
 /**
  * NavigationEnhanced Component
