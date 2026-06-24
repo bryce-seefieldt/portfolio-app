@@ -44,7 +44,12 @@ export default function ProjectsPage() {
           </p>
           <div className="text-sm text-zinc-600 dark:text-zinc-400">
             Evidence engine:{" "}
-            <a className="underline hover:text-zinc-950 dark:hover:text-white" href={DOCS_BASE_URL}>
+            <a
+              className="underline hover:text-zinc-950 dark:hover:text-white"
+              href={DOCS_BASE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               open Documentation App
             </a>
           </div>
@@ -87,12 +92,22 @@ export default function ProjectsPage() {
                     View details
                   </Link>
                   {p.repoUrl ? (
-                    <a className="underline" href={p.repoUrl}>
+                    <a
+                      className="underline"
+                      href={p.repoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       Repo
                     </a>
                   ) : null}
                   {p.demoUrl ? (
-                    <a className="underline" href={p.demoUrl}>
+                    <a
+                      className="underline"
+                      href={p.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       Demo
                     </a>
                   ) : null}
@@ -126,7 +141,12 @@ export default function ProjectsPage() {
                     Details
                   </Link>
                   {p.repoUrl ? (
-                    <a className="underline" href={p.repoUrl}>
+                    <a
+                      className="underline"
+                      href={p.repoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       Repo
                     </a>
                   ) : null}

@@ -57,6 +57,8 @@ export function EvidenceBlock({ project, className = "" }: EvidenceBlockProps) {
         <a
           className="text-sm font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
           href={docsUrl(`/docs/${evidence.dossierPath}`)}
+          target="_blank"
+          rel="noopener noreferrer"
         >
           View Dossier →
         </a>
@@ -84,6 +86,8 @@ export function EvidenceBlock({ project, className = "" }: EvidenceBlockProps) {
         <a
           className="text-sm font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
           href={docsUrl(`/docs/${evidence.threatModelPath}`)}
+          target="_blank"
+          rel="noopener noreferrer"
         >
           View Threat Model →
         </a>
@@ -115,6 +119,8 @@ export function EvidenceBlock({ project, className = "" }: EvidenceBlockProps) {
                 key={index}
                 className="text-sm font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
                 href={docsUrl(`/${adr.url}`)}
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 {adr.title} →
               </a>
@@ -124,6 +130,8 @@ export function EvidenceBlock({ project, className = "" }: EvidenceBlockProps) {
           <a
             className="text-sm font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
             href={docsUrl(`/docs/${evidence.adrIndexPath}`)}
+            target="_blank"
+            rel="noopener noreferrer"
           >
             View ADR Index →
           </a>
@@ -155,6 +163,8 @@ export function EvidenceBlock({ project, className = "" }: EvidenceBlockProps) {
                 key={index}
                 className="text-sm font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
                 href={docsUrl(`/${runbook.url}`)}
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 {runbook.title} →
               </a>
@@ -164,6 +174,8 @@ export function EvidenceBlock({ project, className = "" }: EvidenceBlockProps) {
           <a
             className="text-sm font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
             href={docsUrl(`/docs/${evidence.runbooksPath}`)}
+            target="_blank"
+            rel="noopener noreferrer"
           >
             View Runbooks →
           </a>
@@ -191,6 +203,8 @@ export function EvidenceBlock({ project, className = "" }: EvidenceBlockProps) {
           <a
             className="text-sm font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
             href={project.repoUrl || evidence?.github || "#"}
+            target="_blank"
+            rel="noopener noreferrer"
           >
             View Repository →
           </a>

@@ -29,11 +29,11 @@
 
 - [ ] All CI Checks passed:
   - [x] `ci / quality` passed (lint, format, typecheck)
-  - [x]`ci / secrets-scan` passed (PR-only gate)
-  - [x]`ci / test` passed (unit + E2E tests)
-  - [x]`ci / link-validation` passed (registry + evidence links; Stage 3.5)
-  - [x]`ci / build` passed (depends on quality, test, link-validation)
-  - [x]`codeql` checks passed
+  - [x] `ci / secrets-scan` passed (PR-only gate)
+  - [x] `ci / test` passed (unit + E2E tests)
+  - [x] `ci / link-validation` passed (registry + evidence links; Stage 3.5)
+  - [x] `ci / build` passed (depends on quality, test, link-validation)
+  - [x] `codeql` checks passed
 
 ## Documentation
 
@@ -41,4 +41,5 @@
 - [ ] ADR added/updated (if decision is durable)
 - [ ] Threat model updated (if surface area changed)
 - [ ] Runbooks updated (if deploy/rollback/triage changed)
+
 - Notes:
