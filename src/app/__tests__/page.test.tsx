@@ -47,7 +47,7 @@ describe("HomePage", () => {
     expect(screen.getByRole("link", { name: "See the work" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Read the CV" })).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Review the Portfolio Engineering Docs" }),
+      screen.getByRole("link", { name: /Or go straight to the engineering docs/i }),
     ).toBeInTheDocument();
   });
 
