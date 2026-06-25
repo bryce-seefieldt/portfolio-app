@@ -180,6 +180,232 @@ html:not(.light) .dial-accent-arc {
     drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 34%, transparent));
 }
 
+.control-strip {
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  margin: 0.75rem 1rem;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--surface-2) 88%, white 12%) 0%,
+    var(--surface-2) 55%,
+    color-mix(in srgb, var(--surface-2) 82%, black 18%) 100%
+  );
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--line) 60%, transparent),
+    0 8px 18px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22);
+}
+
+.control-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.125rem;
+  padding: 0.4rem 0.92rem;
+  border-radius: 0.45rem;
+  border: 1px solid color-mix(in srgb, var(--line) 78%, white 22%);
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--surface-2) 90%, white 10%) 0%,
+    var(--surface-2) 58%,
+    color-mix(in srgb, var(--surface-2) 82%, black 18%) 100%
+  );
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--line) 60%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.34),
+    0 2px 8px rgba(0, 0, 0, 0.18);
+  transition:
+    transform 140ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.control-button:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--accent) 54%, var(--line) 46%);
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--line) 68%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.34),
+    0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.control-button:active {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 2px 3px rgba(0, 0, 0, 0.28),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.control-button:focus-visible,
+.control-switch:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 70%, white 30%);
+  outline-offset: 2px;
+}
+
+.control-button--compact {
+  min-height: 1.85rem;
+  padding: 0.3rem 0.7rem;
+  letter-spacing: 0.06em;
+}
+
+.control-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.85rem;
+  padding: 0.28rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 0.42rem;
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: color-mix(in srgb, var(--surface) 88%, black 12%);
+  box-shadow:
+    inset 0 1px 1px rgba(0, 0, 0, 0.24),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+  transition:
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+.control-link:hover {
+  border-color: var(--accent);
+  color: color-mix(in srgb, var(--accent) 84%, var(--ink) 16%);
+}
+
+.footer-inset {
+  border: 1px solid var(--line);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--surface) 90%, black 10%) 0%,
+    color-mix(in srgb, var(--surface) 82%, black 18%) 100%
+  );
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.34),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    0 1px 0 color-mix(in srgb, var(--line) 55%, transparent);
+}
+
+.control-switch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.control-switch-track {
+  position: relative;
+  width: 3.6rem;
+  height: 1.7rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--line) 76%, white 24%);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--surface) 88%, black 12%) 0%,
+    color-mix(in srgb, var(--surface) 80%, black 20%) 100%
+  );
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.42),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.06),
+    0 1px 0 color-mix(in srgb, var(--line) 60%, transparent);
+}
+
+.control-switch-label {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+}
+
+.control-switch-label--left {
+  left: 0.45rem;
+}
+
+.control-switch-label--right {
+  right: 0.45rem;
+}
+
+.control-switch-thumb {
+  position: absolute;
+  top: 0.16rem;
+  left: 0.16rem;
+  width: 1.38rem;
+  height: 1.38rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--line) 78%, white 22%);
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 55%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-2) 92%, white 8%) 0%,
+      color-mix(in srgb, var(--surface-2) 82%, black 18%) 100%
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    0 2px 6px rgba(0, 0, 0, 0.35);
+  transition: transform 180ms ease;
+}
+
+.control-switch[data-light="true"] .control-switch-thumb {
+  transform: translateX(1.84rem);
+}
+
+.pipeline-led {
+  --pipeline-off: color-mix(in srgb, var(--line) 78%, black 22%);
+  --pipeline-color: var(--accent);
+  width: 0.58rem;
+  height: 0.58rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--line) 58%, white 42%);
+  background: var(--pipeline-off);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition:
+    background-color 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+.pipeline-led--stage-1 {
+  --pipeline-color: #ff3b30;
+}
+
+.pipeline-led--stage-2 {
+  --pipeline-color: #ff8a1f;
+}
+
+.pipeline-led--stage-3 {
+  --pipeline-color: #f7df1e;
+}
+
+.pipeline-led--stage-4 {
+  --pipeline-color: #2ed573;
+}
+
+.pipeline-led-final {
+  border-color: color-mix(in srgb, var(--pipeline-color) 62%, var(--line) 38%);
+}
+
+.pipeline-led--active {
+  background: var(--pipeline-color);
+  box-shadow:
+    0 0 10px color-mix(in srgb, var(--pipeline-color) 78%, transparent),
+    0 0 18px color-mix(in srgb, var(--pipeline-color) 52%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.26);
+}
+
 @media (min-width: 640px) {
   .type-display {
     font-size: 3.5rem;
@@ -207,6 +433,15 @@ html:not(.light) .dial-accent-arc {
    ========================================================================= */
 
 @media (prefers-reduced-motion: reduce) {
+  .pipeline-led {
+    transition: none;
+  }
+
+  .control-button,
+  .control-switch-thumb {
+    transition: none;
+  }
+
   *,
   *::before,
   *::after {

@@ -50,7 +50,7 @@ describe("NavigationEnhanced", () => {
     expect(screen.getByText("Work")).toBeInTheDocument();
     expect(screen.getByText("CV")).toBeInTheDocument();
     expect(screen.getByText("Contact")).toBeInTheDocument();
-    expect(screen.getByText("Engineering Docs")).toBeInTheDocument();
+    expect(screen.getByText("Docs")).toBeInTheDocument();
     expect(screen.getByText("GitHub")).toBeInTheDocument();
   });
 
@@ -67,7 +67,7 @@ describe("NavigationEnhanced", () => {
 
     const header = document.querySelector("header");
     expect(header).not.toBeNull();
-    expect(header).not.toHaveClass("shadow-md");
+    expect(header).not.toHaveClass("shadow-[0_10px_22px_rgba(0,0,0,0.28)]");
 
     Object.defineProperty(window, "scrollY", { value: 20, writable: true });
     act(() => {
@@ -75,7 +75,7 @@ describe("NavigationEnhanced", () => {
     });
 
     return waitFor(() => {
-      expect(header).toHaveClass("shadow-md");
+      expect(header).toHaveClass("shadow-[0_10px_22px_rgba(0,0,0,0.28)]");
     });
   });
 

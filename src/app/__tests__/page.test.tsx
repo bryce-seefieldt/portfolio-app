@@ -44,11 +44,10 @@ describe("HomePage", () => {
 
     render(<HomePage />);
 
-    expect(screen.getByRole("link", { name: "See the work" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Read the CV" })).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: "Review the Portfolio Engineering Docs" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "WORK" })).toBeInTheDocument();
+    const cvLinks = screen.getAllByRole("link", { name: "CV" });
+    expect(cvLinks.some((link) => link.getAttribute("href") === "/cv")).toBe(true);
+    expect(screen.getByRole("link", { name: "DOCS" })).toBeInTheDocument();
   });
 
   it("should keep the LinkedIn link out of the page body", () => {
