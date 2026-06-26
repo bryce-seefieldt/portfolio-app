@@ -76,7 +76,7 @@ describe("RootLayout", () => {
 
     render(node as React.ReactElement);
 
-    expect(screen.getByText("Content")).toBeInTheDocument();
+    expect(screen.getAllByText("Content")).toHaveLength(1);
     expect(screen.getByText("Engineering Docs")).toBeInTheDocument();
     expect(screen.getByText("GitHub")).toBeInTheDocument();
     expect(screen.getByText("LinkedIn")).toBeInTheDocument();

@@ -108,6 +108,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   await headers();
   const githubHref = GITHUB_BASE_URL ?? FALLBACK_GITHUB_URL;
   const jsonLdScripts = [generatePersonSchema(), generateWebsiteSchema()];
+  const enableTelemetry = process.env.NODE_ENV === "production";
 
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
@@ -139,7 +140,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       >
         <NavigationEnhanced />
 
-        <main className="mx-auto max-w-5xl px-4 pt-4 pb-11 sm:pt-5">{children}</main>
+        <main className="flex-1 px-4 pt-4 pb-11 sm:pt-5">
+          <div className="mx-auto w-full max-w-5xl">{children}</div>
+        </main>
 
         <footer className="px-4 pb-8">
           <div className="footer-inset mx-auto flex max-w-5xl flex-col gap-4 rounded-md px-4 py-6 text-sm">
@@ -180,8 +183,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </div>
         </footer>
         <BackToTop />
-        <Analytics />
-        <SpeedInsights />
+        {enableTelemetry ? <Analytics /> : null}
+        {enableTelemetry ? <SpeedInsights /> : null}
       </body>
     </html>
   );

@@ -4,12 +4,26 @@ import { useEffect, useState } from "react";
 import { LabelTag } from "@/components/LabelTag";
 
 const DEPLOY_STAGES = ["COMMIT", "CHECKS", "STAGING", "PRODUCTION"] as const;
-const STAGE_DURATION_MS = 3000;
+const STAGE_DURATION_MS = 1000;
 
 export function DeployPipeline() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const applyPreference = () => {
+      setActiveIndex(mediaQuery.matches ? DEPLOY_STAGES.length - 1 : 0);
+    };
+
+    applyPreference();
+
+    const handleChange = () => applyPreference();
+    mediaQuery.addEventListener("change", handleChange);
+
+    if (mediaQuery.matches) {
+      return () => mediaQuery.removeEventListener("change", handleChange);
+    }
+
     const timers = DEPLOY_STAGES.slice(1).map((_, idx) => {
       const nextStageIndex = idx + 1;
       return window.setTimeout(() => {
@@ -18,6 +32,7 @@ export function DeployPipeline() {
     });
 
     return () => {
+      mediaQuery.removeEventListener("change", handleChange);
       timers.forEach((timer) => window.clearTimeout(timer));
     };
   }, []);
@@ -32,7 +47,7 @@ export function DeployPipeline() {
           <div key={stage} className="flex items-center gap-2">
             <span
               className={`pipeline-led pipeline-led--stage-${index + 1} ${isActive ? "pipeline-led--active" : ""} ${
-                isFinal ? "pipeline-led-final" : ""
+                isFinal && isActive ? "pipeline-led--final" : ""
               }`}
               aria-hidden="true"
             />
