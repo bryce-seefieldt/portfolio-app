@@ -74,14 +74,44 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       className="control-switch"
       data-light={state.isLight ? "true" : "false"}
-      aria-label={`Switch to ${state.isLight ? "dark" : "light"} theme`}
+      aria-pressed={state.isLight}
+      aria-label="Toggle light/dark theme"
       title={`Current theme: ${state.isLight ? "light" : "dark"}`}
       type="button"
     >
-      <span className="control-switch-track" aria-hidden="true">
-        <span className="control-switch-label control-switch-label--left">DK</span>
-        <span className="control-switch-label control-switch-label--right">LT</span>
-        <span className="control-switch-thumb" />
+      <span className="control-switch-shell" aria-hidden="true">
+        <span className="control-switch-icon control-switch-icon--light">
+          <svg
+            viewBox="0 0 24 24"
+            className="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="12" cy="12" r="4.25" />
+            <path d="M12 2.75v2.5M12 18.75v2.5M2.75 12h2.5M18.75 12h2.5M5.4 5.4l1.77 1.77M16.83 16.83l1.77 1.77M18.6 5.4l-1.77 1.77M7.17 16.83 5.4 18.6" />
+          </svg>
+        </span>
+        <span className="control-switch-housing">
+          <span className="control-switch-face">
+            <span className="control-switch-rocker" />
+          </span>
+        </span>
+        <span className="control-switch-icon control-switch-icon--dark">
+          <svg
+            viewBox="0 0 24 24"
+            className="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M19 14.8A7.2 7.2 0 1 1 9.2 5a8.2 8.2 0 1 0 9.8 9.8Z" />
+          </svg>
+        </span>
       </span>
     </button>
   );
