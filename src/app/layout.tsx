@@ -139,7 +139,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       >
         <NavigationEnhanced />
 
-        <main className="mx-auto max-w-5xl px-4 py-10">{children}</main>
+        <main className="mx-auto max-w-5xl px-4 pb-11 pt-4 sm:pt-5">{children}</main>
 
         <footer className="px-4 pb-8">
           <div className="footer-inset mx-auto flex max-w-5xl flex-col gap-4 rounded-md px-4 py-6 text-sm">

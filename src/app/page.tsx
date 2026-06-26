@@ -15,10 +15,10 @@ export default function HomePage() {
   const githubHref = GITHUB_BASE_URL ?? "https://github.com/bryce-seefieldt";
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-6">
       {/* HERO */}
       <ScrollFadeIn>
-        <section className="grid min-h-[75vh] gap-8 lg:min-h-[85vh] lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-center">
+        <section className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-start">
           <header className="flex flex-col gap-4">
             <p className="type-label text-ink-muted">
               25 YEARS OF PROFESSIONAL EXPERIENCE · FOCUSED ON SOFTWARE SINCE 2020
