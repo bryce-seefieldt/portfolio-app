@@ -57,6 +57,9 @@ const nextConfig: NextConfig = {
   // Performance: Enable compression
   compress: true,
 
+  // Test hygiene: Keep browser-side dev warnings out of the Playwright web server log.
+  logging: process.env.PLAYWRIGHT_E2E === "1" ? { browserToTerminal: false } : undefined,
+
   // Security: Remove X-Powered-By header
   poweredByHeader: false,
 

@@ -74,8 +74,8 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       className="control-switch"
       data-light={state.isLight ? "true" : "false"}
-      aria-pressed={state.isLight}
-      aria-label="Toggle light/dark theme"
+      aria-pressed={!state.isLight}
+      aria-label="Toggle light and dark theme"
       title={`Current theme: ${state.isLight ? "light" : "dark"}`}
       type="button"
     >
@@ -96,7 +96,11 @@ export function ThemeToggle() {
         </span>
         <span className="control-switch-housing">
           <span className="control-switch-face">
-            <span className="control-switch-rocker" />
+            <span className="control-switch-rocker">
+              <span className="control-switch-rocker-half control-switch-rocker-half--left" />
+              <span className="control-switch-rocker-pivot" />
+              <span className="control-switch-rocker-half control-switch-rocker-half--right" />
+            </span>
           </span>
         </span>
         <span className="control-switch-icon control-switch-icon--dark">

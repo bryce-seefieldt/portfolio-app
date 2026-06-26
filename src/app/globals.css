@@ -348,57 +348,70 @@ html:not(.light) .dial-accent-arc {
 .control-switch-shell {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.34rem;
 }
 
 .control-switch-icon {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--ink-muted);
-  opacity: 0.92;
+  width: 1.1rem;
+  height: 1.1rem;
+  color: color-mix(in srgb, var(--ink-muted) 82%, black 18%);
+  opacity: 0.95;
+  text-shadow:
+    -1px -1px 0 rgba(0, 0, 0, 0.42),
+    1px 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.control-switch-icon::before {
+  content: "";
+  position: absolute;
+  inset: -0.14rem;
+  border-radius: 999px;
+  box-shadow:
+    inset 1px 1px 2px rgba(0, 0, 0, 0.34),
+    inset -1px -1px 1px rgba(255, 255, 255, 0.08);
+  pointer-events: none;
 }
 
 .control-switch-housing {
   position: relative;
-  width: 5.6rem;
-  height: 2rem;
-  border-radius: 0.55rem;
-  border: 1px solid color-mix(in srgb, var(--line) 72%, white 28%);
+  width: 3rem;
+  height: 1.72rem;
+  border-radius: 0.38rem;
+  border: 1px solid color-mix(in srgb, var(--line) 74%, white 26%);
   background:
     linear-gradient(
       180deg,
-      color-mix(in srgb, var(--surface-2) 90%, white 10%) 0%,
-      color-mix(in srgb, var(--surface-2) 78%, black 22%) 100%
+      color-mix(in srgb, var(--surface) 72%, black 28%) 0%,
+      color-mix(in srgb, var(--surface) 62%, black 38%) 100%
     ),
-    radial-gradient(circle at 25% 20%, rgba(255, 255, 255, 0.16), transparent 34%);
+    radial-gradient(circle at 28% 24%, rgba(255, 255, 255, 0.06), transparent 36%);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 2px 4px rgba(0, 0, 0, 0.42),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+    0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.06),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.46),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.22);
 }
 
 .control-switch-face {
   position: absolute;
-  inset: 0.14rem;
-  border-radius: 0.42rem;
+  inset: 0.16rem;
+  border-radius: 0.24rem;
   overflow: hidden;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.08) 0%,
-    rgba(255, 255, 255, 0.02) 34%,
-    rgba(0, 0, 0, 0.08) 100%
-  );
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.32) 0%, rgba(0, 0, 0, 0.1) 100%),
+    radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.1), transparent 58%);
 }
 
 .control-switch-face::before {
   content: "";
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 40%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
-  opacity: 0.25;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent 45%);
+  opacity: 0.5;
   pointer-events: none;
 }
 
@@ -406,61 +419,220 @@ html:not(.light) .dial-accent-arc {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 50%, transparent 42%, rgba(0, 0, 0, 0.18) 100%);
+  background:
+    radial-gradient(circle at 50% 50%, transparent 44%, rgba(0, 0, 0, 0.36) 100%),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(0, 0, 0, 0.42) 49%,
+      rgba(255, 255, 255, 0.08) 100%
+    );
   pointer-events: none;
 }
 
 .control-switch-rocker {
   position: absolute;
-  top: 0.22rem;
-  left: 0.22rem;
-  width: 2.15rem;
-  height: 1.34rem;
-  border-radius: 0.34rem;
-  border: 1px solid color-mix(in srgb, var(--line) 66%, white 34%);
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--surface-2) 94%, white 6%) 0%,
-    color-mix(in srgb, var(--surface-2) 82%, black 18%) 100%
-  );
+  inset: 0.06rem;
+  border-radius: 0.2rem;
+  border: 1px solid color-mix(in srgb, var(--line) 54%, rgba(0, 0, 0, 0.48));
+  background: color-mix(in srgb, var(--surface-2) 86%, white 14%);
+  transform-origin: 50% 50%;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.34),
-    0 3px 6px rgba(0, 0, 0, 0.3);
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.52),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.28),
+    0 3px 6px rgba(0, 0, 0, 0.44);
   transition:
     transform 150ms ease-out,
     box-shadow 150ms ease-out,
-    background-color 150ms ease-out;
+    background-color 150ms ease-out,
+    filter 150ms ease-out;
+}
+
+.control-switch-rocker::before {
+  content: "";
+  position: absolute;
+  inset: 0.03rem;
+  border-radius: 0.17rem;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      color-mix(in srgb, var(--accent) 54%, rgba(170, 255, 212, 0.76)) 0%,
+      color-mix(in srgb, var(--accent) 42%, rgba(106, 226, 164, 0.52)) 34%,
+      color-mix(in srgb, var(--accent) 24%, rgba(42, 148, 98, 0.3)) 64%,
+      transparent 88%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--accent) 22%, rgba(172, 255, 214, 0.34)) 0%,
+      color-mix(in srgb, var(--accent) 14%, rgba(84, 220, 153, 0.22)) 44%,
+      transparent 64%
+    );
+  opacity: 0;
+  filter: blur(0.6px) saturate(1.12);
+  transition:
+    opacity 150ms ease-out,
+    filter 150ms ease-out;
+  pointer-events: none;
+}
+
+.control-switch-rocker-half {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 46%, rgba(48, 82, 62, 0.8)) 0%,
+    color-mix(in srgb, var(--accent) 28%, rgba(12, 30, 20, 0.84)) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -2px 2px rgba(0, 0, 0, 0.44);
+  transition:
+    transform 150ms ease-out,
+    box-shadow 150ms ease-out,
+    filter 150ms ease-out;
+}
+
+.control-switch-rocker-half--left {
+  left: 0;
+  transform-origin: 100% 50%;
+  border-right: 1px solid rgba(0, 0, 0, 0.42);
+}
+
+.control-switch-rocker-half--right {
+  right: 0;
+  transform-origin: 0 50%;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.control-switch-rocker-pivot {
+  position: absolute;
+  left: calc(50% - 1px);
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(0, 0, 0, 0.54) 100%);
+  box-shadow:
+    -1px 0 0 rgba(0, 0, 0, 0.32),
+    1px 0 0 rgba(255, 255, 255, 0.12);
 }
 
 .control-switch[data-light="true"] .control-switch-rocker {
-  transform: translateX(2.8rem);
+  transform: perspective(280px) rotateX(-9deg) rotateY(-15deg);
+  box-shadow:
+    inset 12px 0 14px rgba(0, 0, 0, 0.56),
+    inset -10px 0 10px rgba(255, 255, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.52),
+    0 3px 7px rgba(0, 0, 0, 0.48);
+  background: color-mix(in srgb, var(--surface-2) 92%, white 8%);
+}
+
+.control-switch[data-light="true"] .control-switch-rocker-half--left {
+  transform: perspective(240px) rotateY(-24deg) scaleY(0.97);
+  box-shadow:
+    inset 3px 0 8px rgba(0, 0, 0, 0.62),
+    inset -1px 0 2px rgba(255, 255, 255, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  filter: saturate(0.88) brightness(0.8);
+}
+
+.control-switch[data-light="true"] .control-switch-rocker-half--right {
+  transform: perspective(240px) rotateY(18deg) scaleY(1.03);
+  box-shadow:
+    inset -3px 0 9px rgba(206, 255, 230, 0.36),
+    inset 1px 0 2px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(245, 255, 248, 0.36),
+    0 0 6px rgba(174, 255, 212, 0.18);
+  filter: saturate(1.24) brightness(1.18);
+}
+
+.control-switch[data-light="true"] .control-switch-face {
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.2),
+    inset 0 0 8px rgba(255, 255, 255, 0.18);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface) 92%, white 8%) 0%,
+      color-mix(in srgb, var(--surface-2) 84%, white 16%) 52%,
+      color-mix(in srgb, var(--surface-2) 80%, black 20%) 100%
+    ),
+    radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.1), transparent 66%);
+}
+
+.control-switch[data-light="false"] .control-switch-rocker {
+  transform: perspective(280px) rotateX(9deg) rotateY(15deg);
+  box-shadow:
+    0 0 4px color-mix(in srgb, var(--accent) 34%, transparent),
+    0 0 10px color-mix(in srgb, var(--accent) 18%, transparent),
+    inset -10px 0 12px rgba(0, 0, 0, 0.44),
+    inset 8px 0 9px rgba(255, 255, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.56),
+    0 3px 7px rgba(0, 0, 0, 0.5);
+}
+
+.control-switch[data-light="false"] .control-switch-rocker::before {
+  opacity: 0.55;
+  filter: blur(0.9px) saturate(1.2) brightness(1.08);
+}
+
+.control-switch[data-light="false"] .control-switch-rocker-half--left {
+  transform: perspective(240px) rotateY(-14deg) scaleY(1.02);
+  box-shadow:
+    inset 2px 0 5px rgba(255, 255, 255, 0.14),
+    inset -1px 0 2px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  filter: saturate(1.14) brightness(1.08);
+}
+
+.control-switch[data-light="false"] .control-switch-rocker-half--right {
+  transform: perspective(240px) rotateY(20deg) scaleY(0.98);
+  box-shadow:
+    inset -2px 0 5px rgba(0, 0, 0, 0.48),
+    inset 1px 0 2px rgba(255, 255, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  filter: saturate(0.82) brightness(0.82);
 }
 
 .control-switch[data-light="false"] .control-switch-face {
   box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.14),
-    0 0 12px color-mix(in srgb, var(--accent) 40%, transparent);
+    0 0 0 1px rgba(0, 0, 0, 0.24),
+    inset 0 0 10px color-mix(in srgb, var(--accent) 32%, transparent),
+    0 0 8px color-mix(in srgb, var(--accent) 24%, transparent);
   background:
     linear-gradient(
       180deg,
-      color-mix(in srgb, var(--accent) 28%, rgba(255, 255, 255, 0.12)) 0%,
-      rgba(255, 255, 255, 0.06) 36%,
-      rgba(0, 0, 0, 0.12) 100%
+      color-mix(in srgb, var(--accent) 32%, rgba(255, 255, 255, 0.08)) 0%,
+      rgba(0, 0, 0, 0.08) 56%,
+      rgba(0, 0, 0, 0.22) 100%
     ),
     radial-gradient(
-      circle at 50% 50%,
-      color-mix(in srgb, var(--accent) 16%, transparent),
-      transparent 58%
+      circle at 50% 42%,
+      color-mix(in srgb, var(--accent) 28%, transparent),
+      transparent 64%
     );
 }
 
 .control-switch[data-light="false"] .control-switch-rocker {
   box-shadow:
-    0 0 14px color-mix(in srgb, var(--accent) 48%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.34),
-    0 3px 8px rgba(0, 0, 0, 0.34);
+    0 0 6px color-mix(in srgb, var(--accent) 30%, transparent),
+    inset -10px 0 12px rgba(0, 0, 0, 0.44),
+    inset 8px 0 9px rgba(255, 255, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.48),
+    0 3px 8px rgba(0, 0, 0, 0.42);
+}
+
+.control-switch[data-light="false"] .control-switch-icon--dark {
+  color: color-mix(in srgb, var(--accent) 50%, white 50%);
+}
+
+.control-switch[data-light="true"] .control-switch-icon--light {
+  color: color-mix(in srgb, #c58f2f 75%, white 25%);
 }
 
 .pipeline-led {
@@ -545,7 +717,9 @@ html:not(.light) .dial-accent-arc {
   }
 
   .control-button,
-  .control-switch-rocker {
+  .control-switch-rocker,
+  .control-switch-rocker-half,
+  .control-switch-face {
     transition: none;
   }
 

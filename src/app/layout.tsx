@@ -8,11 +8,6 @@ import { headers } from "next/headers";
 import "./globals.css";
 
 import { DOCS_BASE_URL, GITHUB_BASE_URL, LINKEDIN_URL, SITE_URL } from "@/lib/config";
-import {
-  generatePersonSchema,
-  generateWebsiteSchema,
-  formatSchemaAsScript,
-} from "@/lib/structured-data";
 
 const APP_TITLE = "Bryce Seefieldt | Portfolio";
 const APP_DESCRIPTION =
@@ -107,34 +102,11 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   await headers();
   const githubHref = GITHUB_BASE_URL ?? FALLBACK_GITHUB_URL;
-  const jsonLdScripts = [generatePersonSchema(), generateWebsiteSchema()];
   const enableTelemetry = process.env.NODE_ENV === "production";
 
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <head>
-        {/* Theme initialization script: runs before paint to prevent flash of wrong theme.
-            This ensures the correct theme is applied immediately on page load,
-            preventing a visible flash when the page loads in the wrong theme.
-            Uses stored preference or system preference as fallback. */}
-        <script
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{
-            __html:
-              "(function(){try{const saved=localStorage.getItem('theme');const isLight=saved==='light';if(isLight){document.documentElement.classList.add('light');document.documentElement.classList.remove('dark');}else{document.documentElement.classList.remove('light');document.documentElement.classList.add('dark');}}catch(e){document.documentElement.classList.add('dark');}})();",
-          }}
-        />
-
-        {/* JSON-LD Structured Data for SEO */}
-        {jsonLdScripts.map((schema, idx) => (
-          <script
-            key={idx}
-            type="application/ld+json"
-            suppressHydrationWarning
-            dangerouslySetInnerHTML={{ __html: formatSchemaAsScript(schema) }}
-          ></script>
-        ))}
-      </head>
+      <head />
       <body
         className={`${inter.variable} ${spaceGrotesk.variable} ${jetBrainsMono.variable} font-body min-h-dvh`}
       >
