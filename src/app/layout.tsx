@@ -141,11 +141,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
         <main className="mx-auto max-w-5xl px-4 py-10">{children}</main>
 
-        <footer className="border-t border-zinc-200 dark:border-zinc-800">
-          <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-8 text-sm text-zinc-600 dark:text-zinc-400">
-            <div className="flex flex-wrap items-center gap-3">
+        <footer className="px-4 pb-8">
+          <div className="footer-inset mx-auto flex max-w-5xl flex-col gap-4 rounded-md px-4 py-6 text-sm">
+            <div className="flex flex-wrap items-center gap-2">
               <a
-                className="hover:text-zinc-950 dark:hover:text-white"
+                className="control-link"
                 href={githubHref}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -154,7 +154,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               </a>
               {LINKEDIN_URL ? (
                 <a
-                  className="hover:text-zinc-950 dark:hover:text-white"
+                  className="control-link"
                   href={LINKEDIN_URL}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -163,7 +163,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 </a>
               ) : null}
               <a
-                className="hover:text-zinc-950 dark:hover:text-white"
+                className="control-link"
                 href={DOCS_BASE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -171,9 +171,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 Engineering Docs
               </a>
             </div>
-            <div className="space-y-1">
-              <p>Bryce Seefieldt · Full-stack developer · Toronto</p>
-              <p>Built with Next.js, TypeScript, and Tailwind. Inspect the source on GitHub.</p>
+            <div className="space-y-1 text-sm">
+              <p className="text-ink">Bryce Seefieldt · Full-Stack Developer · Toronto, Canada</p>
+              <p className="text-ink-muted">
+                Built with Next.js, TypeScript, and Tailwind. Inspect the source on GitHub.
+              </p>
             </div>
           </div>
         </footer>

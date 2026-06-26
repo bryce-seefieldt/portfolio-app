@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { ControlButton } from "./ControlButton";
 import { ThemeToggle } from "./ThemeToggle";
 import { DOCS_BASE_URL, GITHUB_BASE_URL } from "@/lib/config";
 
@@ -33,7 +34,7 @@ function NavLink({ href, children, onClick }: NavLinkProps) {
     <Link
       href={href}
       onClick={onClick}
-      className="text-sm text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
+      className="control-button control-button--compact type-label"
     >
       {children}
     </Link>
@@ -71,14 +72,17 @@ export function NavigationEnhanced() {
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b border-zinc-200 bg-white transition-shadow duration-200 dark:border-zinc-800 dark:bg-zinc-950 ${
-        isScrolled ? "shadow-md" : ""
+      className={`control-strip sticky top-0 z-50 transition-shadow duration-200 ${
+        isScrolled ? "shadow-[0_10px_22px_rgba(0,0,0,0.28)]" : ""
       }`}
     >
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
         {/* Logo */}
-        <Link href="/" className="font-semibold tracking-tight" onClick={closeMobileMenu}>
-          Bryce Seefieldt | Portfolio
+        <Link href="/" className="flex flex-col leading-none" onClick={closeMobileMenu}>
+          <span className="font-display text-ink text-lg font-semibold tracking-tight">
+            Bryce Seefieldt
+          </span>
+          <span className="type-label text-ink-muted mt-1">Full-Stack Developer</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -86,23 +90,13 @@ export function NavigationEnhanced() {
           <NavLink href="/">Home</NavLink>
           <NavLink href="/projects">Work</NavLink>
           <NavLink href="/cv">CV</NavLink>
-          <a
-            href={DOCS_BASE_URL}
-            className="text-sm text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Engineering Docs
-          </a>
+          <ControlButton href={DOCS_BASE_URL} external className="control-button--compact">
+            Docs
+          </ControlButton>
           <NavLink href="/contact">Contact</NavLink>
-          <a
-            href={githubHref}
-            className="text-sm text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <ControlButton href={githubHref} external className="control-button--compact">
             GitHub
-          </a>
+          </ControlButton>
           {/* TO DO: Add search button here in the future, currently disabled as search is not implemented. */}
           {/* <button
             type="button"
@@ -132,7 +126,7 @@ export function NavigationEnhanced() {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="rounded-lg p-2 transition-colors hover:bg-zinc-100 md:hidden dark:hover:bg-zinc-800"
+          className="control-button control-button--compact md:hidden"
           aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
           aria-expanded={isMobileMenuOpen}
         >
@@ -174,8 +168,8 @@ export function NavigationEnhanced() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="border-t border-zinc-200 bg-white md:hidden dark:border-zinc-800 dark:bg-zinc-950">
-          <nav className="mx-auto flex max-w-5xl flex-col gap-1 px-4 py-4">
+        <div className="border-line bg-surface mt-2 border-t md:hidden">
+          <nav className="mx-auto flex max-w-5xl flex-col gap-2 px-4 py-4">
             <NavLink href="/" onClick={closeMobileMenu}>
               Home
             </NavLink>
@@ -185,30 +179,26 @@ export function NavigationEnhanced() {
             <NavLink href="/cv" onClick={closeMobileMenu}>
               CV
             </NavLink>
-            <a
+            <ControlButton
               href={DOCS_BASE_URL}
-              className="text-sm text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
-              onClick={closeMobileMenu}
-              target="_blank"
-              rel="noopener noreferrer"
+              external
+              className="control-button--compact justify-center"
             >
-              Engineering Docs
-            </a>
+              Docs
+            </ControlButton>
             <NavLink href="/contact" onClick={closeMobileMenu}>
               Contact
             </NavLink>
-            <a
+            <ControlButton
               href={githubHref}
-              className="text-sm text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
-              onClick={closeMobileMenu}
-              target="_blank"
-              rel="noopener noreferrer"
+              external
+              className="control-button--compact justify-center"
             >
               GitHub
-            </a>
+            </ControlButton>
 
             <div className="mt-2 flex items-center gap-2">
-              <span className="text-sm text-zinc-600 dark:text-zinc-400">Theme:</span>
+              <span className="type-label text-ink-muted">Theme</span>
               <ThemeToggle />
             </div>
           </nav>

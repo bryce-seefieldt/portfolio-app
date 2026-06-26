@@ -1,82 +1,73 @@
 // src/app/page.tsx
 import Link from "next/link";
 import { Callout } from "@/components/Callout";
+import { ControlButton } from "@/components/ControlButton";
+import { Dial } from "@/components/Dial";
+import { DeployPipeline } from "@/components/DeployPipeline";
+import { LabelTag } from "@/components/LabelTag";
+import { Panel } from "@/components/Panel";
+import { Readout } from "@/components/Readout";
 import { Section } from "@/components/Section";
 import { ScrollFadeIn } from "@/components/ScrollFadeIn";
 import { DOCS_BASE_URL, docsUrl, GITHUB_BASE_URL } from "@/lib/config";
 
-function PrimaryButton({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <Link
-      href={href}
-      className="inline-flex items-center justify-center rounded-xl border border-zinc-200 bg-zinc-950 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-900 dark:border-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100"
-    >
-      {children}
-    </Link>
-  );
-}
-
-function SecondaryLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <Link
-      href={href}
-      className="text-sm font-medium text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
-    >
-      {children}
-    </Link>
-  );
-}
-
 export default function HomePage() {
   const githubHref = GITHUB_BASE_URL ?? "https://github.com/bryce-seefieldt";
+
   return (
     <div className="flex flex-col gap-8">
       {/* HERO */}
       <ScrollFadeIn>
-        <header className="flex flex-col gap-4">
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">Full-stack developer · Toronto</p>
+        <section className="grid min-h-[75vh] gap-8 lg:min-h-[85vh] lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-center">
+          <header className="flex flex-col gap-4">
+            <p className="type-label text-ink-muted">
+              25 YEARS OF PROFESSIONAL EXPERIENCE · FOCUSED ON SOFTWARE SINCE 2020
+            </p>
 
-          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Confidence across the whole stack. Intention at every layer.
-          </h1>
+            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+              Confidence across the whole stack.{" "}
+              <span className="text-accent glow-accent">Intention</span> at every layer.
+            </h1>
 
-          <p className="max-w-3xl text-base text-zinc-700 dark:text-zinc-300">
-            Full-stack developer with a background leading enterprise technology projects. I&apos;ve
-            focused my career on modernizing systems and improving processes. I build and deliver to
-            an enterprise standard: tested, secured, documented, and shipped through a real
-            pipeline. Take a look around. The proof is one click deep.
-          </p>
+            <p className="max-w-3xl text-base text-zinc-700 dark:text-zinc-300">
+              Full-stack developer with a background leading enterprise technology projects.
+              I&apos;ve focused my career on modernizing systems and improving processes. I build
+              and deliver to an enterprise standard: tested, secured, documented, and shipped
+              through a real pipeline. Take a look around. The proof is one click deep.
+            </p>
 
-          {/* PRIMARY CTA ROW */}
-          <div className="flex flex-wrap items-center gap-3">
-            <PrimaryButton href="/projects">See the work</PrimaryButton>
-            <SecondaryLink href="/cv">Read the CV</SecondaryLink>
-            <a
-              className="text-sm font-medium text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
-              href={DOCS_BASE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Review the Portfolio Engineering Docs
-            </a>
-          </div>
-          <br />
-          {/* EXTERNAL LINKS */}
-          {/* <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-600 dark:text-zinc-400">
-            {GITHUB_BASE_URL ? (
-              <a className="hover:text-zinc-950 dark:hover:text-white" href={GITHUB_BASE_URL}>
-                GitHub
-              </a>
-            ) : null}
-            {LINKEDIN_URL ? (
-              <a className="hover:text-zinc-950 dark:hover:text-white" href={LINKEDIN_URL}>
-                LinkedIn
-              </a>
-            ) : null}
-            <span className="text-zinc-400 dark:text-zinc-600">•</span>
-            <span>Enterprise delivery, with proof one click deep</span>
-          </div> */}
-        </header>
+            <div className="flex flex-wrap items-center gap-3 pt-1">
+              <ControlButton href="/projects">WORK</ControlButton>
+              <ControlButton href="/cv">CV</ControlButton>
+              <ControlButton href={DOCS_BASE_URL} external>
+                DOCS
+              </ControlButton>
+            </div>
+          </header>
+
+          <Panel label="MODULE 00 / DEVELOPER" className="h-fit" variant="default">
+            <div className="flex flex-col gap-5">
+              <div className="flex flex-wrap items-center gap-2">
+                <LabelTag tone="accent">BRYCE SEEFIELDT</LabelTag>
+                <LabelTag>PANEL: CONTROL BUS</LabelTag>
+                <LabelTag tone="warn">TORONTO, CANADA</LabelTag>
+              </div>
+
+              <div className="space-y-2">
+                <p className="type-label text-ink-muted">DEPLOY PIPELINE</p>
+                <DeployPipeline />
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-end">
+                <Readout value="OPERATIONAL" caption="DEPLOY STATUS" />
+                <Readout value="~1" unit="min" caption="ROLLBACK MTTR" />
+                <div className="justify-self-start sm:justify-self-end" aria-hidden="true">
+                  <Dial value={74} caption="PIPELINE LOAD" />
+                </div>
+              </div>
+            </div>
+          </Panel>
+        </section>
 
         {/* CALLOUT: HOW TO EVALUATE */}
         <Callout>
