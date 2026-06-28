@@ -50,6 +50,43 @@
   --depth-dial-mount-highlight: rgba(255, 255, 255, 0.2);
   --depth-dial-mount-shadow: rgba(0, 0, 0, 0.58);
 
+  /* Theme-aware elevation tokens (dark recipe: lift with light) */
+  --edge-highlight: rgba(255, 255, 255, 0.2);
+  --edge-shadow: rgba(0, 0, 0, 0.48);
+  --lift-halo: color-mix(in srgb, var(--ink) 16%, transparent);
+  --elevation-raised-shadow:
+    0 1px 0 color-mix(in srgb, white 24%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--ink) 16%, transparent), 0 10px 18px rgba(0, 0, 0, 0.24),
+    0 0 14px color-mix(in srgb, var(--accent) 18%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24), inset 0 -1px 0 rgba(0, 0, 0, 0.42);
+  --elevation-raised-shadow-hover:
+    0 1px 0 color-mix(in srgb, white 26%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent), 0 12px 20px rgba(0, 0, 0, 0.26),
+    0 0 18px color-mix(in srgb, var(--accent) 24%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28), inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+  --elevation-raised-shadow-pressed:
+    0 1px 0 color-mix(in srgb, white 16%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent), 0 3px 8px rgba(0, 0, 0, 0.2),
+    inset 0 2px 3px rgba(0, 0, 0, 0.44), inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  --elevation-inset-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.52);
+  --panel-raised-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.14), inset -1px -1px 0 rgba(0, 0, 0, 0.36),
+    0 0 0 1px color-mix(in srgb, var(--ink) 14%, transparent), 0 16px 28px rgba(0, 0, 0, 0.18),
+    0 0 14px color-mix(in srgb, var(--accent) 14%, transparent);
+  --panel-inset-shadow:
+    inset 2px 2px 3px rgba(0, 0, 0, 0.34), inset -1px -1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 10px 20px rgba(0, 0, 0, 0.16);
+  --keycap-skirt: color-mix(in srgb, var(--keycap-bg) 56%, black 44%);
+  --keycap-drop-shadow: 0 9px 14px rgba(0, 0, 0, 0.24);
+  --keypad-gutter: color-mix(in srgb, var(--surface-2) 62%, var(--bg) 38%);
+  --keypad-gutter-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --dial-face-shadow-1: rgba(0, 0, 0, 0.36);
+  --dial-face-shadow-2: rgba(0, 0, 0, 0.2);
+  --dial-face-highlight: rgba(255, 255, 255, 0.14);
+  --dial-needle-shadow: rgba(0, 0, 0, 0.4);
+
   /* Keycap tokens (dark mode) */
   --key-neutral: #2a2722;
   --key-neutral-ink: #e8e2d0;
@@ -116,6 +153,36 @@ html.light {
   --depth-inset-shell-shadow: rgba(0, 0, 0, 0.44);
   --depth-dial-mount-highlight: rgba(255, 255, 255, 0.24);
   --depth-dial-mount-shadow: rgba(0, 0, 0, 0.4);
+
+  /* Theme-aware elevation tokens (light recipe: highlight + shadow) */
+  --edge-highlight: rgba(255, 255, 255, 0.26);
+  --edge-shadow: rgba(0, 0, 0, 0.32);
+  --lift-halo: color-mix(in srgb, white 32%, transparent);
+  --elevation-raised-shadow:
+    0 1px 0 color-mix(in srgb, white 24%, transparent), 0 8px 14px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+  --elevation-raised-shadow-hover:
+    0 1px 0 color-mix(in srgb, white 28%, transparent), 0 10px 16px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.34), inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+  --elevation-raised-shadow-pressed:
+    0 1px 0 color-mix(in srgb, white 16%, transparent), 0 3px 8px rgba(0, 0, 0, 0.18),
+    inset 0 2px 3px rgba(0, 0, 0, 0.34), inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  --elevation-inset-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+  --panel-raised-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.2), inset -1px -1px 0 rgba(0, 0, 0, 0.28),
+    0 12px 22px rgba(0, 0, 0, 0.14), 0 4px 10px rgba(0, 0, 0, 0.16);
+  --panel-inset-shadow:
+    inset 2px 2px 3px rgba(0, 0, 0, 0.24), inset -1px -1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 10px 18px rgba(0, 0, 0, 0.1);
+  --keycap-skirt: color-mix(in srgb, var(--keycap-bg) 58%, black 42%);
+  --keycap-drop-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+  --keypad-gutter: color-mix(in srgb, var(--surface-2) 70%, var(--bg) 30%);
+  --keypad-gutter-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  --dial-face-shadow-1: rgba(0, 0, 0, 0.32);
+  --dial-face-shadow-2: rgba(0, 0, 0, 0.16);
+  --dial-face-highlight: rgba(255, 255, 255, 0.18);
+  --dial-needle-shadow: rgba(0, 0, 0, 0.3);
 
   /* Keycap tokens (light mode) */
   --key-neutral: #c9bfa3;
@@ -394,7 +461,29 @@ html:not(.light) .dial-accent-arc {
     inset 0 -2px 0 rgba(0, 0, 0, 0.38);
 }
 
+.control-button.is-hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--accent) 60%, var(--line) 40%);
+  box-shadow:
+    0 2px 0 color-mix(in srgb, var(--surface-2) 48%, black 52%),
+    0 5px 0 color-mix(in srgb, var(--surface-2) 40%, black 60%),
+    var(--depth-cast-shadow-strong),
+    0 0 14px color-mix(in srgb, var(--accent) 28%, transparent),
+    var(--depth-lift-halo),
+    inset 0 2px 0 color-mix(in srgb, white 52%, transparent),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.38);
+}
+
 .control-button:active {
+  transform: translateY(3px);
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--surface-2) 42%, black 58%),
+    0 2px 5px rgba(0, 0, 0, 0.3),
+    inset 0 3px 5px rgba(0, 0, 0, 0.46),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.control-button.is-active {
   transform: translateY(3px);
   box-shadow:
     0 1px 0 color-mix(in srgb, var(--surface-2) 42%, black 58%),
@@ -405,6 +494,11 @@ html:not(.light) .dial-accent-arc {
 
 .control-button:focus-visible,
 .control-switch:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 70%, white 30%);
+  outline-offset: 2px;
+}
+
+.control-button.is-focus-visible {
   outline: 2px solid color-mix(in srgb, var(--accent) 70%, white 30%);
   outline-offset: 2px;
 }

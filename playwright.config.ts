@@ -54,7 +54,8 @@ export default defineConfig({
     ? undefined
     : {
         // Build then start production server for deterministic browser behavior
-        command: "pnpm build && PORT=3000 PLAYWRIGHT_E2E=1 pnpm start",
+        command:
+          "PLAYWRIGHT_E2E=1 NEXT_OTEL_PERFORMANCE_PREFIX=e2e pnpm build && PLAYWRIGHT_E2E=1 NEXT_OTEL_PERFORMANCE_PREFIX=e2e pnpm start",
         // URL to wait for before starting tests
         url: "http://localhost:3000",
         // Reuse existing server if already running (except in CI)

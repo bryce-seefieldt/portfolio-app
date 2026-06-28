@@ -412,8 +412,8 @@ export default function DesignTokensPreviewPage() {
                 <Keycap
                   legend="NEXT"
                   subLegend="1.5u"
-                  capColor="#2D7F87"
-                  legendColor="#E8F5F7"
+                  capColor="#2B6F76"
+                  legendColor="#F4FCFF"
                   size="1.5u"
                   state="hover"
                 />
