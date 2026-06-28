@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import localFont from "next/font/local";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { NavigationEnhanced } from "@/components/NavigationEnhanced";
 import { BackToTop } from "@/components/BackToTop";
@@ -33,6 +34,12 @@ const jetBrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
   variable: "--font-jetbrains-mono",
+  display: "swap",
+});
+
+const departureMono = localFont({
+  src: "./fonts/DepartureMono-Regular.woff2",
+  variable: "--font-departure-mono",
   display: "swap",
 });
 
@@ -108,7 +115,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en" className="dark" suppressHydrationWarning>
       <head />
       <body
-        className={`${inter.variable} ${spaceGrotesk.variable} ${jetBrainsMono.variable} font-body min-h-dvh`}
+        className={`${inter.variable} ${spaceGrotesk.variable} ${jetBrainsMono.variable} ${departureMono.variable} font-body min-h-dvh`}
       >
         <NavigationEnhanced />
 

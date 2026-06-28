@@ -15,32 +15,33 @@
   --font-display: var(--font-space-grotesk);
   --font-body: var(--font-inter);
   --font-mono: var(--font-jetbrains-mono);
+  --font-display-accent: var(--font-departure-mono);
 }
 
 /* Dark mode tokens (default) */
 :root {
-  --bg: #0d0f0c;
-  --surface: #15180f;
-  --surface-2: #1c2114;
-  --ink: #d6e8c8;
-  --ink-muted: #7e8c6b;
-  --accent: #4fe08a;
-  --accent-warn: #e8a24f;
-  --line: #28301e;
-  --rivet: #3a4329;
+  --bg: #0a0a0a;
+  --surface: #1a1814;
+  --surface-2: #211e18;
+  --ink: #e8e2d0;
+  --ink-muted: #9a958a;
+  --accent: #00ff41;
+  --accent-warn: #ff5a4d;
+  --line: #003311;
+  --rivet: #2f2a21;
 }
 
 /* Light mode tokens (explicit opt-in via .light) */
 html.light {
-  --bg: #f4f1e8;
-  --surface: #fbfaf4;
-  --surface-2: #ede9da;
-  --ink: #1c1b17;
-  --ink-muted: #5c584c;
-  --accent: #1f6f54;
-  --accent-warn: #b4521e;
-  --line: #d8d2c0;
-  --rivet: #c3bba3;
+  --bg: #e8e2d0;
+  --surface: #d4cbb3;
+  --surface-2: #c9bfa3;
+  --ink: #1a1814;
+  --ink-muted: #4a463e;
+  --accent: #a34722;
+  --accent-warn: #c0392b;
+  --line: #9a958a;
+  --rivet: #6e6a60;
 }
 
 /* ============================================================================
@@ -155,6 +156,14 @@ body {
   font-size: 1.5rem;
   line-height: 1;
   font-weight: 500;
+}
+
+.type-register-pixel {
+  font-family: var(--font-departure-mono), var(--font-jetbrains-mono), monospace;
+  font-size: 0.875rem;
+  line-height: 1.3;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 /* Enhanced phosphor bloom glow for readout value in dark mode */
@@ -685,6 +694,260 @@ html:not(.light) .dial-accent-arc {
     inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
+/* ============================================================================
+   Phase 2C Home Modules
+   ========================================================================= */
+
+.signal-path-rail {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 42rem;
+  padding: 0.55rem 0;
+}
+
+.signal-path-rail::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--line) 84%, var(--ink) 16%) 0%,
+    color-mix(in srgb, var(--accent) 56%, var(--line) 44%) 50%,
+    color-mix(in srgb, var(--line) 84%, var(--ink) 16%) 100%
+  );
+  opacity: 0.9;
+}
+
+.signal-path-rail span {
+  z-index: 1;
+  justify-self: center;
+  width: 0.66rem;
+  height: 0.66rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--line) 68%, var(--ink) 32%);
+  background: color-mix(in srgb, var(--surface) 66%, var(--bg) 34%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 0 0 1px rgba(0, 0, 0, 0.18);
+}
+
+html:not(.light) .signal-path-rail span {
+  box-shadow:
+    0 0 8px color-mix(in srgb, var(--accent) 46%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.annunciator-tile {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  border: 1px solid color-mix(in srgb, var(--line) 78%, var(--ink) 22%);
+  border-radius: 0.45rem;
+  padding: 0.55rem 0.65rem;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-2) 92%, white 8%) 0%,
+      color-mix(in srgb, var(--surface-2) 78%, black 22%) 100%
+    ),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.16), transparent 46%);
+  color: var(--ink);
+  text-align: left;
+  transition:
+    transform 120ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    filter 160ms ease;
+}
+
+.annunciator-tile:hover {
+  transform: translateY(-1px);
+}
+
+.annunciator-tile:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 72%, white 28%);
+  outline-offset: 2px;
+}
+
+.annunciator-tile__lamp {
+  width: 0.58rem;
+  height: 0.58rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--line) 75%, var(--ink) 25%);
+  background: color-mix(in srgb, var(--line) 70%, var(--surface) 30%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.annunciator-tile__text {
+  font-family: var(--font-departure-mono), var(--font-jetbrains-mono), monospace;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  letter-spacing: 0.08em;
+}
+
+.annunciator-tile.is-active {
+  border-color: color-mix(in srgb, var(--accent) 62%, var(--line) 38%);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent) 26%, transparent),
+    0 9px 16px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24);
+}
+
+html:not(.light) .annunciator-tile.is-active {
+  box-shadow:
+    0 0 10px color-mix(in srgb, var(--accent) 28%, transparent),
+    0 0 20px color-mix(in srgb, var(--accent) 16%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.annunciator-tile.is-active .annunciator-tile__lamp {
+  background: color-mix(in srgb, var(--accent) 82%, white 18%);
+  border-color: color-mix(in srgb, var(--accent) 75%, var(--line) 25%);
+  box-shadow:
+    0 0 10px color-mix(in srgb, var(--accent) 65%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.crt-screen {
+  height: 100%;
+  border: 1px solid color-mix(in srgb, var(--line) 74%, var(--ink) 26%);
+  border-radius: 0.42rem;
+  padding: 0.85rem;
+  background:
+    radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.12), transparent 50%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-2) 94%, black 6%) 0%,
+      color-mix(in srgb, var(--surface-2) 80%, black 20%) 100%
+    );
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.crt-screen__detail {
+  color: var(--ink);
+}
+
+html:not(.light) .crt-screen__detail {
+  color: color-mix(in srgb, var(--accent) 85%, var(--ink) 15%);
+  text-shadow:
+    0 0 2px color-mix(in srgb, var(--accent) 80%, transparent),
+    0 0 8px color-mix(in srgb, var(--accent) 42%, transparent);
+}
+
+.instrument-stat {
+  border: 1px solid color-mix(in srgb, var(--line) 72%, var(--ink) 28%);
+  border-radius: 0.4rem;
+  padding: 0.55rem;
+  background: color-mix(in srgb, var(--surface-2) 90%, transparent);
+}
+
+.instrument-stat__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.45rem;
+}
+
+.instrument-seven,
+.instrument-nixie {
+  border: 1px solid color-mix(in srgb, var(--line) 70%, var(--ink) 30%);
+  border-radius: 0.3rem;
+  padding: 0.24rem 0.45rem;
+  font-size: 0.9rem;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  font-family: var(--font-departure-mono), var(--font-jetbrains-mono), monospace;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--surface) 82%, black 18%);
+}
+
+.instrument-nixie {
+  color: color-mix(in srgb, var(--accent) 66%, var(--ink) 34%);
+}
+
+.instrument-gauge {
+  width: 3.25rem;
+  height: 1.8rem;
+  border-top-left-radius: 3.25rem;
+  border-top-right-radius: 3.25rem;
+  border: 1px solid color-mix(in srgb, var(--line) 72%, var(--ink) 28%);
+  border-bottom: 0;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 15%, transparent),
+    transparent
+  );
+}
+
+.instrument-gauge__needle {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 2px;
+  height: 1.45rem;
+  transform-origin: bottom center;
+  transform: rotate(52deg);
+  background: color-mix(in srgb, var(--accent) 72%, var(--ink) 28%);
+}
+
+.instrument-bar {
+  width: 3.6rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--line) 70%, var(--ink) 30%);
+  background: color-mix(in srgb, var(--line) 78%, var(--surface) 22%);
+}
+
+.instrument-bar__fill {
+  display: block;
+  width: 68%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--accent) 42%, var(--line) 58%) 0%,
+    color-mix(in srgb, var(--accent) 80%, white 20%) 100%
+  );
+}
+
+.instrument-lamps {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.26rem;
+}
+
+.instrument-lamps span {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--line) 70%, var(--ink) 30%);
+  background: color-mix(in srgb, var(--accent) 56%, transparent);
+}
+
+.era-card-led {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 76%, white 24%);
+  box-shadow:
+    0 0 10px color-mix(in srgb, var(--accent) 54%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24);
+}
+
 @media (min-width: 640px) {
   .type-display {
     font-size: 3.5rem;
@@ -712,8 +975,20 @@ html:not(.light) .dial-accent-arc {
    ========================================================================= */
 
 @media (prefers-reduced-motion: reduce) {
+  .fade-in-on-scroll {
+    opacity: 1;
+  }
+
   .pipeline-led {
     transition: none;
+  }
+
+  .signal-path-rail::before,
+  .signal-path-rail span,
+  .annunciator-tile,
+  .annunciator-tile__lamp {
+    transition: none;
+    animation: none;
   }
 
   .control-button,
