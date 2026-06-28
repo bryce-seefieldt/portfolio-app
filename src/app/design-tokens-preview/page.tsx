@@ -50,10 +50,10 @@ const KEY_TOKENS_DARK_SECONDARY: readonly TokenEntry[] = [
   { token: "--key2-teal", bg: "#1F6B64", legend: "#F1F6EF" },
   { token: "--key2-violet", bg: "#5B4A7A", legend: "#F2ECFF" },
   { token: "--key2-blue", bg: "#3D5F86", legend: "#EDF4FF" },
-  { token: "--key2-olive", bg: "#7B8450", legend: "#12140C" },
+  { token: "--key2-olive", bg: "#7B8450", legend: "#0A0B07" },
   { token: "--key2-rust", bg: "#8B4A2C", legend: "#FFF0E6" },
   { token: "--key2-slate", bg: "#59616C", legend: "#EEF1F4" },
-  { token: "--key2-gold", bg: "#9A7A34", legend: "#171008" },
+  { token: "--key2-gold", bg: "#9A7A34", legend: "#0D0905" },
   { token: "--key2-magenta", bg: "#7D3C67", legend: "#FFEEFA" },
 ];
 
@@ -72,11 +72,11 @@ const KEY_TOKENS_LIGHT_SECONDARY: readonly TokenEntry[] = [
   { token: "--key2-teal", bg: "#2F7772", legend: "#F3FCFA" },
   { token: "--key2-plum", bg: "#6F5678", legend: "#F8EFFF" },
   { token: "--key2-blue", bg: "#43688A", legend: "#EEF5FF" },
-  { token: "--key2-olive", bg: "#78804F", legend: "#0F1109" },
+  { token: "--key2-olive", bg: "#78804F", legend: "#030402" },
   { token: "--key2-rust", bg: "#9F5431", legend: "#FFF2EB" },
-  { token: "--key2-stone", bg: "#8A7F70", legend: "#17130F" },
+  { token: "--key2-stone", bg: "#8A7F70", legend: "#100D0B" },
   { token: "--key2-ochre", bg: "#A67D2E", legend: "#181109" },
-  { token: "--key2-mauve", bg: "#8B6677", legend: "#FFF4FA" },
+  { token: "--key2-mauve", bg: "#8B6677", legend: "#FFFEFE" },
 ];
 
 function hexToRgb(hex: string) {
@@ -124,8 +124,8 @@ function getContrastRatio(foreground: string, background: string) {
 }
 
 function getGradientContrastFloors(baseColor: string, legendColor: string) {
-  const lightest = mixHex(baseColor, "#ffffff", 0.009);
-  const darkest = mixHex(baseColor, "#000000", 0.003);
+  const lightest = mixHex(baseColor, "#ffffff", 0.04);
+  const darkest = mixHex(baseColor, "#000000", 0.05);
   const c1 = getContrastRatio(legendColor, lightest);
   const c2 = getContrastRatio(legendColor, darkest);
   return {
@@ -243,13 +243,13 @@ export default function DesignTokensPreviewPage() {
     },
     { id: "q", legend: "Q", subLegend: "CI", capColor: "#1F6B64", legendColor: "#F1F6EF" },
     { id: "w", legend: "W", subLegend: "UI", capColor: "#3D5F86", legendColor: "#EDF4FF" },
-    { id: "e", legend: "E", subLegend: "DB", capColor: "#9A7A34", legendColor: "#171008" },
+    { id: "e", legend: "E", subLegend: "DB", capColor: "#9A7A34", legendColor: "#0D0905" },
     {
       id: "r",
       legend: "R",
       subLegend: "SEC",
       capColor: "#7B8450",
-      legendColor: "#12140C",
+      legendColor: "#0A0B07",
       state: "pressed" as const,
     },
     {

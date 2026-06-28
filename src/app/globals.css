@@ -36,15 +36,6 @@
   --depth-cast-shadow: 0 9px 14px -2px rgba(0, 0, 0, 0.56);
   --depth-cast-shadow-strong: 0 12px 18px -2px rgba(0, 0, 0, 0.64);
   --depth-lift-halo: 0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent);
-  --depth-raised-top-light: color-mix(in srgb, var(--keycap-bg) 99.1%, white 0.9%);
-  --depth-raised-top-mid: var(--keycap-bg);
-  --depth-raised-top-dark: color-mix(in srgb, var(--keycap-bg) 99.7%, black 0.3%);
-  --depth-sidewall-1: color-mix(in srgb, var(--keycap-bg) 58%, black 42%);
-  --depth-sidewall-2: color-mix(in srgb, var(--keycap-bg) 50%, black 50%);
-  --depth-sidewall-3: color-mix(in srgb, var(--keycap-bg) 42%, black 58%);
-  --depth-sidewall-4: color-mix(in srgb, var(--keycap-bg) 36%, black 64%);
-  --depth-sidewall-5: color-mix(in srgb, var(--keycap-bg) 32%, black 68%);
-  --depth-sidewall-6: color-mix(in srgb, var(--keycap-bg) 28%, black 72%);
   --depth-inset-shell-highlight: rgba(255, 255, 255, 0.22);
   --depth-inset-shell-shadow: rgba(0, 0, 0, 0.64);
   --depth-dial-mount-highlight: rgba(255, 255, 255, 0.2);
@@ -78,7 +69,6 @@
   --panel-inset-shadow:
     inset 2px 2px 3px rgba(0, 0, 0, 0.34), inset -1px -1px 0 rgba(255, 255, 255, 0.08),
     inset 0 10px 20px rgba(0, 0, 0, 0.16);
-  --keycap-skirt: color-mix(in srgb, var(--keycap-bg) 56%, black 44%);
   --keycap-drop-shadow: 0 9px 14px rgba(0, 0, 0, 0.24);
   --keypad-gutter: color-mix(in srgb, var(--surface-2) 62%, var(--bg) 38%);
   --keypad-gutter-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
@@ -111,13 +101,13 @@
   --key2-blue: #3d5f86;
   --key2-blue-ink: #edf4ff;
   --key2-olive: #7b8450;
-  --key2-olive-ink: #12140c;
+  --key2-olive-ink: #0a0b07;
   --key2-rust: #8b4a2c;
   --key2-rust-ink: #fff0e6;
   --key2-slate: #59616c;
   --key2-slate-ink: #eef1f4;
   --key2-gold: #9a7a34;
-  --key2-gold-ink: #171008;
+  --key2-gold-ink: #0d0905;
   --key2-magenta: #7d3c67;
   --key2-magenta-ink: #ffeefa;
 }
@@ -140,15 +130,6 @@ html.light {
   --depth-cast-shadow: 0 8px 12px -2px rgba(0, 0, 0, 0.34);
   --depth-cast-shadow-strong: 0 11px 16px -2px rgba(0, 0, 0, 0.4);
   --depth-lift-halo: 0 0 0 1px color-mix(in srgb, white 34%, transparent);
-  --depth-raised-top-light: color-mix(in srgb, var(--keycap-bg) 99.1%, white 0.9%);
-  --depth-raised-top-mid: var(--keycap-bg);
-  --depth-raised-top-dark: color-mix(in srgb, var(--keycap-bg) 99.7%, black 0.3%);
-  --depth-sidewall-1: color-mix(in srgb, var(--keycap-bg) 56%, black 44%);
-  --depth-sidewall-2: color-mix(in srgb, var(--keycap-bg) 48%, black 52%);
-  --depth-sidewall-3: color-mix(in srgb, var(--keycap-bg) 40%, black 60%);
-  --depth-sidewall-4: color-mix(in srgb, var(--keycap-bg) 34%, black 66%);
-  --depth-sidewall-5: color-mix(in srgb, var(--keycap-bg) 30%, black 70%);
-  --depth-sidewall-6: color-mix(in srgb, var(--keycap-bg) 26%, black 74%);
   --depth-inset-shell-highlight: rgba(255, 255, 255, 0.28);
   --depth-inset-shell-shadow: rgba(0, 0, 0, 0.44);
   --depth-dial-mount-highlight: rgba(255, 255, 255, 0.24);
@@ -175,7 +156,6 @@ html.light {
   --panel-inset-shadow:
     inset 2px 2px 3px rgba(0, 0, 0, 0.24), inset -1px -1px 0 rgba(255, 255, 255, 0.12),
     inset 0 10px 18px rgba(0, 0, 0, 0.1);
-  --keycap-skirt: color-mix(in srgb, var(--keycap-bg) 58%, black 42%);
   --keycap-drop-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
   --keypad-gutter: color-mix(in srgb, var(--surface-2) 70%, var(--bg) 30%);
   --keypad-gutter-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
@@ -208,15 +188,15 @@ html.light {
   --key2-blue: #43688a;
   --key2-blue-ink: #eef5ff;
   --key2-olive: #78804f;
-  --key2-olive-ink: #0f1109;
+  --key2-olive-ink: #030402;
   --key2-rust: #9f5431;
   --key2-rust-ink: #fff2eb;
   --key2-stone: #8a7f70;
-  --key2-stone-ink: #17130f;
+  --key2-stone-ink: #100d0b;
   --key2-ochre: #a67d2e;
   --key2-ochre-ink: #181109;
   --key2-mauve: #8b6677;
-  --key2-mauve-ink: #fff4fa;
+  --key2-mauve-ink: #fffefe;
 }
 
 /* ============================================================================
@@ -1191,6 +1171,17 @@ html:not(.light) .crt-screen__detail {
 .keycap {
   --keycap-bg: var(--surface);
   --keycap-legend: var(--ink);
+  /* Cap-color-derived depth must be declared on .keycap to resolve against per-key inline --keycap-bg. */
+  --depth-raised-top-light: color-mix(in srgb, var(--keycap-bg) 96%, white 4%);
+  --depth-raised-top-mid: var(--keycap-bg);
+  --depth-raised-top-dark: color-mix(in srgb, var(--keycap-bg) 95%, black 5%);
+  --depth-sidewall-1: color-mix(in srgb, var(--keycap-bg) 64%, black 36%);
+  --depth-sidewall-2: color-mix(in srgb, var(--keycap-bg) 58%, black 42%);
+  --depth-sidewall-3: color-mix(in srgb, var(--keycap-bg) 52%, black 48%);
+  --depth-sidewall-4: color-mix(in srgb, var(--keycap-bg) 46%, black 54%);
+  --depth-sidewall-5: color-mix(in srgb, var(--keycap-bg) 42%, black 58%);
+  --depth-sidewall-6: color-mix(in srgb, var(--keycap-bg) 38%, black 62%);
+  --keycap-skirt: color-mix(in srgb, var(--keycap-bg) 56%, black 44%);
   position: relative;
   display: inline-flex;
   flex-direction: column;
