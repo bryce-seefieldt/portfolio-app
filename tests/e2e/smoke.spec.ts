@@ -61,4 +61,12 @@ test.describe("Resilience checks", () => {
       await expect(page.locator(".pipeline-led--stage-4.pipeline-led--active")).toHaveCount(1);
     });
   });
+
+  test("keypad visual treatment remains design-tokens-only", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByText("KEYCAP + KEYPAD VISUAL TREATMENT")).toHaveCount(0);
+
+    await page.goto("/design-tokens-preview");
+    await expect(page.getByText("MINI KEYBOARD / DEPTH REBUILD")).toBeVisible();
+  });
 });

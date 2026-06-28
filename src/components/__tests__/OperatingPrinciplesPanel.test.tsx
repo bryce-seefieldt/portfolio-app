@@ -30,4 +30,11 @@ describe("OperatingPrinciplesPanel", () => {
 
     expect(screen.getByText(/I translate between the boardroom and the terminal\./i)).toBeVisible();
   });
+
+  it("does not force CRT panel to full-height", () => {
+    const { container } = render(<OperatingPrinciplesPanel />);
+    const crtPanel = container.querySelector(".crt-screen")?.closest("section");
+
+    expect(crtPanel?.className.includes("h-full")).toBe(false);
+  });
 });
