@@ -29,18 +29,24 @@ const DARK_PALETTE = [
   ["line", "#003311"],
 ] as const;
 
-const KEY_TOKENS_DARK_PRIMARY = [
+type TokenEntry = {
+  token: string;
+  bg: string;
+  legend: string;
+};
+
+const KEY_TOKENS_DARK_PRIMARY: readonly TokenEntry[] = [
   { token: "--key-neutral", bg: "#2A2722", legend: "#E8E2D0" },
   { token: "--key-primary", bg: "#00FF41", legend: "#07220E" },
   { token: "--key-secondary", bg: "#FFB000", legend: "#2F1800" },
   { token: "--key-tertiary", bg: "#5FD0D0", legend: "#062024" },
   { token: "--key-alert", bg: "#CC2B2B", legend: "#FFF3F1" },
   { token: "--key-contrast", bg: "#E8E2D0", legend: "#17120D" },
-  { token: "--key-instrument-green", bg: "#2A7B4E", legend: "#EAFFF2" },
+  { token: "--key-instrument-green", bg: "#237246", legend: "#EAFFF2" },
   { token: "--key-amber-phosphor", bg: "#FF6A00", legend: "#2D1300" },
-] as const;
+];
 
-const KEY_TOKENS_DARK_SECONDARY = [
+const KEY_TOKENS_DARK_SECONDARY: readonly TokenEntry[] = [
   { token: "--key2-teal", bg: "#1F6B64", legend: "#F1F6EF" },
   { token: "--key2-violet", bg: "#5B4A7A", legend: "#F2ECFF" },
   { token: "--key2-blue", bg: "#3D5F86", legend: "#EDF4FF" },
@@ -49,9 +55,9 @@ const KEY_TOKENS_DARK_SECONDARY = [
   { token: "--key2-slate", bg: "#59616C", legend: "#EEF1F4" },
   { token: "--key2-gold", bg: "#9A7A34", legend: "#171008" },
   { token: "--key2-magenta", bg: "#7D3C67", legend: "#FFEEFA" },
-] as const;
+];
 
-const KEY_TOKENS_LIGHT_PRIMARY = [
+const KEY_TOKENS_LIGHT_PRIMARY: readonly TokenEntry[] = [
   { token: "--key-neutral", bg: "#C9BFA3", legend: "#1A1814" },
   { token: "--key-primary", bg: "#A34722", legend: "#F5ECE1" },
   { token: "--key-secondary", bg: "#D4891F", legend: "#281606" },
@@ -59,10 +65,10 @@ const KEY_TOKENS_LIGHT_PRIMARY = [
   { token: "--key-alert", bg: "#B53A2F", legend: "#FFF2EF" },
   { token: "--key-contrast", bg: "#1A1814", legend: "#EFE9D9" },
   { token: "--key-instrument-green", bg: "#3E6B47", legend: "#F1F8F2" },
-  { token: "--key-amber-phosphor", bg: "#B24B22", legend: "#FFF1EA" },
-] as const;
+  { token: "--key-amber-phosphor", bg: "#A3421D", legend: "#FFF1EA" },
+];
 
-const KEY_TOKENS_LIGHT_SECONDARY = [
+const KEY_TOKENS_LIGHT_SECONDARY: readonly TokenEntry[] = [
   { token: "--key2-teal", bg: "#2F7772", legend: "#F3FCFA" },
   { token: "--key2-plum", bg: "#6F5678", legend: "#F8EFFF" },
   { token: "--key2-blue", bg: "#43688A", legend: "#EEF5FF" },
@@ -71,18 +77,32 @@ const KEY_TOKENS_LIGHT_SECONDARY = [
   { token: "--key2-stone", bg: "#8A7F70", legend: "#17130F" },
   { token: "--key2-ochre", bg: "#A67D2E", legend: "#181109" },
   { token: "--key2-mauve", bg: "#8B6677", legend: "#FFF4FA" },
-] as const;
-
-type TokenEntry = {
-  token: string;
-  bg: string;
-  legend: string;
-};
+];
 
 function hexToRgb(hex: string) {
   const normalized = hex.replace("#", "");
   const parsed = [0, 2, 4].map((idx) => Number.parseInt(normalized.slice(idx, idx + 2), 16));
   return { r: parsed[0] ?? 0, g: parsed[1] ?? 0, b: parsed[2] ?? 0 };
+}
+
+function rgbToHex(r: number, g: number, b: number) {
+  return `#${[r, g, b]
+    .map((value) =>
+      Math.max(0, Math.min(255, Math.round(value)))
+        .toString(16)
+        .padStart(2, "0"),
+    )
+    .join("")}`;
+}
+
+function mixHex(base: string, target: string, amount: number) {
+  const a = hexToRgb(base);
+  const b = hexToRgb(target);
+  return rgbToHex(
+    a.r + (b.r - a.r) * amount,
+    a.g + (b.g - a.g) * amount,
+    a.b + (b.b - a.b) * amount,
+  );
 }
 
 function getLuminance(hex: string) {
@@ -101,6 +121,18 @@ function getContrastRatio(foreground: string, background: string) {
   const high = Math.max(l1, l2);
   const low = Math.min(l1, l2);
   return (high + 0.05) / (low + 0.05);
+}
+
+function getGradientContrastFloors(baseColor: string, legendColor: string) {
+  const lightest = mixHex(baseColor, "#ffffff", 0.009);
+  const darkest = mixHex(baseColor, "#000000", 0.003);
+  const c1 = getContrastRatio(legendColor, lightest);
+  const c2 = getContrastRatio(legendColor, darkest);
+  return {
+    floor: Math.min(c1, c2),
+    lightest,
+    darkest,
+  };
 }
 
 function PaletteCard({
@@ -155,7 +187,8 @@ function KeycapTokenBoard({ title, tokens }: { title: string; tokens: ReadonlyAr
       <div className="grid gap-2 sm:grid-cols-2">
         {tokens.map((entry) => {
           const ratio = getContrastRatio(entry.legend, entry.bg);
-          const passes = ratio >= 4.5;
+          const gradientFloors = getGradientContrastFloors(entry.bg, entry.legend);
+          const passes = ratio >= 4.5 && gradientFloors.floor >= 4.5;
           return (
             <div key={`${title}-${entry.token}-meta`} className="border-line rounded-md border p-3">
               <div className="mb-2 flex items-center justify-between gap-3">
@@ -167,12 +200,14 @@ function KeycapTokenBoard({ title, tokens }: { title: string; tokens: ReadonlyAr
               <div className="mb-2 flex items-center gap-3">
                 <Keycap
                   legend="TXT"
-                  subLegend={`${ratio.toFixed(2)}:1`}
+                  subLegend={`${gradientFloors.floor.toFixed(2)}:1 min`}
                   capColor={entry.bg}
                   legendColor={entry.legend}
                   size="1u"
                 />
                 <div className="type-caption text-ink-muted space-y-1">
+                  <div>base: {ratio.toFixed(2)}:1</div>
+                  <div>gradient floor: {gradientFloors.floor.toFixed(2)}:1</div>
                   <div>bg: {entry.bg}</div>
                   <div>legend: {entry.legend}</div>
                 </div>
@@ -186,62 +221,72 @@ function KeycapTokenBoard({ title, tokens }: { title: string; tokens: ReadonlyAr
 }
 
 export default function DesignTokensPreviewPage() {
-  const mixedKeypadKeys = [
-    { id: "mix-1", legend: "TS", subLegend: "LANG", capColor: "#C9BFA3", legendColor: "#1A1814" },
-    { id: "mix-2", legend: "RE", subLegend: "UI", capColor: "#A34722", legendColor: "#F5ECE1" },
-    { id: "mix-3", legend: "GO", subLegend: "API", capColor: "#2F7772", legendColor: "#F3FCFA" },
+  const miniKeyboard = [
     {
-      id: "mix-4",
-      legend: "CI",
-      subLegend: "PIPE",
-      capColor: "#3E6B47",
-      legendColor: "#F1F8F2",
-      state: "backlit" as const,
+      id: "esc",
+      legend: "ESC",
+      subLegend: "SYS",
+      capColor: "#CC2B2B",
+      legendColor: "#FFF3F1",
+      state: "hover" as const,
     },
+    { id: "1", legend: "1", subLegend: "TS", capColor: "#2A2722", legendColor: "#E8E2D0" },
+    { id: "2", legend: "2", subLegend: "RE", capColor: "#2A2722", legendColor: "#E8E2D0" },
+    { id: "3", legend: "3", subLegend: "GO", capColor: "#2A2722", legendColor: "#E8E2D0" },
     {
-      id: "mix-5",
-      legend: "SQL",
-      subLegend: "DB",
-      capColor: "#43688A",
-      legendColor: "#EEF5FF",
-      size: "1.5u" as const,
-    },
-    {
-      id: "mix-6",
-      legend: "K8S",
+      id: "del",
+      legend: "DEL",
       subLegend: "OPS",
-      capColor: "#78804F",
-      legendColor: "#16150F",
+      capColor: "#7D3C67",
+      legendColor: "#FFEEFA",
       size: "1.5u" as const,
     },
+    { id: "q", legend: "Q", subLegend: "CI", capColor: "#1F6B64", legendColor: "#F1F6EF" },
+    { id: "w", legend: "W", subLegend: "UI", capColor: "#3D5F86", legendColor: "#EDF4FF" },
+    { id: "e", legend: "E", subLegend: "DB", capColor: "#9A7A34", legendColor: "#171008" },
     {
-      id: "mix-7",
-      legend: "AUTH",
+      id: "r",
+      legend: "R",
       subLegend: "SEC",
-      capColor: "#8B6677",
-      legendColor: "#1A1417",
-      size: "2u" as const,
+      capColor: "#7B8450",
+      legendColor: "#12140C",
       state: "pressed" as const,
     },
     {
-      id: "mix-8",
-      legend: "SHIP",
-      subLegend: "PR",
-      capColor: "#9F5431",
-      legendColor: "#FFF2EB",
+      id: "tab",
+      legend: "TAB",
+      subLegend: "FLOW",
+      capColor: "#8B4A2C",
+      legendColor: "#FFF0E6",
+      size: "1.5u" as const,
+    },
+    {
+      id: "space",
+      legend: "SPACE",
+      subLegend: "DEPLOY",
+      capColor: "#00FF41",
+      legendColor: "#07220E",
       size: "2u" as const,
-      state: "hover" as const,
+      state: "backlit" as const,
+    },
+    {
+      id: "enter",
+      legend: "ENTER",
+      subLegend: "SHIP",
+      capColor: "#FF6A00",
+      legendColor: "#2D1300",
+      size: "2u" as const,
     },
   ];
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6">
-      {/* Governance rule: this page is the canonical rendered catalog for reusable design-system components. */}
+      {/* Governance: this page is the canonical rendered gallery for reusable design-system components. */}
       <header className="space-y-2">
         <h1 className="type-h1 text-ink">Design Token Preview</h1>
         <p className="type-body text-ink-muted">
-          Canonical component gallery: every reusable design-system component must be represented on
-          this page and updated in the same PR whenever its attributes change.
+          Canonical component gallery. Every reusable design-system component must be represented
+          here and updated in the same PR when its visual contract changes.
         </p>
       </header>
 
@@ -277,14 +322,14 @@ export default function DesignTokensPreviewPage() {
 
       <Panel label="MODULE 02 / PANELS" variant="default">
         <div className="grid gap-4 lg:grid-cols-2">
-          <Panel label="PANEL / DEFAULT" variant="default" showRivets={false}>
+          <Panel label="PANEL / RAISED" variant="default" showRivets={false}>
             <p className="type-body text-ink">
-              Raised panel surface with tunable elevation token stack.
+              Raised panel treatment with exaggerated bevel depth.
             </p>
           </Panel>
           <Panel label="PANEL / INSET" variant="inset" showRivets={false}>
             <p className="type-body text-ink">
-              Recessed panel/well treatment with top-inner catch light.
+              Recessed well treatment used for mounted controls and keypad plates.
             </p>
           </Panel>
         </div>
@@ -293,7 +338,7 @@ export default function DesignTokensPreviewPage() {
       <Panel label="MODULE 03 / CONTROLS" variant="default">
         <div className="grid gap-4 lg:grid-cols-2">
           <div className="space-y-3">
-            <h3 className="type-h3 text-ink">ControlButton variants + states</h3>
+            <h3 className="type-h3 text-ink">ControlButton</h3>
             <div className="flex flex-wrap gap-2">
               <ControlButton href="/" className="pointer-events-none">
                 DEFAULT
@@ -301,28 +346,13 @@ export default function DesignTokensPreviewPage() {
               <ControlButton href="/" className="control-button--compact pointer-events-none">
                 COMPACT
               </ControlButton>
-              <button
-                type="button"
-                className="control-button type-label is-hover pointer-events-none"
-              >
-                HOVER
-              </button>
-              <button
-                type="button"
-                className="control-button type-label is-active pointer-events-none"
-              >
-                ACTIVE
-              </button>
-              <button
-                type="button"
-                className="control-button type-label is-focus-visible pointer-events-none"
-              >
-                FOCUS
-              </button>
+              <ControlButton href="/" className="pointer-events-none">
+                HOVER DEMO
+              </ControlButton>
             </div>
           </div>
           <div className="space-y-3">
-            <h3 className="type-h3 text-ink">Deploy pipeline</h3>
+            <h3 className="type-h3 text-ink">DeployPipeline</h3>
             <DeployPipeline />
           </div>
         </div>
@@ -331,7 +361,7 @@ export default function DesignTokensPreviewPage() {
       <Panel label="MODULE 04 / INSTRUMENTS" variant="default">
         <div className="grid gap-4 lg:grid-cols-2">
           <div className="space-y-3">
-            <h3 className="type-h3 text-ink">Dial values</h3>
+            <h3 className="type-h3 text-ink">Dial (mounted)</h3>
             <div className="flex flex-wrap gap-4">
               <Dial value={25} caption="LOAD 25" />
               <Dial value={50} caption="LOAD 50" />
@@ -340,7 +370,7 @@ export default function DesignTokensPreviewPage() {
             </div>
           </div>
           <div className="space-y-3">
-            <h3 className="type-h3 text-ink">Readout + tags</h3>
+            <h3 className="type-h3 text-ink">Readout + LabelTag</h3>
             <Readout value="OPERATIONAL" caption="DEPLOY STATUS" />
             <Readout value="~1" unit="min" caption="ROLLBACK MTTR" />
             <div className="flex flex-wrap gap-2">
@@ -352,10 +382,11 @@ export default function DesignTokensPreviewPage() {
         </div>
       </Panel>
 
-      <Panel label="MODULE 05 / KEYS" variant="default">
+      <Panel label="MODULE 05 / KEYCAP + KEYPAD VISUAL TREATMENT" variant="default">
         <div className="space-y-6">
           <p className="type-body text-ink-muted">
-            Design-tokens sandbox only. Home-page keypad integration is intentionally deferred.
+            Design-tokens sandbox only. This module is the dress rehearsal for future hero keypad
+            integration.
           </p>
 
           <KeycapTokenBoard title="Dark primary keycap colors" tokens={KEY_TOKENS_DARK_PRIMARY} />
@@ -413,8 +444,12 @@ export default function DesignTokensPreviewPage() {
           </div>
 
           <div className="space-y-3">
-            <h3 className="type-h3 text-ink">Representative mixed-color keypad</h3>
-            <Keypad label="MIXED BOARD / TECH STACK" keys={mixedKeypadKeys} columns={4} />
+            <h3 className="type-h3 text-ink">Real mini-keyboard example</h3>
+            <p className="type-caption text-ink-muted">
+              Recessed plate + gutter channels + mixed key roles + wider keys + in-context pressed
+              key.
+            </p>
+            <Keypad label="MINI KEYBOARD / DEPTH REBUILD" keys={miniKeyboard} columns={5} />
           </div>
         </div>
       </Panel>
@@ -435,7 +470,7 @@ export default function DesignTokensPreviewPage() {
           </div>
 
           <div className="space-y-2">
-            <div className="type-label text-ink-muted">Verification badges</div>
+            <div className="type-label text-ink-muted">VerificationBadge</div>
             <div className="flex flex-wrap gap-2">
               <VerificationBadge type="docs-available" />
               <VerificationBadge type="threat-model" />
@@ -445,7 +480,7 @@ export default function DesignTokensPreviewPage() {
           </div>
 
           <div className="space-y-2">
-            <div className="type-label text-ink-muted">Gold-standard badge</div>
+            <div className="type-label text-ink-muted">GoldStandardBadge</div>
             <GoldStandardBadge />
           </div>
         </div>

@@ -28,26 +28,23 @@ beforeAll(() => {
 });
 
 describe("DesignTokensPreviewPage", () => {
-  it("renders canonical catalog governance note", () => {
+  it("renders canonical inventory sections", () => {
     render(<DesignTokensPreviewPage />);
 
-    expect(
-      screen.getByText(/canonical component gallery: every reusable design-system component/i),
-    ).toBeInTheDocument();
-  });
-
-  it("renders required component inventory sections", () => {
-    render(<DesignTokensPreviewPage />);
-
+    expect(screen.getByText("MODULE 00 / PALETTE")).toBeInTheDocument();
+    expect(screen.getByText("MODULE 01 / TYPE")).toBeInTheDocument();
     expect(screen.getByText("MODULE 02 / PANELS")).toBeInTheDocument();
     expect(screen.getByText("MODULE 03 / CONTROLS")).toBeInTheDocument();
     expect(screen.getByText("MODULE 04 / INSTRUMENTS")).toBeInTheDocument();
-    expect(screen.getByText("MODULE 05 / KEYS")).toBeInTheDocument();
+    expect(screen.getByText("MODULE 05 / KEYCAP + KEYPAD VISUAL TREATMENT")).toBeInTheDocument();
     expect(screen.getByText("MODULE 06 / COMPOSITES")).toBeInTheDocument();
+  });
 
-    expect(screen.getByText("Dial values")).toBeInTheDocument();
-    expect(screen.getByText("ControlButton variants + states")).toBeInTheDocument();
-    expect(screen.getByText("Deploy pipeline")).toBeInTheDocument();
-    expect(screen.getByText("Representative mixed-color keypad")).toBeInTheDocument();
+  it("renders real mini-keyboard module", () => {
+    render(<DesignTokensPreviewPage />);
+
+    expect(screen.getByText("Real mini-keyboard example")).toBeInTheDocument();
+    expect(screen.getByText("MINI KEYBOARD / DEPTH REBUILD")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "SPACE" })).toBeInTheDocument();
   });
 });

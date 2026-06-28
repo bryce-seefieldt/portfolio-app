@@ -49,11 +49,11 @@ export default defineConfig({
     },
   ],
 
-  // Start dev server before tests (skip in CI, assume it's already running)
+  // Start local production server before tests (skip in CI, assume it's already running)
   webServer: process.env.CI
     ? undefined
     : {
-        // Command to start the dev server
+        // Build then start production server for deterministic browser behavior
         command:
           "PLAYWRIGHT_E2E=1 NEXT_OTEL_PERFORMANCE_PREFIX=e2e pnpm build && PLAYWRIGHT_E2E=1 NEXT_OTEL_PERFORMANCE_PREFIX=e2e pnpm start",
         // URL to wait for before starting tests

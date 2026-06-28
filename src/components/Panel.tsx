@@ -29,13 +29,15 @@ export function Panel({
     variant === "default"
       ? {
           backgroundImage:
-            "linear-gradient(135deg, color-mix(in srgb, white 18%, transparent) 0%, color-mix(in srgb, white 8%, transparent) 18%, color-mix(in srgb, white 2%, transparent) 42%, transparent 70%), repeating-linear-gradient(135deg, color-mix(in srgb, white 2%, transparent) 0 1px, transparent 1px 6px)",
-          boxShadow: "var(--panel-raised-shadow)",
+            "linear-gradient(135deg, color-mix(in srgb, white 22%, transparent) 0%, color-mix(in srgb, white 10%, transparent) 24%, color-mix(in srgb, white 3%, transparent) 48%, transparent 72%), repeating-linear-gradient(135deg, color-mix(in srgb, white 2%, transparent) 0 1px, transparent 1px 6px)",
+          boxShadow:
+            "inset 0 2px 0 var(--depth-edge-highlight), inset 0 -2px 0 var(--depth-edge-shadow), var(--depth-cast-shadow), var(--depth-lift-halo)",
         }
       : {
           backgroundImage:
-            "linear-gradient(135deg, color-mix(in srgb, white 7%, transparent) 0%, color-mix(in srgb, white 2%, transparent) 18%, transparent 48%)",
-          boxShadow: "var(--panel-inset-shadow)",
+            "linear-gradient(135deg, color-mix(in srgb, white 10%, transparent) 0%, color-mix(in srgb, white 3%, transparent) 20%, transparent 50%)",
+          boxShadow:
+            "inset 0 3px 0 var(--depth-inset-shell-highlight), inset 0 -4px 0 var(--depth-inset-shell-shadow), inset 0 10px 20px rgba(0, 0, 0, 0.22)",
         };
   const rivetStyle = {
     background:
