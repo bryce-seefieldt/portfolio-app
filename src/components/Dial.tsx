@@ -18,9 +18,9 @@ export function Dial({ value, caption, className = "" }: DialProps) {
         <defs>
           {/* Gradient for bezel (top-left light source) */}
           <linearGradient id="bezel-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="rgba(255, 255, 255, 0.15)" />
+            <stop offset="0%" stopColor="var(--edge-highlight)" />
             <stop offset="50%" stopColor="rgba(0, 0, 0, 0)" />
-            <stop offset="100%" stopColor="rgba(0, 0, 0, 0.25)" />
+            <stop offset="100%" stopColor="var(--edge-shadow)" />
           </linearGradient>
           {/* Radial gradient for dimensional rivet/hub */}
           <radialGradient id="hub-grad" cx="35%" cy="35%">
@@ -50,7 +50,7 @@ export function Dial({ value, caption, className = "" }: DialProps) {
           cy="43"
           r="29.5"
           fill="none"
-          stroke="rgba(0, 0, 0, 0.34)"
+          stroke="var(--dial-face-shadow-1)"
           strokeWidth="1.4"
           opacity="0.95"
         />
@@ -59,7 +59,7 @@ export function Dial({ value, caption, className = "" }: DialProps) {
           cy="43"
           r="27.75"
           fill="none"
-          stroke="rgba(0, 0, 0, 0.16)"
+          stroke="var(--dial-face-shadow-2)"
           strokeWidth="2.2"
           opacity="0.75"
         />
@@ -68,7 +68,7 @@ export function Dial({ value, caption, className = "" }: DialProps) {
           cy="42.2"
           r="28.4"
           fill="none"
-          stroke="rgba(255, 255, 255, 0.08)"
+          stroke="var(--dial-face-highlight)"
           strokeWidth="0.9"
           opacity="0.8"
         />
@@ -121,7 +121,7 @@ export function Dial({ value, caption, className = "" }: DialProps) {
             y1="43"
             x2="43"
             y2="16"
-            stroke="rgba(0, 0, 0, 0.42)"
+            stroke="var(--dial-needle-shadow)"
             strokeWidth="3.2"
             strokeLinecap="round"
             transform={`rotate(${angle + 2.25} 43 43) translate(1.1 1.4)`}
