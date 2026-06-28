@@ -83,8 +83,8 @@ export function OperatingPrinciplesPanel() {
   const selectedPrinciple = PRINCIPLES.at(selectedIndex) ?? PRINCIPLES.at(0);
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-stretch">
-      <Panel label="ANNUNCIATOR / PRINCIPLE SELECT" variant="default" className="h-full">
+    <div className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-start">
+      <Panel label="ANNUNCIATOR / PRINCIPLE SELECT" variant="default">
         <div
           role="radiogroup"
           aria-labelledby={groupId}
@@ -129,7 +129,7 @@ export function OperatingPrinciplesPanel() {
         </div>
       </Panel>
 
-      <Panel label="CRT DETAIL / ACTIVE PRINCIPLE" variant="inset" className="h-full">
+      <Panel label="CRT DETAIL / ACTIVE PRINCIPLE" variant="inset">
         <div className="crt-screen" role="status" aria-live="polite" aria-atomic="true">
           <LabelTag tone="accent" className="mb-3">
             {selectedPrinciple?.label}

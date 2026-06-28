@@ -21,6 +21,7 @@ export default function HomePage() {
       <ScrollFadeIn>
         <section className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-start">
           <header className="flex flex-col gap-4">
+            {/* TODO(phase2c1-copy): Workshop decision pending - consider present-tense eyebrow variant. */}
             <p className="type-label text-ink-muted">
               25 YEARS OF PROFESSIONAL EXPERIENCE · FOCUSED ON SOFTWARE SINCE 2020
             </p>
@@ -71,6 +72,7 @@ export default function HomePage() {
         </section>
       </ScrollFadeIn>
 
+      {/* TODO(phase2c1-keypad): Reserve the lead slot for a future Tech-Stack Keypad module after visual treatment approval. */}
       {/* MODULE 01 */}
       <ScrollFadeIn>
         <section className="space-y-4">
