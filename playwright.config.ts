@@ -54,7 +54,8 @@ export default defineConfig({
     ? undefined
     : {
         // Command to start the dev server
-        command: "PLAYWRIGHT_E2E=1 NEXT_OTEL_PERFORMANCE_PREFIX= pnpm dev",
+        command:
+          "PLAYWRIGHT_E2E=1 NEXT_OTEL_PERFORMANCE_PREFIX=e2e pnpm build && PLAYWRIGHT_E2E=1 NEXT_OTEL_PERFORMANCE_PREFIX=e2e pnpm start",
         // URL to wait for before starting tests
         url: "http://localhost:3000",
         // Reuse existing server if already running (except in CI)

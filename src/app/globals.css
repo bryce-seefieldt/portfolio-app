@@ -30,6 +30,43 @@
   --line: #003311;
   --rivet: #2f2a21;
 
+  /* Theme-aware elevation tokens (dark recipe: lift with light) */
+  --edge-highlight: rgba(255, 255, 255, 0.2);
+  --edge-shadow: rgba(0, 0, 0, 0.48);
+  --lift-halo: color-mix(in srgb, var(--ink) 16%, transparent);
+  --elevation-raised-shadow:
+    0 1px 0 color-mix(in srgb, white 24%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--ink) 16%, transparent), 0 10px 18px rgba(0, 0, 0, 0.24),
+    0 0 14px color-mix(in srgb, var(--accent) 18%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24), inset 0 -1px 0 rgba(0, 0, 0, 0.42);
+  --elevation-raised-shadow-hover:
+    0 1px 0 color-mix(in srgb, white 26%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent), 0 12px 20px rgba(0, 0, 0, 0.26),
+    0 0 18px color-mix(in srgb, var(--accent) 24%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28), inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+  --elevation-raised-shadow-pressed:
+    0 1px 0 color-mix(in srgb, white 16%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent), 0 3px 8px rgba(0, 0, 0, 0.2),
+    inset 0 2px 3px rgba(0, 0, 0, 0.44), inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  --elevation-inset-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.52);
+  --panel-raised-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.14), inset -1px -1px 0 rgba(0, 0, 0, 0.36),
+    0 0 0 1px color-mix(in srgb, var(--ink) 14%, transparent), 0 16px 28px rgba(0, 0, 0, 0.18),
+    0 0 14px color-mix(in srgb, var(--accent) 14%, transparent);
+  --panel-inset-shadow:
+    inset 2px 2px 3px rgba(0, 0, 0, 0.34), inset -1px -1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 10px 20px rgba(0, 0, 0, 0.16);
+  --keycap-skirt: color-mix(in srgb, var(--keycap-bg) 56%, black 44%);
+  --keycap-drop-shadow: 0 9px 14px rgba(0, 0, 0, 0.24);
+  --keypad-gutter: color-mix(in srgb, var(--surface-2) 62%, var(--bg) 38%);
+  --keypad-gutter-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --dial-face-shadow-1: rgba(0, 0, 0, 0.36);
+  --dial-face-shadow-2: rgba(0, 0, 0, 0.2);
+  --dial-face-highlight: rgba(255, 255, 255, 0.14);
+  --dial-needle-shadow: rgba(0, 0, 0, 0.4);
+
   /* Keycap tokens (dark mode) */
   --key-neutral: #2a2722;
   --key-neutral-ink: #e8e2d0;
@@ -43,10 +80,26 @@
   --key-alert-ink: #fff3f1;
   --key-contrast: #e8e2d0;
   --key-contrast-ink: #17120d;
-  --key-instrument-green: #2e8b57;
-  --key-instrument-green-ink: #081c13;
+  --key-instrument-green: #2a7b4e;
+  --key-instrument-green-ink: #eafff2;
   --key-amber-phosphor: #ff6a00;
   --key-amber-phosphor-ink: #2d1300;
+  --key2-teal: #1f6b64;
+  --key2-teal-ink: #f1f6ef;
+  --key2-violet: #5b4a7a;
+  --key2-violet-ink: #f2ecff;
+  --key2-blue: #3d5f86;
+  --key2-blue-ink: #edf4ff;
+  --key2-olive: #7b8450;
+  --key2-olive-ink: #12140c;
+  --key2-rust: #8b4a2c;
+  --key2-rust-ink: #fff0e6;
+  --key2-slate: #59616c;
+  --key2-slate-ink: #eef1f4;
+  --key2-gold: #9a7a34;
+  --key2-gold-ink: #171008;
+  --key2-magenta: #7d3c67;
+  --key2-magenta-ink: #ffeefa;
 }
 
 /* Light mode tokens (explicit opt-in via .light) */
@@ -61,6 +114,36 @@ html.light {
   --line: #9a958a;
   --rivet: #6e6a60;
 
+  /* Theme-aware elevation tokens (light recipe: highlight + shadow) */
+  --edge-highlight: rgba(255, 255, 255, 0.26);
+  --edge-shadow: rgba(0, 0, 0, 0.32);
+  --lift-halo: color-mix(in srgb, white 32%, transparent);
+  --elevation-raised-shadow:
+    0 1px 0 color-mix(in srgb, white 24%, transparent), 0 8px 14px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+  --elevation-raised-shadow-hover:
+    0 1px 0 color-mix(in srgb, white 28%, transparent), 0 10px 16px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.34), inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+  --elevation-raised-shadow-pressed:
+    0 1px 0 color-mix(in srgb, white 16%, transparent), 0 3px 8px rgba(0, 0, 0, 0.18),
+    inset 0 2px 3px rgba(0, 0, 0, 0.34), inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  --elevation-inset-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+  --panel-raised-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.2), inset -1px -1px 0 rgba(0, 0, 0, 0.28),
+    0 12px 22px rgba(0, 0, 0, 0.14), 0 4px 10px rgba(0, 0, 0, 0.16);
+  --panel-inset-shadow:
+    inset 2px 2px 3px rgba(0, 0, 0, 0.24), inset -1px -1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 10px 18px rgba(0, 0, 0, 0.1);
+  --keycap-skirt: color-mix(in srgb, var(--keycap-bg) 58%, black 42%);
+  --keycap-drop-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+  --keypad-gutter: color-mix(in srgb, var(--surface-2) 70%, var(--bg) 30%);
+  --keypad-gutter-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  --dial-face-shadow-1: rgba(0, 0, 0, 0.32);
+  --dial-face-shadow-2: rgba(0, 0, 0, 0.16);
+  --dial-face-highlight: rgba(255, 255, 255, 0.18);
+  --dial-needle-shadow: rgba(0, 0, 0, 0.3);
+
   /* Keycap tokens (light mode) */
   --key-neutral: #c9bfa3;
   --key-neutral-ink: #1a1814;
@@ -68,16 +151,32 @@ html.light {
   --key-primary-ink: #f5ece1;
   --key-secondary: #d4891f;
   --key-secondary-ink: #281606;
-  --key-tertiary: #2d7f87;
-  --key-tertiary-ink: #e8f5f7;
+  --key-tertiary: #2b6f76;
+  --key-tertiary-ink: #f4fcff;
   --key-alert: #b53a2f;
   --key-alert-ink: #fff2ef;
   --key-contrast: #1a1814;
   --key-contrast-ink: #efe9d9;
   --key-instrument-green: #3e6b47;
   --key-instrument-green-ink: #f1f8f2;
-  --key-amber-phosphor: #c85a2c;
+  --key-amber-phosphor: #b24b22;
   --key-amber-phosphor-ink: #fff1ea;
+  --key2-teal: #2f7772;
+  --key2-teal-ink: #f3fcfa;
+  --key2-plum: #6f5678;
+  --key2-plum-ink: #f8efff;
+  --key2-blue: #43688a;
+  --key2-blue-ink: #eef5ff;
+  --key2-olive: #78804f;
+  --key2-olive-ink: #0f1109;
+  --key2-rust: #9f5431;
+  --key2-rust-ink: #fff2eb;
+  --key2-stone: #8a7f70;
+  --key2-stone-ink: #17130f;
+  --key2-ochre: #a67d2e;
+  --key2-ochre-ink: #181109;
+  --key2-mauve: #8b6677;
+  --key2-mauve-ink: #fff4fa;
 }
 
 /* ============================================================================
@@ -270,10 +369,7 @@ html:not(.light) .dial-accent-arc {
     ),
     linear-gradient(145deg, rgba(255, 255, 255, 0.22), transparent 35%);
   box-shadow:
-    0 1px 0 color-mix(in srgb, white 22%, transparent),
-    0 10px 16px rgba(0, 0, 0, 0.26),
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.38),
+    var(--elevation-raised-shadow),
     inset 0 0 0 1px rgba(0, 0, 0, 0.08);
   text-shadow:
     0 1px 0 rgba(255, 255, 255, 0.22),
@@ -299,33 +395,40 @@ html:not(.light) .dial-accent-arc {
   inset: 0;
   border-radius: inherit;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    inset 0 1px 0 var(--edge-highlight),
+    inset 0 -1px 0 var(--edge-shadow);
   pointer-events: none;
 }
 
 .control-button:hover {
   transform: translateY(-1px);
   border-color: color-mix(in srgb, var(--accent) 60%, var(--line) 40%);
-  box-shadow:
-    0 1px 0 color-mix(in srgb, white 24%, transparent),
-    0 12px 18px rgba(0, 0, 0, 0.28),
-    0 0 12px color-mix(in srgb, var(--accent) 25%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.26),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.36);
+  box-shadow: var(--elevation-raised-shadow-hover);
+}
+
+.control-button.is-hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--accent) 60%, var(--line) 40%);
+  box-shadow: var(--elevation-raised-shadow-hover);
 }
 
 .control-button:active {
   transform: translateY(1px);
-  box-shadow:
-    0 1px 0 color-mix(in srgb, white 14%, transparent),
-    0 4px 8px rgba(0, 0, 0, 0.16),
-    inset 0 2px 3px rgba(0, 0, 0, 0.42),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: var(--elevation-raised-shadow-pressed);
+}
+
+.control-button.is-active {
+  transform: translateY(1px);
+  box-shadow: var(--elevation-raised-shadow-pressed);
 }
 
 .control-button:focus-visible,
 .control-switch:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 70%, white 30%);
+  outline-offset: 2px;
+}
+
+.control-button.is-focus-visible {
   outline: 2px solid color-mix(in srgb, var(--accent) 70%, white 30%);
   outline-offset: 2px;
 }
@@ -980,14 +1083,16 @@ html:not(.light) .crt-screen__detail {
     color-mix(in srgb, var(--surface-2) 86%, black 14%) 0%,
     color-mix(in srgb, var(--surface-2) 72%, black 28%) 100%
   );
-  box-shadow:
-    inset 0 2px 4px rgba(0, 0, 0, 0.35),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: var(--elevation-inset-shadow);
 }
 
 .keypad-grid {
   display: grid;
   gap: 0.5rem;
+  border-radius: 0.34rem;
+  padding: 0.1rem;
+  background: var(--keypad-gutter);
+  box-shadow: var(--keypad-gutter-shadow);
 }
 
 .keycap {
@@ -1009,8 +1114,9 @@ html:not(.light) .crt-screen__detail {
     color-mix(in srgb, var(--keycap-bg) 82%, black 18%) 100%
   );
   box-shadow:
-    0 3px 0 color-mix(in srgb, var(--line) 70%, black 30%),
-    0 8px 12px rgba(0, 0, 0, 0.22),
+    0 3px 0 var(--keycap-skirt),
+    var(--keycap-drop-shadow),
+    0 0 0 1px var(--lift-halo),
     inset 0 1px 0 rgba(255, 255, 255, 0.28),
     inset 0 -1px 0 rgba(0, 0, 0, 0.34);
   color: var(--keycap-legend);
@@ -1066,8 +1172,9 @@ html:not(.light) .crt-screen__detail {
 .keycap:hover {
   transform: translateY(-1px);
   box-shadow:
-    0 4px 0 color-mix(in srgb, var(--line) 70%, black 30%),
+    0 4px 0 var(--keycap-skirt),
     0 10px 14px rgba(0, 0, 0, 0.24),
+    0 0 0 1px color-mix(in srgb, var(--ink) 20%, transparent),
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
     inset 0 -1px 0 rgba(0, 0, 0, 0.3);
 }
@@ -1075,17 +1182,19 @@ html:not(.light) .crt-screen__detail {
 .keycap--pressed {
   transform: translateY(2px);
   box-shadow:
-    0 1px 0 color-mix(in srgb, var(--line) 74%, black 26%),
+    0 1px 0 var(--keycap-skirt),
     0 2px 6px rgba(0, 0, 0, 0.2),
     inset 0 2px 3px rgba(0, 0, 0, 0.4),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 0 1px color-mix(in srgb, var(--line) 58%, var(--ink) 42%);
 }
 
 .keycap--backlit {
   box-shadow:
-    0 3px 0 color-mix(in srgb, var(--line) 70%, black 30%),
-    0 8px 12px rgba(0, 0, 0, 0.22),
+    0 3px 0 var(--keycap-skirt),
+    var(--keycap-drop-shadow),
     0 0 12px color-mix(in srgb, var(--keycap-bg) 42%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--ink) 20%, transparent),
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
     inset 0 -1px 0 rgba(0, 0, 0, 0.33);
 }
