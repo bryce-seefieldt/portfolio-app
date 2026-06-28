@@ -10,7 +10,9 @@ describe("ThemeToggle", () => {
     render(<ThemeToggle />);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /Switch to/ })).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: /Toggle light and dark theme/ }),
+      ).toBeInTheDocument();
     });
 
     const button = screen.getByRole("button");
@@ -26,7 +28,9 @@ describe("ThemeToggle", () => {
     render(<ThemeToggle />);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /Switch to/ })).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: /Toggle light and dark theme/ }),
+      ).toBeInTheDocument();
     });
 
     expect(document.documentElement.classList.contains("light")).toBe(true);
@@ -38,7 +42,9 @@ describe("ThemeToggle", () => {
     render(<ThemeToggle />);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /Switch to/ })).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: /Toggle light and dark theme/ }),
+      ).toBeInTheDocument();
     });
 
     const button = screen.getByRole("button");

@@ -56,7 +56,7 @@ describe("ScrollFadeIn", () => {
     });
   });
 
-  it("should render visible immediately for reduced motion", () => {
+  it("should skip observer setup for reduced motion", () => {
     const observerSpy = vi.fn();
     vi.stubGlobal("IntersectionObserver", observerSpy);
     vi.stubGlobal(
@@ -70,7 +70,8 @@ describe("ScrollFadeIn", () => {
       </ScrollFadeIn>,
     );
 
-    expect(container.firstChild).toHaveClass("is-visible");
+    expect(container.firstChild).toHaveClass("fade-in-on-scroll");
+    expect(container.firstChild).not.toHaveClass("is-visible");
     expect(observerSpy).not.toHaveBeenCalled();
   });
 });

@@ -1,295 +1,252 @@
 // src/app/page.tsx
 import Link from "next/link";
-import { Callout } from "@/components/Callout";
-import { Section } from "@/components/Section";
+import { ControlButton } from "@/components/ControlButton";
+import { Dial } from "@/components/Dial";
+import { DeployPipeline } from "@/components/DeployPipeline";
+import { LabelTag } from "@/components/LabelTag";
+import { Panel } from "@/components/Panel";
+import { Readout } from "@/components/Readout";
 import { ScrollFadeIn } from "@/components/ScrollFadeIn";
+import { OperatingPrinciplesPanel } from "@/components/home/OperatingPrinciplesPanel";
+import { ByTheNumbersCluster } from "@/components/home/ByTheNumbersCluster";
+import { CareerEraCards } from "@/components/home/CareerEraCards";
 import { DOCS_BASE_URL, docsUrl, GITHUB_BASE_URL } from "@/lib/config";
-
-function PrimaryButton({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <Link
-      href={href}
-      className="inline-flex items-center justify-center rounded-xl border border-zinc-200 bg-zinc-950 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-900 dark:border-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100"
-    >
-      {children}
-    </Link>
-  );
-}
-
-function SecondaryLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <Link
-      href={href}
-      className="text-sm font-medium text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
-    >
-      {children}
-    </Link>
-  );
-}
 
 export default function HomePage() {
   const githubHref = GITHUB_BASE_URL ?? "https://github.com/bryce-seefieldt";
+
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-10 pb-6">
       {/* HERO */}
       <ScrollFadeIn>
-        <header className="flex flex-col gap-4">
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">Full-stack developer · Toronto</p>
+        <section className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-start">
+          <header className="flex flex-col gap-4">
+            <p className="type-label text-ink-muted">
+              25 YEARS OF PROFESSIONAL EXPERIENCE · FOCUSED ON SOFTWARE SINCE 2020
+            </p>
 
-          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Confidence across the whole stack. Intention at every layer.
-          </h1>
+            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+              Confidence across the whole stack.{" "}
+              <span className="text-accent glow-accent">Intention</span> at every layer.
+            </h1>
 
-          <p className="max-w-3xl text-base text-zinc-700 dark:text-zinc-300">
-            Full-stack developer with a background leading enterprise technology projects. I&apos;ve
-            focused my career on modernizing systems and improving processes. I build and deliver to
-            an enterprise standard: tested, secured, documented, and shipped through a real
-            pipeline. Take a look around. The proof is one click deep.
-          </p>
+            <p className="type-body text-ink max-w-3xl">
+              Full-stack developer with a background leading enterprise technology projects.
+              I&apos;ve focused my career on modernizing systems and improving processes. I build
+              and deliver to an enterprise standard: tested, secured, documented, and shipped
+              through a real pipeline. Take a look around. The proof is one click deep.
+            </p>
 
-          {/* PRIMARY CTA ROW */}
-          <div className="flex flex-wrap items-center gap-3">
-            <PrimaryButton href="/projects">See the work</PrimaryButton>
-            <SecondaryLink href="/cv">Read the CV</SecondaryLink>
-            <a
-              className="text-sm font-medium text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
-              href={DOCS_BASE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Review the Portfolio Engineering Docs
-            </a>
-          </div>
-          <br />
-          {/* EXTERNAL LINKS */}
-          {/* <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-600 dark:text-zinc-400">
-            {GITHUB_BASE_URL ? (
-              <a className="hover:text-zinc-950 dark:hover:text-white" href={GITHUB_BASE_URL}>
-                GitHub
-              </a>
-            ) : null}
-            {LINKEDIN_URL ? (
-              <a className="hover:text-zinc-950 dark:hover:text-white" href={LINKEDIN_URL}>
-                LinkedIn
-              </a>
-            ) : null}
-            <span className="text-zinc-400 dark:text-zinc-600">•</span>
-            <span>Enterprise delivery, with proof one click deep</span>
-          </div> */}
-        </header>
+            <div className="flex flex-wrap items-center gap-3 pt-1">
+              <ControlButton href="/projects">WORK</ControlButton>
+              <ControlButton href="/cv">CV</ControlButton>
+              <ControlButton href={DOCS_BASE_URL} external>
+                DOCS
+              </ControlButton>
+            </div>
+          </header>
 
-        {/* CALLOUT: HOW TO EVALUATE */}
-        <Callout>
-          <div className="flex flex-col gap-2">
-            <Section
-              title="Evaluation Path"
-              subtitle="Short on time? Here's the three-minute version:"
-            >
-              <ol className="list-decimal pl-5">
-                <li>
-                  <strong>
-                    Skim the{" "}
-                    <Link className="underline" href="/cv">
-                      CV
-                    </Link>{" "}
-                  </strong>
-                  : Scope, impact, and enterprise delivery by the numbers.
-                </li>
-                <li>
-                  <strong>
-                    Open a project in{" "}
-                    <Link className="underline" href="/projects">
-                      Work
-                    </Link>{" "}
-                  </strong>
-                  : Each one links to how it was actually built, not just what it does.
-                </li>
-                <li>
-                  <strong>
-                    Dig a little deeper in the{" "}
-                    <a
-                      className="underline"
-                      href={docsUrl("projects/portfolio-app/")}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Engineering Docs
-                    </a>{" "}
-                  </strong>
-                  : The docs hold the architecture decisions, threat models, and runbooks behind
-                  every feature on this site.
-                </li>
-              </ol>
-            </Section>
-          </div>
-        </Callout>
+          <Panel label="MODULE 00 / DEVELOPER" className="h-fit" variant="default">
+            <div className="flex flex-col gap-5">
+              <div className="flex flex-wrap items-center gap-2">
+                <LabelTag tone="accent">BRYCE SEEFIELDT</LabelTag>
+                <LabelTag>PANEL: CONTROL BUS</LabelTag>
+                <LabelTag tone="warn">TORONTO, CANADA</LabelTag>
+              </div>
+
+              <div className="space-y-2">
+                <p className="type-label text-ink-muted">DEPLOY PIPELINE</p>
+                <DeployPipeline />
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-end">
+                <Readout value="OPERATIONAL" caption="DEPLOY STATUS" />
+                <Readout value="~1" unit="min" caption="ROLLBACK MTTR" />
+                <div className="justify-self-start sm:justify-self-end" aria-hidden="true">
+                  <Dial value={74} caption="PIPELINE LOAD" />
+                </div>
+              </div>
+            </div>
+          </Panel>
+        </section>
       </ScrollFadeIn>
 
-      {/* SECTIONS GRID */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <ScrollFadeIn>
-          <Section
-            title="Definining Quality"
-            subtitle="This site is a personal project, built and run like a production service. Here's what that means in practice:"
-          >
-            <ul className="list-disc pl-5 text-sm text-zinc-700 dark:text-zinc-300">
-              <li>
-                <strong>Range Across the Stack</strong>
-                <br />
-                Next.js App Router, React, and TypeScript on the front; APIs, data, and cloud
-                deployment behind them. Confidence and intentionality at every layer.
-              </li>
-              <li>
-                <strong>Decisions That Hold Up</strong>
-                <br />
-                Every meaningful choice gets reasoned through and written down, so the system stays
-                understandable as it grows. That&apos;s the difference between code that works and
-                code a team can live with.
-              </li>
-              <li>
-                <strong>Security as a Starting Point</strong>
-                <br />
-                Hardened HTTP headers, content security policy, supply-chain monitoring, and a
-                threat model. Built in from the first commit, not bolted on later.
-              </li>
-              <li>
-                <strong>Built to be Operated</strong>
-                <br />
-                Deploy and rollback runbooks, performance budgets, and a plan for when something
-                breaks. Because in production, something always does.
-              </li>
-            </ul>
-          </Section>
-        </ScrollFadeIn>
+      {/* MODULE 01 */}
+      <ScrollFadeIn>
+        <section className="space-y-4">
+          <LabelTag>MODULE 01 / THE ARC</LabelTag>
+          <h2 className="type-h2 text-ink">Twenty-five years, one throughline.</h2>
+          <div className="signal-path-rail" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+            <span />
+          </div>
+          <div className="text-ink max-w-4xl space-y-4 text-base">
+            <p>
+              I spent the first two decades of my career in music and entertainment, then in
+              enterprise publishing, then in university IT. Different industries, same instinct: I
+              kept finding the broken process, the manual workaround everyone had stopped
+              questioning, the thing that should be automated but wasn&apos;t. For years I fixed
+              those the way I could, with better systems, better coordination, better tools.
+            </p>
+            <p>
+              Then at Warner Chappell Music Publishing I automated a reporting process that five
+              international offices had been doing by hand for years, and watched 45-plus hours of
+              weekly manual work simply disappear. That was the moment. Software wasn&apos;t just a
+              tool for the job, it was the most powerful version of the thing I&apos;d always done.
+              So I went and learned it properly: a four-year honours degree, eighteen months of
+              enterprise IT delivery, and six years of building, every day, to a real standard.
+            </p>
+            <p>
+              I&apos;m not a career-changer who left one thing for another. I&apos;m the same person
+              I always was, finding what&apos;s broken and fixing it, with a much better set of
+              tools now.
+            </p>
+          </div>
+        </section>
+      </ScrollFadeIn>
 
-        <ScrollFadeIn delay={100}>
-          <Section
-            title="By the numbers"
-            subtitle="Enterprise delivery, stakeholder by stakeholder, system by system. The full story is in the CV."
-          >
-            <ul className="list-disc pl-5 text-sm text-zinc-700 dark:text-zinc-300">
-              <li>
-                2,500+ users served by the cloud print platform I led, across the Toronto-wide
-                campus.
-              </li>
-              <li>50% reduction in print-related support tickets within three months of launch.</li>
-              <li>
-                150+ enterprise services I documented and brought under a robust Disaster Recovery
-                and Business Continuity Plan.
-              </li>
-              <li>
-                $10K / year in licensing cost and admin overhead eliminated by the migration I
-                delivered.
-              </li>
-            </ul>
-          </Section>
-        </ScrollFadeIn>
+      {/* MODULE 02 */}
+      <ScrollFadeIn delay={60}>
+        <section className="space-y-4">
+          <LabelTag>MODULE 02 / OPERATING PRINCIPLES</LabelTag>
+          <h2 className="type-h2 text-ink">How I work.</h2>
+          <OperatingPrinciplesPanel />
+        </section>
+      </ScrollFadeIn>
 
-        <ScrollFadeIn delay={200}>
-          <Section
-            title="Selected work"
-            subtitle="Two live systems you can inspect end to end. More in the full work index."
-          >
-            <div className="flex flex-col gap-3 text-sm text-zinc-700 dark:text-zinc-300">
-              <div className="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
-                <div className="font-medium">This site</div>
-                <div className="mt-1 text-zinc-600 dark:text-zinc-400">
-                  A Next.js and TypeScript application, built and operated like production software.
-                  Pull-request workflow, automated testing across two browsers, security hardening,
-                  and a three-stage deployment pipeline.
-                </div>
-                <div className="mt-3 flex flex-wrap items-center gap-3">
+      {/* MODULE 03 */}
+      <ScrollFadeIn delay={120}>
+        <section className="space-y-4">
+          <LabelTag>MODULE 03 / BY THE NUMBERS</LabelTag>
+          <h2 className="type-h2 text-ink">By the numbers.</h2>
+          <p className="text-ink-muted max-w-3xl text-sm">
+            Enterprise delivery, a creative career, and a production engineering practice. Read
+            across the panel.
+          </p>
+          <ByTheNumbersCluster />
+        </section>
+      </ScrollFadeIn>
+
+      {/* MODULE 04 */}
+      <ScrollFadeIn delay={180}>
+        <section className="space-y-4">
+          <LabelTag>MODULE 04 / CAREER HIGHLIGHTS</LabelTag>
+          <h2 className="type-h2 text-ink">The long version, in four movements.</h2>
+          <CareerEraCards />
+        </section>
+      </ScrollFadeIn>
+
+      {/* MODULE 05 */}
+      <ScrollFadeIn delay={220}>
+        <section className="space-y-4">
+          <LabelTag>MODULE 05 / SELECTED WORK</LabelTag>
+          <h2 className="type-h2 text-ink">Two live systems you can inspect end to end.</h2>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <Panel className="h-full" label="CARD / PORTFOLIO APP" variant="default">
+              <div className="text-ink space-y-3 text-sm">
+                <p>
+                  A Next.js and TypeScript application built and operated like production software:
+                  PR workflow, automated testing, security hardening, and staged delivery.
+                </p>
+                <div className="flex flex-wrap gap-2">
                   <a
-                    className="underline"
+                    className="control-link"
                     href={docsUrl("projects/portfolio-docs-app/")}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    → How it&apos;s built
+                    How it&apos;s built
                   </a>
                   <a
-                    className="underline"
+                    className="control-link"
                     href={docsUrl("security/threat-models/portfolio-app-threat-model")}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    → Threat model
+                    Threat model
                   </a>
                   <a
-                    className="underline"
+                    className="control-link"
                     href={docsUrl("operations/runbooks/")}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    → Operational runbooks
+                    Operational runbooks
                   </a>
                 </div>
               </div>
+            </Panel>
 
-              <div className="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
-                <div className="font-medium">The engineering docs</div>
-                <div className="mt-1 text-zinc-600 dark:text-zinc-400">
-                  A companion documentation system holding the architecture decisions, threat
-                  models, and operational runbooks behind every claim on this site.
-                </div>
-                <div className="mt-3 flex flex-wrap items-center gap-3">
+            <Panel className="h-full" label="CARD / ENGINEERING DOCS" variant="default">
+              <div className="text-ink space-y-3 text-sm">
+                <p>
+                  A companion system with architecture decisions, threat models, and operations
+                  evidence behind each implementation claim.
+                </p>
+                <div className="flex flex-wrap gap-2">
                   <a
-                    className="underline"
+                    className="control-link"
                     href={docsUrl("projects/portfolio-app/")}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    → Read the docs
+                    Read the docs
                   </a>
                   <a
-                    className="underline"
+                    className="control-link"
                     href={docsUrl("architecture/adr/")}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    → Architecture decisions
+                    Architecture decisions
                   </a>
                 </div>
               </div>
-            </div>
-          </Section>
-        </ScrollFadeIn>
+            </Panel>
 
-        <ScrollFadeIn delay={300}>
-          <Section title="Let's talk." subtitle="">
-            <ul className="list-disc pl-5 text-sm text-zinc-700 dark:text-zinc-300">
+            <Panel className="h-full opacity-85" label="CARD / RESERVED" variant="default">
+              <div className="text-ink-muted flex h-full flex-col items-start justify-between gap-4 text-sm">
+                <p>Reserved for the planned AI demo system.</p>
+                <LabelTag>SLOT OPEN</LabelTag>
+              </div>
+            </Panel>
+          </div>
+        </section>
+      </ScrollFadeIn>
+
+      {/* MODULE 06 */}
+      <ScrollFadeIn delay={260}>
+        <section className="space-y-4">
+          <LabelTag>MODULE 06 / CONTACT</LabelTag>
+          <h2 className="type-h2 text-ink">Let&apos;s talk.</h2>
+          <div className="text-ink max-w-3xl space-y-3 text-base">
+            <p>
               I&apos;m looking for a full-stack role where engineering judgment and a track record
-              of modernizing how work gets done, both matter.
-              <br />
-              <br />
-              If that sounds like your team, I&apos;d like to hear from you. And yes, everything on
-              this site is open source, so look as closely as you like.
-              <br />
-              <br />
-              View the{" "}
-              <Link className="underline" href="/cv">
-                CV
-              </Link>{" "}
-              and{" "}
-              <Link
-                className="underline"
-                href={githubHref}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                GitHub
-              </Link>{" "}
-              for additional context.
-              <br />
-            </ul>
-            <div className="mt-4">
-              <Link className="underline" href="/contact">
-                Get in touch
-              </Link>{" "}
-            </div>
-          </Section>
-        </ScrollFadeIn>
-      </div>
+              of modernizing how work gets done both matter. If that sounds like your team, I&apos;d
+              like to hear from you.
+            </p>
+            <p>Everything on this site is open source, so look as closely as you like.</p>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 pt-1">
+            <ControlButton href="/contact">GET IN TOUCH</ControlButton>
+            <ControlButton href="/cv">CV</ControlButton>
+            <ControlButton href={githubHref} external>
+              GITHUB
+            </ControlButton>
+            <ControlButton href={DOCS_BASE_URL} external>
+              DOCS
+            </ControlButton>
+          </div>
+          <p className="text-ink-muted text-sm">
+            Direct links: <Link href="/cv">CV</Link> ·{" "}
+            <Link href={githubHref} target="_blank" rel="noopener noreferrer">
+              GitHub
+            </Link>
+          </p>
+        </section>
+      </ScrollFadeIn>
     </div>
   );
 }

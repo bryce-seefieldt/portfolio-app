@@ -9,10 +9,10 @@ export function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-zinc-200 p-6 shadow-sm dark:border-zinc-800">
+    <section className="border-line bg-surface rounded-2xl border p-6 shadow-sm">
       <div className="flex flex-col gap-1">
-        <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
-        {subtitle ? <p className="text-sm text-zinc-600 dark:text-zinc-400">{subtitle}</p> : null}
+        <h2 className="text-ink text-lg font-semibold tracking-tight">{title}</h2>
+        {subtitle ? <p className="text-ink-muted text-sm">{subtitle}</p> : null}
       </div>
       <div className="mt-4">{children}</div>
     </section>

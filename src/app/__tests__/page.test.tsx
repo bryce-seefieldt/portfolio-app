@@ -38,17 +38,28 @@ import HomePage from "../page";
 
 // RATIONALE: Home page must expose primary reviewer CTAs.
 describe("HomePage", () => {
+  it("should render all Phase 2C module labels", () => {
+    render(<HomePage />);
+
+    expect(screen.getByText("MODULE 01 / THE ARC")).toBeInTheDocument();
+    expect(screen.getByText("MODULE 02 / OPERATING PRINCIPLES")).toBeInTheDocument();
+    expect(screen.getByText("MODULE 03 / BY THE NUMBERS")).toBeInTheDocument();
+    expect(screen.getByText("MODULE 04 / CAREER HIGHLIGHTS")).toBeInTheDocument();
+    expect(screen.getByText("MODULE 05 / SELECTED WORK")).toBeInTheDocument();
+    expect(screen.getByText("MODULE 06 / CONTACT")).toBeInTheDocument();
+  });
+
   it("should render primary CTAs", () => {
     configValues.GITHUB_BASE_URL = "https://github.com/example-base";
     configValues.LINKEDIN_URL = "https://linkedin.example.com";
 
     render(<HomePage />);
 
-    expect(screen.getByRole("link", { name: "See the work" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Read the CV" })).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: "Review the Portfolio Engineering Docs" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "WORK" })).toBeInTheDocument();
+    const cvLinks = screen.getAllByRole("link", { name: "CV" });
+    expect(cvLinks.some((link) => link.getAttribute("href") === "/cv")).toBe(true);
+    const docsLinks = screen.getAllByRole("link", { name: "DOCS" });
+    expect(docsLinks.length).toBeGreaterThan(0);
   });
 
   it("should keep the LinkedIn link out of the page body", () => {

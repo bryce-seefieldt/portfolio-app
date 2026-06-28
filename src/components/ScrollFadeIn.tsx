@@ -37,12 +37,7 @@ interface FadeInOptions {
  */
 export function useFadeInOnScroll({ threshold = 0.1 }: FadeInOptions = {}) {
   const elementRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(() => {
-    if (typeof window === "undefined") {
-      return false;
-    }
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  });
+  const [isVisible, setIsVisible] = useState(false);
 
   const handleIntersection = (entries: IntersectionObserverEntry[]) => {
     const [entry] = entries;

@@ -36,3 +36,29 @@ test.describe("Smoke tests", () => {
     expect(docsLink).toBeTruthy();
   });
 });
+
+test.describe("Resilience checks", () => {
+  test.describe("JS disabled", () => {
+    test.use({ javaScriptEnabled: false });
+
+    test("home remains readable without JavaScript", async ({ page }) => {
+      const response = await page.goto("/");
+      expect(response?.status()).toBeLessThan(400);
+
+      await expect(page.getByText("MODULE 01 / THE ARC")).toBeVisible();
+      await expect(page.getByText("MODULE 02 / OPERATING PRINCIPLES")).toBeVisible();
+      await expect(page.getByText("MODULE 03 / BY THE NUMBERS")).toBeVisible();
+    });
+  });
+
+  test.describe("Reduced motion", () => {
+    test("deploy pipeline settles to final production stage", async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await page.goto("/");
+
+      const activeLeds = page.locator(".pipeline-led--active");
+      await expect(activeLeds).toHaveCount(1);
+      await expect(page.locator(".pipeline-led--stage-4.pipeline-led--active")).toHaveCount(1);
+    });
+  });
+});

@@ -66,31 +66,57 @@ export function ThemeToggle() {
 
   // Don't render until mounted to avoid hydration mismatch
   if (!state.mounted) {
-    return <div className="h-9 w-9" />;
+    return <div className="h-8 w-16" />;
   }
 
   return (
     <button
       onClick={toggleTheme}
-      className="rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors duration-200 hover:bg-zinc-100 dark:hover:bg-zinc-800"
-      aria-label={`Switch to ${state.isLight ? "dark" : "light"} theme`}
+      className="control-switch"
+      data-light={state.isLight ? "true" : "false"}
+      aria-pressed={!state.isLight}
+      aria-label="Toggle light and dark theme"
       title={`Current theme: ${state.isLight ? "light" : "dark"}`}
+      type="button"
     >
-      {state.isLight ? (
-        // Sun icon (show when in light mode, click to switch to dark)
-        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-          <path
-            fillRule="evenodd"
-            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.536l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zm5.414 9.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM5 11a1 1 0 100-2H4a1 1 0 100 2h1z"
-            clipRule="evenodd"
-          />
-        </svg>
-      ) : (
-        // Moon icon (show when in dark mode, click to switch to light)
-        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-          <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-        </svg>
-      )}
+      <span className="control-switch-shell" aria-hidden="true">
+        <span className="control-switch-icon control-switch-icon--light">
+          <svg
+            viewBox="0 0 24 24"
+            className="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="12" cy="12" r="4.25" />
+            <path d="M12 2.75v2.5M12 18.75v2.5M2.75 12h2.5M18.75 12h2.5M5.4 5.4l1.77 1.77M16.83 16.83l1.77 1.77M18.6 5.4l-1.77 1.77M7.17 16.83 5.4 18.6" />
+          </svg>
+        </span>
+        <span className="control-switch-housing">
+          <span className="control-switch-face">
+            <span className="control-switch-rocker">
+              <span className="control-switch-rocker-half control-switch-rocker-half--left" />
+              <span className="control-switch-rocker-pivot" />
+              <span className="control-switch-rocker-half control-switch-rocker-half--right" />
+            </span>
+          </span>
+        </span>
+        <span className="control-switch-icon control-switch-icon--dark">
+          <svg
+            viewBox="0 0 24 24"
+            className="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M19 14.8A7.2 7.2 0 1 1 9.2 5a8.2 8.2 0 1 0 9.8 9.8Z" />
+          </svg>
+        </span>
+      </span>
     </button>
   );
 }

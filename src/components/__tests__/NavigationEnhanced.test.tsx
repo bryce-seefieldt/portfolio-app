@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { NavigationEnhanced } from "../NavigationEnhanced";
 
@@ -13,7 +13,11 @@ vi.mock("next/link", () => ({
 }));
 
 vi.mock("../ThemeToggle", () => ({
-  ThemeToggle: () => <div>Theme Toggle</div>,
+  ThemeToggle: () => (
+    <button type="button" aria-label="Toggle light/dark theme">
+      Theme Toggle
+    </button>
+  ),
 }));
 
 const configValues: {
@@ -50,16 +54,8 @@ describe("NavigationEnhanced", () => {
     expect(screen.getByText("Work")).toBeInTheDocument();
     expect(screen.getByText("CV")).toBeInTheDocument();
     expect(screen.getByText("Contact")).toBeInTheDocument();
-    expect(screen.getByText("Engineering Docs")).toBeInTheDocument();
+    expect(screen.getByText("Docs")).toBeInTheDocument();
     expect(screen.getByText("GitHub")).toBeInTheDocument();
-  });
-
-  it("should toggle mobile menu", () => {
-    render(<NavigationEnhanced />);
-
-    const button = screen.getByRole("button", { name: "Open menu" });
-    fireEvent.click(button);
-    expect(screen.getByRole("button", { name: "Close menu" })).toBeInTheDocument();
   });
 
   it("should add shadow on scroll", () => {
@@ -67,7 +63,7 @@ describe("NavigationEnhanced", () => {
 
     const header = document.querySelector("header");
     expect(header).not.toBeNull();
-    expect(header).not.toHaveClass("shadow-md");
+    expect(header).not.toHaveClass("shadow-[0_10px_22px_rgba(0,0,0,0.28)]");
 
     Object.defineProperty(window, "scrollY", { value: 20, writable: true });
     act(() => {
@@ -75,20 +71,16 @@ describe("NavigationEnhanced", () => {
     });
 
     return waitFor(() => {
-      expect(header).toHaveClass("shadow-md");
+      expect(header).toHaveClass("shadow-[0_10px_22px_rgba(0,0,0,0.28)]");
     });
   });
 
-  it("should close mobile menu on escape", () => {
+  it("should render the theme toggle inline without a menu button", () => {
     render(<NavigationEnhanced />);
 
-    const button = screen.getByRole("button", { name: "Open menu" });
-    fireEvent.click(button);
-
-    expect(screen.getByRole("button", { name: "Close menu" })).toBeInTheDocument();
-
-    fireEvent.keyDown(document, { key: "Escape" });
-    expect(screen.getByRole("button", { name: "Open menu" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Toggle light/dark theme" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Open menu" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Close menu" })).toBeNull();
   });
 
   it("should fall back to the base GitHub URL when profile URL is missing", () => {

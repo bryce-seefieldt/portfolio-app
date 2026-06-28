@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import localFont from "next/font/local";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { NavigationEnhanced } from "@/components/NavigationEnhanced";
 import { BackToTop } from "@/components/BackToTop";
@@ -8,11 +9,6 @@ import { headers } from "next/headers";
 import "./globals.css";
 
 import { DOCS_BASE_URL, GITHUB_BASE_URL, LINKEDIN_URL, SITE_URL } from "@/lib/config";
-import {
-  generatePersonSchema,
-  generateWebsiteSchema,
-  formatSchemaAsScript,
-} from "@/lib/structured-data";
 
 const APP_TITLE = "Bryce Seefieldt | Portfolio";
 const APP_DESCRIPTION =
@@ -38,6 +34,12 @@ const jetBrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
   variable: "--font-jetbrains-mono",
+  display: "swap",
+});
+
+const departureMono = localFont({
+  src: "./fonts/DepartureMono-Regular.woff2",
+  variable: "--font-departure-mono",
   display: "swap",
 });
 
@@ -107,45 +109,25 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   await headers();
   const githubHref = GITHUB_BASE_URL ?? FALLBACK_GITHUB_URL;
-  const jsonLdScripts = [generatePersonSchema(), generateWebsiteSchema()];
+  const enableTelemetry = process.env.NODE_ENV === "production";
 
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <head>
-        {/* Theme initialization script: runs before paint to prevent flash of wrong theme.
-            This ensures the correct theme is applied immediately on page load,
-            preventing a visible flash when the page loads in the wrong theme.
-            Uses stored preference or system preference as fallback. */}
-        <script
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{
-            __html:
-              "(function(){try{const saved=localStorage.getItem('theme');const isLight=saved==='light';if(isLight){document.documentElement.classList.add('light');document.documentElement.classList.remove('dark');}else{document.documentElement.classList.remove('light');document.documentElement.classList.add('dark');}}catch(e){document.documentElement.classList.add('dark');}})();",
-          }}
-        />
-
-        {/* JSON-LD Structured Data for SEO */}
-        {jsonLdScripts.map((schema, idx) => (
-          <script
-            key={idx}
-            type="application/ld+json"
-            suppressHydrationWarning
-            dangerouslySetInnerHTML={{ __html: formatSchemaAsScript(schema) }}
-          ></script>
-        ))}
-      </head>
+      <head />
       <body
-        className={`${inter.variable} ${spaceGrotesk.variable} ${jetBrainsMono.variable} font-body min-h-dvh`}
+        className={`${inter.variable} ${spaceGrotesk.variable} ${jetBrainsMono.variable} ${departureMono.variable} font-body min-h-dvh`}
       >
         <NavigationEnhanced />
 
-        <main className="mx-auto max-w-5xl px-4 py-10">{children}</main>
+        <main className="flex-1 px-4 pt-4 pb-11 sm:pt-5">
+          <div className="mx-auto w-full max-w-5xl">{children}</div>
+        </main>
 
-        <footer className="border-t border-zinc-200 dark:border-zinc-800">
-          <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-8 text-sm text-zinc-600 dark:text-zinc-400">
-            <div className="flex flex-wrap items-center gap-3">
+        <footer className="px-4 pb-8">
+          <div className="footer-inset mx-auto flex max-w-5xl flex-col gap-4 rounded-md px-4 py-6 text-sm">
+            <div className="flex flex-wrap items-center gap-2">
               <a
-                className="hover:text-zinc-950 dark:hover:text-white"
+                className="control-link"
                 href={githubHref}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -154,7 +136,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               </a>
               {LINKEDIN_URL ? (
                 <a
-                  className="hover:text-zinc-950 dark:hover:text-white"
+                  className="control-link"
                   href={LINKEDIN_URL}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -163,7 +145,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 </a>
               ) : null}
               <a
-                className="hover:text-zinc-950 dark:hover:text-white"
+                className="control-link"
                 href={DOCS_BASE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -171,15 +153,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 Engineering Docs
               </a>
             </div>
-            <div className="space-y-1">
-              <p>Bryce Seefieldt · Full-stack developer · Toronto</p>
-              <p>Built with Next.js, TypeScript, and Tailwind. Inspect the source on GitHub.</p>
+            <div className="space-y-1 text-sm">
+              <p className="text-ink">Bryce Seefieldt · Full-Stack Developer · Toronto, Canada</p>
+              <p className="text-ink-muted">
+                Built with Next.js, TypeScript, and Tailwind. Inspect the source on GitHub.
+              </p>
             </div>
           </div>
         </footer>
         <BackToTop />
-        <Analytics />
-        <SpeedInsights />
+        {enableTelemetry ? <Analytics /> : null}
+        {enableTelemetry ? <SpeedInsights /> : null}
       </body>
     </html>
   );
