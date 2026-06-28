@@ -30,6 +30,26 @@
   --line: #003311;
   --rivet: #2f2a21;
 
+  /* Skeuomorphic depth language (dark: lift with light + visible sidewalls) */
+  --depth-edge-highlight: rgba(255, 255, 255, 0.34);
+  --depth-edge-shadow: rgba(0, 0, 0, 0.58);
+  --depth-cast-shadow: 0 9px 14px -2px rgba(0, 0, 0, 0.56);
+  --depth-cast-shadow-strong: 0 12px 18px -2px rgba(0, 0, 0, 0.64);
+  --depth-lift-halo: 0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent);
+  --depth-raised-top-light: color-mix(in srgb, var(--keycap-bg) 99.1%, white 0.9%);
+  --depth-raised-top-mid: var(--keycap-bg);
+  --depth-raised-top-dark: color-mix(in srgb, var(--keycap-bg) 99.7%, black 0.3%);
+  --depth-sidewall-1: color-mix(in srgb, var(--keycap-bg) 58%, black 42%);
+  --depth-sidewall-2: color-mix(in srgb, var(--keycap-bg) 50%, black 50%);
+  --depth-sidewall-3: color-mix(in srgb, var(--keycap-bg) 42%, black 58%);
+  --depth-sidewall-4: color-mix(in srgb, var(--keycap-bg) 36%, black 64%);
+  --depth-sidewall-5: color-mix(in srgb, var(--keycap-bg) 32%, black 68%);
+  --depth-sidewall-6: color-mix(in srgb, var(--keycap-bg) 28%, black 72%);
+  --depth-inset-shell-highlight: rgba(255, 255, 255, 0.22);
+  --depth-inset-shell-shadow: rgba(0, 0, 0, 0.64);
+  --depth-dial-mount-highlight: rgba(255, 255, 255, 0.2);
+  --depth-dial-mount-shadow: rgba(0, 0, 0, 0.58);
+
   /* Keycap tokens (dark mode) */
   --key-neutral: #2a2722;
   --key-neutral-ink: #e8e2d0;
@@ -43,10 +63,26 @@
   --key-alert-ink: #fff3f1;
   --key-contrast: #e8e2d0;
   --key-contrast-ink: #17120d;
-  --key-instrument-green: #2e8b57;
-  --key-instrument-green-ink: #081c13;
+  --key-instrument-green: #237246;
+  --key-instrument-green-ink: #eafff2;
   --key-amber-phosphor: #ff6a00;
   --key-amber-phosphor-ink: #2d1300;
+  --key2-teal: #1f6b64;
+  --key2-teal-ink: #f1f6ef;
+  --key2-violet: #5b4a7a;
+  --key2-violet-ink: #f2ecff;
+  --key2-blue: #3d5f86;
+  --key2-blue-ink: #edf4ff;
+  --key2-olive: #7b8450;
+  --key2-olive-ink: #12140c;
+  --key2-rust: #8b4a2c;
+  --key2-rust-ink: #fff0e6;
+  --key2-slate: #59616c;
+  --key2-slate-ink: #eef1f4;
+  --key2-gold: #9a7a34;
+  --key2-gold-ink: #171008;
+  --key2-magenta: #7d3c67;
+  --key2-magenta-ink: #ffeefa;
 }
 
 /* Light mode tokens (explicit opt-in via .light) */
@@ -61,6 +97,26 @@ html.light {
   --line: #9a958a;
   --rivet: #6e6a60;
 
+  /* Skeuomorphic depth language (light: stronger shadow + classic bevel) */
+  --depth-edge-highlight: rgba(255, 255, 255, 0.4);
+  --depth-edge-shadow: rgba(0, 0, 0, 0.46);
+  --depth-cast-shadow: 0 8px 12px -2px rgba(0, 0, 0, 0.34);
+  --depth-cast-shadow-strong: 0 11px 16px -2px rgba(0, 0, 0, 0.4);
+  --depth-lift-halo: 0 0 0 1px color-mix(in srgb, white 34%, transparent);
+  --depth-raised-top-light: color-mix(in srgb, var(--keycap-bg) 99.1%, white 0.9%);
+  --depth-raised-top-mid: var(--keycap-bg);
+  --depth-raised-top-dark: color-mix(in srgb, var(--keycap-bg) 99.7%, black 0.3%);
+  --depth-sidewall-1: color-mix(in srgb, var(--keycap-bg) 56%, black 44%);
+  --depth-sidewall-2: color-mix(in srgb, var(--keycap-bg) 48%, black 52%);
+  --depth-sidewall-3: color-mix(in srgb, var(--keycap-bg) 40%, black 60%);
+  --depth-sidewall-4: color-mix(in srgb, var(--keycap-bg) 34%, black 66%);
+  --depth-sidewall-5: color-mix(in srgb, var(--keycap-bg) 30%, black 70%);
+  --depth-sidewall-6: color-mix(in srgb, var(--keycap-bg) 26%, black 74%);
+  --depth-inset-shell-highlight: rgba(255, 255, 255, 0.28);
+  --depth-inset-shell-shadow: rgba(0, 0, 0, 0.44);
+  --depth-dial-mount-highlight: rgba(255, 255, 255, 0.24);
+  --depth-dial-mount-shadow: rgba(0, 0, 0, 0.4);
+
   /* Keycap tokens (light mode) */
   --key-neutral: #c9bfa3;
   --key-neutral-ink: #1a1814;
@@ -68,16 +124,32 @@ html.light {
   --key-primary-ink: #f5ece1;
   --key-secondary: #d4891f;
   --key-secondary-ink: #281606;
-  --key-tertiary: #2d7f87;
-  --key-tertiary-ink: #e8f5f7;
+  --key-tertiary: #2b6f76;
+  --key-tertiary-ink: #f4fcff;
   --key-alert: #b53a2f;
   --key-alert-ink: #fff2ef;
   --key-contrast: #1a1814;
   --key-contrast-ink: #efe9d9;
   --key-instrument-green: #3e6b47;
   --key-instrument-green-ink: #f1f8f2;
-  --key-amber-phosphor: #c85a2c;
+  --key-amber-phosphor: #a3421d;
   --key-amber-phosphor-ink: #fff1ea;
+  --key2-teal: #2f7772;
+  --key2-teal-ink: #f3fcfa;
+  --key2-plum: #6f5678;
+  --key2-plum-ink: #f8efff;
+  --key2-blue: #43688a;
+  --key2-blue-ink: #eef5ff;
+  --key2-olive: #78804f;
+  --key2-olive-ink: #0f1109;
+  --key2-rust: #9f5431;
+  --key2-rust-ink: #fff2eb;
+  --key2-stone: #8a7f70;
+  --key2-stone-ink: #17130f;
+  --key2-ochre: #a67d2e;
+  --key2-ochre-ink: #181109;
+  --key2-mauve: #8b6677;
+  --key2-mauve-ink: #fff4fa;
 }
 
 /* ============================================================================
@@ -251,9 +323,9 @@ html:not(.light) .dial-accent-arc {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 2.125rem;
-  padding: 0.4rem 0.92rem;
-  border-radius: 0.45rem;
+  min-height: 2.45rem;
+  padding: 0.52rem 1.02rem;
+  border-radius: 0.5rem;
   border: 1px solid color-mix(in srgb, var(--line) 76%, white 24%);
   color: var(--ink);
   position: relative;
@@ -263,18 +335,20 @@ html:not(.light) .dial-accent-arc {
   background:
     linear-gradient(
       180deg,
-      color-mix(in srgb, var(--surface-2) 95%, white 5%) 0%,
-      color-mix(in srgb, var(--surface-2) 90%, white 10%) 18%,
-      var(--surface-2) 55%,
-      color-mix(in srgb, var(--surface-2) 82%, black 18%) 100%
+      color-mix(in srgb, var(--surface-2) 62%, white 38%) 0%,
+      color-mix(in srgb, var(--surface-2) 84%, white 16%) 26%,
+      color-mix(in srgb, var(--surface-2) 88%, black 12%) 62%,
+      color-mix(in srgb, var(--surface-2) 70%, black 30%) 100%
     ),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.22), transparent 35%);
+    linear-gradient(145deg, rgba(255, 255, 255, 0.28), transparent 36%);
   box-shadow:
-    0 1px 0 color-mix(in srgb, white 22%, transparent),
-    0 10px 16px rgba(0, 0, 0, 0.26),
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.38),
-    inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+    0 2px 0 color-mix(in srgb, var(--surface-2) 46%, black 54%),
+    0 4px 0 color-mix(in srgb, var(--surface-2) 38%, black 62%),
+    var(--depth-cast-shadow),
+    var(--depth-lift-halo),
+    inset 0 2px 0 var(--depth-edge-highlight),
+    inset 0 -2px 0 var(--depth-edge-shadow),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.12);
   text-shadow:
     0 1px 0 rgba(255, 255, 255, 0.22),
     0 -1px 0 rgba(0, 0, 0, 0.68);
@@ -287,9 +361,12 @@ html:not(.light) .dial-accent-arc {
 .control-button::before {
   content: "";
   position: absolute;
-  inset: 1px;
+  inset: 2px;
   border-radius: inherit;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), transparent 42%);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.3), transparent 44%),
+    radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.32), transparent 62%),
+    radial-gradient(circle at 50% 94%, rgba(0, 0, 0, 0.45), transparent 58%);
   pointer-events: none;
 }
 
@@ -299,8 +376,8 @@ html:not(.light) .dial-accent-arc {
   inset: 0;
   border-radius: inherit;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    inset 0 2px 0 rgba(255, 255, 255, 0.34),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.38);
   pointer-events: none;
 }
 
@@ -308,20 +385,22 @@ html:not(.light) .dial-accent-arc {
   transform: translateY(-1px);
   border-color: color-mix(in srgb, var(--accent) 60%, var(--line) 40%);
   box-shadow:
-    0 1px 0 color-mix(in srgb, white 24%, transparent),
-    0 12px 18px rgba(0, 0, 0, 0.28),
-    0 0 12px color-mix(in srgb, var(--accent) 25%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.26),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.36);
+    0 2px 0 color-mix(in srgb, var(--surface-2) 48%, black 52%),
+    0 5px 0 color-mix(in srgb, var(--surface-2) 40%, black 60%),
+    var(--depth-cast-shadow-strong),
+    0 0 14px color-mix(in srgb, var(--accent) 28%, transparent),
+    var(--depth-lift-halo),
+    inset 0 2px 0 color-mix(in srgb, white 52%, transparent),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.38);
 }
 
 .control-button:active {
-  transform: translateY(1px);
+  transform: translateY(3px);
   box-shadow:
-    0 1px 0 color-mix(in srgb, white 14%, transparent),
-    0 4px 8px rgba(0, 0, 0, 0.16),
-    inset 0 2px 3px rgba(0, 0, 0, 0.42),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+    0 1px 0 color-mix(in srgb, var(--surface-2) 42%, black 58%),
+    0 2px 5px rgba(0, 0, 0, 0.3),
+    inset 0 3px 5px rgba(0, 0, 0, 0.46),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .control-button:focus-visible,
@@ -331,9 +410,26 @@ html:not(.light) .dial-accent-arc {
 }
 
 .control-button--compact {
-  min-height: 1.85rem;
-  padding: 0.3rem 0.7rem;
+  min-height: 2.1rem;
+  padding: 0.34rem 0.78rem;
   letter-spacing: 0.06em;
+}
+
+.dial-mount {
+  border-radius: 999px;
+  padding: 0.38rem;
+  background:
+    radial-gradient(circle at 32% 28%, var(--depth-dial-mount-highlight), transparent 58%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-2) 74%, black 26%) 0%,
+      color-mix(in srgb, var(--surface-2) 58%, black 42%) 100%
+    );
+  box-shadow:
+    inset 0 2px 0 var(--depth-dial-mount-highlight),
+    inset 0 -3px 0 var(--depth-dial-mount-shadow),
+    0 0 0 1px color-mix(in srgb, var(--line) 70%, var(--ink) 30%),
+    var(--depth-cast-shadow);
 }
 
 .control-link {
@@ -973,21 +1069,29 @@ html:not(.light) .crt-screen__detail {
 
 .keypad-shell {
   border: 1px solid color-mix(in srgb, var(--line) 72%, var(--ink) 28%);
-  border-radius: 0.5rem;
-  padding: 0.7rem;
+  border-radius: 0.64rem;
+  padding: 0.9rem;
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--surface-2) 86%, black 14%) 0%,
-    color-mix(in srgb, var(--surface-2) 72%, black 28%) 100%
+    color-mix(in srgb, var(--surface-2) 76%, black 24%) 0%,
+    color-mix(in srgb, var(--surface-2) 58%, black 42%) 100%
   );
   box-shadow:
-    inset 0 2px 4px rgba(0, 0, 0, 0.35),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+    inset 0 3px 0 var(--depth-inset-shell-highlight),
+    inset 0 -4px 0 var(--depth-inset-shell-shadow),
+    inset 0 12px 18px rgba(0, 0, 0, 0.32),
+    0 1px 0 color-mix(in srgb, white 18%, transparent);
 }
 
 .keypad-grid {
   display: grid;
-  gap: 0.5rem;
+  gap: 0.58rem;
+  border-radius: 0.46rem;
+  padding: 0.34rem;
+  background: color-mix(in srgb, var(--surface-2) 52%, var(--bg) 48%);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.5);
 }
 
 .keycap {
@@ -998,39 +1102,49 @@ html:not(.light) .crt-screen__detail {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.16rem;
-  min-height: 2.6rem;
+  gap: 0.22rem;
+  min-height: 3.2rem;
   border: 1px solid color-mix(in srgb, var(--line) 74%, var(--ink) 26%);
-  border-radius: 0.45rem;
+  border-radius: 0.5rem;
   background: linear-gradient(
     140deg,
-    color-mix(in srgb, var(--keycap-bg) 78%, white 22%) 0%,
-    var(--keycap-bg) 42%,
-    color-mix(in srgb, var(--keycap-bg) 82%, black 18%) 100%
+    var(--depth-raised-top-light) 0%,
+    var(--depth-raised-top-mid) 45%,
+    var(--depth-raised-top-dark) 100%
   );
   box-shadow:
-    0 3px 0 color-mix(in srgb, var(--line) 70%, black 30%),
-    0 8px 12px rgba(0, 0, 0, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.28),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.34);
+    0 2px 0 var(--depth-sidewall-1),
+    0 4px 0 var(--depth-sidewall-2),
+    0 6px 0 var(--depth-sidewall-3),
+    0 7px 0 var(--depth-sidewall-4),
+    0 8px 0 var(--depth-sidewall-5),
+    0 9px 0 var(--depth-sidewall-6),
+    var(--depth-cast-shadow),
+    var(--depth-lift-halo),
+    inset 0 2px 0 var(--depth-edge-highlight),
+    inset 0 -2px 0 var(--depth-edge-shadow);
   color: var(--keycap-legend);
-  padding: 0.3rem 0.25rem;
+  padding: 0.36rem 0.3rem;
+  transition:
+    transform 150ms ease,
+    box-shadow 170ms ease,
+    filter 170ms ease;
 }
 
 .keycap__dish {
   position: absolute;
-  inset: 0.22rem 0.2rem 0.58rem;
-  border-radius: 0.34rem;
+  inset: 0.28rem 0.26rem 0.9rem;
+  border-radius: 0.38rem;
   background:
-    radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.18), transparent 58%),
-    radial-gradient(circle at 50% 82%, rgba(0, 0, 0, 0.28), transparent 52%);
+    radial-gradient(circle at 50% 24%, rgba(255, 255, 255, 0.48), transparent 60%),
+    radial-gradient(circle at 50% 88%, rgba(0, 0, 0, 0.45), transparent 56%);
   pointer-events: none;
 }
 
 .keycap__legend {
   z-index: 1;
   font-family: var(--font-departure-mono), var(--font-jetbrains-mono), monospace;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   line-height: 1;
@@ -1039,7 +1153,7 @@ html:not(.light) .crt-screen__detail {
 .keycap__sublegend {
   z-index: 1;
   font-family: var(--font-jetbrains-mono), monospace;
-  font-size: 0.56rem;
+  font-size: 0.58rem;
   line-height: 1;
   letter-spacing: 0.04em;
   opacity: 0.85;
@@ -1051,7 +1165,7 @@ html:not(.light) .crt-screen__detail {
 
 .keycap--1-25u {
   grid-column: span 1;
-  min-height: 2.6rem;
+  min-height: 3.2rem;
 }
 
 .keycap--1-5u {
@@ -1064,30 +1178,46 @@ html:not(.light) .crt-screen__detail {
 
 .keycap--hover,
 .keycap:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   box-shadow:
-    0 4px 0 color-mix(in srgb, var(--line) 70%, black 30%),
-    0 10px 14px rgba(0, 0, 0, 0.24),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+    0 2px 0 var(--depth-sidewall-1),
+    0 4px 0 var(--depth-sidewall-2),
+    0 6px 0 var(--depth-sidewall-3),
+    0 8px 0 var(--depth-sidewall-4),
+    0 10px 0 var(--depth-sidewall-5),
+    0 11px 0 var(--depth-sidewall-6),
+    var(--depth-cast-shadow-strong),
+    0 0 12px color-mix(in srgb, var(--keycap-bg) 24%, transparent),
+    var(--depth-lift-halo),
+    inset 0 2px 0 color-mix(in srgb, white 56%, transparent),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.34);
 }
 
 .keycap--pressed {
-  transform: translateY(2px);
+  transform: translateY(6px);
   box-shadow:
-    0 1px 0 color-mix(in srgb, var(--line) 74%, black 26%),
-    0 2px 6px rgba(0, 0, 0, 0.2),
-    inset 0 2px 3px rgba(0, 0, 0, 0.4),
+    0 1px 0 var(--depth-sidewall-3),
+    0 2px 0 var(--depth-sidewall-4),
+    0 3px 0 var(--depth-sidewall-5),
+    0 4px 0 var(--depth-sidewall-6),
+    0 2px 6px rgba(0, 0, 0, 0.36),
+    inset 0 3px 4px rgba(0, 0, 0, 0.52),
     inset 0 -1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .keycap--backlit {
   box-shadow:
-    0 3px 0 color-mix(in srgb, var(--line) 70%, black 30%),
-    0 8px 12px rgba(0, 0, 0, 0.22),
-    0 0 12px color-mix(in srgb, var(--keycap-bg) 42%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.33);
+    0 2px 0 var(--depth-sidewall-1),
+    0 4px 0 var(--depth-sidewall-2),
+    0 6px 0 var(--depth-sidewall-3),
+    0 8px 0 var(--depth-sidewall-4),
+    0 9px 0 var(--depth-sidewall-5),
+    0 10px 0 var(--depth-sidewall-6),
+    var(--depth-cast-shadow),
+    0 0 16px color-mix(in srgb, var(--keycap-bg) 44%, transparent),
+    var(--depth-lift-halo),
+    inset 0 2px 0 color-mix(in srgb, white 56%, transparent),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.36);
 }
 
 .instrument-lamps {
@@ -1158,6 +1288,7 @@ html:not(.light) .crt-screen__detail {
   }
 
   .control-button,
+  .keycap,
   .control-switch-rocker,
   .control-switch-rocker-half,
   .control-switch-face {

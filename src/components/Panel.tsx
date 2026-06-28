@@ -29,15 +29,15 @@ export function Panel({
     variant === "default"
       ? {
           backgroundImage:
-            "linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.08) 18%, rgba(255, 255, 255, 0.02) 42%, transparent 70%), repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 6px)",
+            "linear-gradient(135deg, color-mix(in srgb, white 22%, transparent) 0%, color-mix(in srgb, white 10%, transparent) 24%, color-mix(in srgb, white 3%, transparent) 48%, transparent 72%), repeating-linear-gradient(135deg, color-mix(in srgb, white 2%, transparent) 0 1px, transparent 1px 6px)",
           boxShadow:
-            "inset 1px 1px 0 rgba(255, 255, 255, 0.08), inset -1px -1px 0 rgba(0, 0, 0, 0.34), 0 16px 28px rgba(0, 0, 0, 0.16), 0 5px 12px rgba(0, 0, 0, 0.2)",
+            "inset 0 2px 0 var(--depth-edge-highlight), inset 0 -2px 0 var(--depth-edge-shadow), var(--depth-cast-shadow), var(--depth-lift-halo)",
         }
       : {
           backgroundImage:
-            "linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 18%, transparent 48%)",
+            "linear-gradient(135deg, color-mix(in srgb, white 10%, transparent) 0%, color-mix(in srgb, white 3%, transparent) 20%, transparent 50%)",
           boxShadow:
-            "inset 2px 2px 3px rgba(0, 0, 0, 0.28), inset -1px -1px 0 rgba(255, 255, 255, 0.05), inset 0 10px 20px rgba(0, 0, 0, 0.14)",
+            "inset 0 3px 0 var(--depth-inset-shell-highlight), inset 0 -4px 0 var(--depth-inset-shell-shadow), inset 0 10px 20px rgba(0, 0, 0, 0.22)",
         };
   const rivetStyle = {
     background:
