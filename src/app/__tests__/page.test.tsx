@@ -70,4 +70,10 @@ describe("HomePage", () => {
 
     expect(screen.queryByText("LinkedIn")).toBeNull();
   });
+
+  it("should keep keypad treatment out of home page", () => {
+    render(<HomePage />);
+
+    expect(screen.queryByText(/KEYCAP \+ KEYPAD VISUAL TREATMENT/i)).toBeNull();
+  });
 });
