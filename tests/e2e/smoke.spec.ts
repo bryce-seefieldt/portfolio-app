@@ -67,6 +67,6 @@ test.describe("Resilience checks", () => {
     await expect(page.getByText("KEYCAP + KEYPAD VISUAL TREATMENT")).toHaveCount(0);
 
     await page.goto("/design-tokens-preview");
-    await expect(page.getByText("MODULE 05 / KEYS")).toBeVisible();
+    await expect(page.getByText("MINI KEYBOARD / DEPTH REBUILD")).toBeVisible();
   });
 });
