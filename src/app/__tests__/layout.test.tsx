@@ -64,6 +64,10 @@ vi.mock("next/font/google", () => ({
   JetBrains_Mono: () => ({ variable: "--font-jetbrains-mono" }),
 }));
 
+vi.mock("next/font/local", () => ({
+  default: () => ({ variable: "--font-departure-mono" }),
+}));
+
 import RootLayout from "../layout";
 
 // RATIONALE: Root layout must render navigation, footer, and main slot.

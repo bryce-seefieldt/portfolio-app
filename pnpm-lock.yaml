@@ -22,6 +22,9 @@ importers:
 
   .:
     dependencies:
+      '@proj-airi/font-departure-mono':
+        specifier: ^0.10.2
+        version: 0.10.2
       '@vercel/analytics':
         specifier: ^1.6.1
         version: 1.6.1(next@16.2.9(@babel/core@7.29.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)
@@ -934,6 +937,9 @@ packages:
 
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
+
+  '@proj-airi/font-departure-mono@0.10.2':
+    resolution: {integrity: sha512-IFXUr7HVpKbT4jaaz8vtNWQjHzb6/HEq0ufCYOSDBUKJ97nIwDfCdtiJDgavGV0h6gU+XXCWT/d5L/WaV2Iu6w==}
 
   '@rollup/rollup-android-arm-eabi@4.59.0':
     resolution: {integrity: sha512-upnNBkA6ZH2VKGcBj9Fyl9IGNPULcjXRlg0LLeaioQWueH30p6IXtJEbKAgvyv+mJaMxSm1l6xwDXYjpEMiLMg==}
@@ -3989,6 +3995,8 @@ snapshots:
       playwright: 1.61.0
 
   '@polka/url@1.0.0-next.29': {}
+
+  '@proj-airi/font-departure-mono@0.10.2': {}
 
   '@rollup/rollup-android-arm-eabi@4.59.0':
     optional: true
