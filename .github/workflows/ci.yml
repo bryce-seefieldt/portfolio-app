@@ -63,6 +63,10 @@ jobs:
             git push origin HEAD:${{ github.head_ref }}
           fi
 
+      - name: Re-checkout after format push
+        if: ${{ github.actor == 'dependabot[bot]' && github.event_name == 'pull_request' }}
+        run: git checkout HEAD
+
       - name: Lint
         run: pnpm lint
 
