@@ -23,7 +23,8 @@ export default function HomePage() {
           <header className="flex flex-col gap-4">
             {/* TODO(phase2c1-copy): Workshop decision pending - consider present-tense eyebrow variant. */}
             <p className="type-label text-ink-muted">
-              25 YEARS OF PROFESSIONAL EXPERIENCE · FOCUSED ON SOFTWARE SINCE 2020
+              Full-Stack Cloud Engineer | Next.js, React, Python, Java, C++ | Docker, AWS, Azure |
+              Architecting secure, reliable applications & bulletproof pipelines
             </p>
 
             <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
@@ -32,10 +33,23 @@ export default function HomePage() {
             </h1>
 
             <p className="type-body text-ink max-w-3xl">
-              Full-stack developer with a background leading enterprise technology projects.
-              I&apos;ve focused my career on modernizing systems and improving processes. I build
-              and deliver to an enterprise standard: tested, secured, documented, and shipped
-              through a real pipeline. Take a look around. The proof is one click deep.
+              I am a software engineer who looks at development through a wider lens. While I love
+              building intuitive, high-performance interfaces with Next.js and React, I care deeply
+              about what happens after the code is pushed. To me, a feature isn&apos;t complete
+              unless it&apos;s running on secure, resilient, and fully automated cloud
+              infrastructure.
+              <br />
+              <br />
+              Over my career, I’ve intentionally cultivated a stack that spans the entire lifecycle
+              of a product. I use TypeScript/JavaScript for rapid web development, Python and Java
+              for heavy-duty backend services, and Docker paired with AWS or Azure to ensure
+              seamless cloud deployment.
+              <br />
+              <br />
+              Because of my background in project management, I don&apos;t just write code in a
+              vacuum—I design architectures with business constraints, security compliance, and
+              long-term reliability in mind. I specialize in building robust CI/CD pipelines that
+              eliminate deployment anxiety and keep engineering teams moving fast.
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-1">
@@ -74,7 +88,7 @@ export default function HomePage() {
 
       {/* TODO(phase2c1-keypad): Reserve the lead slot for a future Tech-Stack Keypad module after visual treatment approval. */}
       {/* MODULE 01 */}
-      <ScrollFadeIn>
+      {/* <ScrollFadeIn>
         <section className="space-y-4">
           <LabelTag>MODULE 01 / THE ARC</LabelTag>
           <h2 className="type-h2 text-ink">Twenty-five years, one throughline.</h2>
@@ -107,7 +121,7 @@ export default function HomePage() {
             </p>
           </div>
         </section>
-      </ScrollFadeIn>
+      </ScrollFadeIn> */}
 
       {/* MODULE 02 */}
       <ScrollFadeIn delay={60}>
@@ -208,12 +222,12 @@ export default function HomePage() {
               </div>
             </Panel>
 
-            <Panel className="h-full opacity-85" label="CARD / RESERVED" variant="default">
+            {/* <Panel className="h-full opacity-85" label="CARD / RESERVED" variant="default">
               <div className="text-ink-muted flex h-full flex-col items-start justify-between gap-4 text-sm">
                 <p>Reserved for the planned AI demo system.</p>
                 <LabelTag>SLOT OPEN</LabelTag>
               </div>
-            </Panel>
+            </Panel> */}
           </div>
         </section>
       </ScrollFadeIn>
