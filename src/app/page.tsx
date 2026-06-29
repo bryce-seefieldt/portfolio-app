@@ -47,7 +47,7 @@ export default function HomePage() {
               <br />
               <br />
               Because of my background in project management, I don&apos;t just write code in a
-              vacuum.  I design architectures with business constraints, security compliance, and
+              vacuum. I design architectures with business constraints, security compliance, and
               long-term reliability in mind. I specialize in building robust CI/CD pipelines that
               eliminate deployment anxiety and keep engineering teams moving fast.
             </p>
