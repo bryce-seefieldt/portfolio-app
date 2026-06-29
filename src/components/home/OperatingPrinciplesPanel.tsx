@@ -15,7 +15,7 @@ const PRINCIPLES: Principle[] = [
     id: "find-the-break",
     label: "FIND THE BREAK",
     detail:
-      "I find the broken process before I write the code. Most of the value I've delivered, from automating royalty reporting across five offices to halving a university's print-support load, started with seeing the inefficiency, not the technology. The code is the fix, not the goal.",
+      "I find the broken process before I write the code. Much of the value I've delivered started with seeing the inefficiency, not trying to incorporate specific technology. From automating royalty reporting across five international offices to halving a university's print-related Helpdesk load. The code is the fix, not the goal.",
   },
   {
     id: "translate",
@@ -33,7 +33,7 @@ const PRINCIPLES: Principle[] = [
     id: "user-first",
     label: "USER FIRST",
     detail:
-      "I think about the person using it before the framework I'll build it in. User experience is a design decision made before the first line of code, not a polish step at the end.",
+      "I think about the person using it long before the framework is defined. User experience is a design decision made before the first line of code, not a polish step at the end.",
   },
   {
     id: "secure-by-default",
@@ -45,7 +45,7 @@ const PRINCIPLES: Principle[] = [
     id: "build-from-nothing",
     label: "BUILD FROM NOTHING",
     detail:
-      "I've built things from nothing. A company, an enterprise continuity program, this site. I'm comfortable where there's no template yet.",
+      "I've built things from nothing. A company, an enterprise DRBCP initiative, this site. I'm comfortable where there's no template yet.",
   },
   {
     id: "speed-and-quality",
