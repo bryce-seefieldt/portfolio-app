@@ -24,7 +24,7 @@ export default function HomePage() {
             {/* TODO(phase2c1-copy): Workshop decision pending - consider present-tense eyebrow variant. */}
             <p className="type-label text-ink-muted">
               Full-Stack Cloud Engineer | Next.js, React, Python, Java, C++ | Docker, AWS, Azure |
-              Architecting secure, reliable applications & bulletproof pipelines
+              Architect of secure, reliable applications & bulletproof pipelines
             </p>
 
             <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
@@ -47,7 +47,7 @@ export default function HomePage() {
               <br />
               <br />
               Because of my background in project management, I don&apos;t just write code in a
-              vacuum—I design architectures with business constraints, security compliance, and
+              vacuum. I design architectures with business constraints, security compliance, and
               long-term reliability in mind. I specialize in building robust CI/CD pipelines that
               eliminate deployment anxiety and keep engineering teams moving fast.
             </p>
