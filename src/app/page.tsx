@@ -8,6 +8,7 @@ import { Panel } from "@/components/Panel";
 import { Readout } from "@/components/Readout";
 import { ScrollFadeIn } from "@/components/ScrollFadeIn";
 import { OperatingPrinciplesPanel } from "@/components/home/OperatingPrinciplesPanel";
+import { TechStackKeyboard } from "@/components/home/TechStackKeyboard";
 import { ByTheNumbersCluster } from "@/components/home/ByTheNumbersCluster";
 import { CareerEraCards } from "@/components/home/CareerEraCards";
 import { DOCS_BASE_URL, docsUrl, GITHUB_BASE_URL } from "@/lib/config";
@@ -86,8 +87,16 @@ export default function HomePage() {
         </section>
       </ScrollFadeIn>
 
-      {/* TODO(phase2c1-keypad): Reserve the lead slot for a future Tech-Stack Keypad module after visual treatment approval. */}
-      {/* MODULE 01 */}
+      {/* MODULE 01 / TECH STACK KEYBOARD */}
+      <ScrollFadeIn>
+        <section className="space-y-4">
+          <LabelTag>MODULE 01 / TECH STACK</LabelTag>
+          <h2 className="type-h2 text-ink">My toolbox.</h2>
+          <TechStackKeyboard />
+        </section>
+      </ScrollFadeIn>
+
+      {/* THE ARC (ARCHIVED) */}
       {/* <ScrollFadeIn>
         <section className="space-y-4">
           <LabelTag>MODULE 01 / THE ARC</LabelTag>
