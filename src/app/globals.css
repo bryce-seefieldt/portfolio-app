@@ -1158,6 +1158,7 @@ html:not(.light) .crt-screen__detail {
 }
 
 .keypad-grid {
+  --keycap-unit: 3.78rem; /* 3.2rem base + 0.58rem gap = 3.78rem per unit */
   display: grid;
   gap: 0.58rem;
   border-radius: 0.46rem;
@@ -1171,6 +1172,7 @@ html:not(.light) .crt-screen__detail {
 .keycap {
   --keycap-bg: var(--surface);
   --keycap-legend: var(--ink);
+  width: calc(1 * var(--keycap-unit));
   /* Cap-color-derived depth must be declared on .keycap to resolve against per-key inline --keycap-bg. */
   --depth-raised-top-light: color-mix(in srgb, var(--keycap-bg) 96%, white 4%);
   --depth-raised-top-mid: var(--keycap-bg);
@@ -1245,20 +1247,20 @@ html:not(.light) .crt-screen__detail {
 }
 
 .keycap--1u {
-  grid-column: span 1;
+  width: calc(1 * var(--keycap-unit));
 }
 
 .keycap--1-25u {
-  grid-column: span 1;
+  width: calc(1.25 * var(--keycap-unit));
   min-height: 3.2rem;
 }
 
 .keycap--1-5u {
-  grid-column: span 2;
+  width: calc(1.5 * var(--keycap-unit));
 }
 
 .keycap--2u {
-  grid-column: span 2;
+  width: calc(2 * var(--keycap-unit));
 }
 
 .keycap--hover,
