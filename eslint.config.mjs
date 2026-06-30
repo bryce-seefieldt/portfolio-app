@@ -7,13 +7,6 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   security.configs.recommended,
-  {
-    rules: {
-      // Disable object injection warning for this project since all dynamic keys
-      // come from our own StackKey data structures, not user input
-      "security/detect-object-injection": "off",
-    },
-  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

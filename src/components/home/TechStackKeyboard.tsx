@@ -272,6 +272,7 @@ export function TechStackKeyboard() {
   const handleKeyDown = (event: React.KeyboardEvent, currentIndex: number) => {
     if (event.key === " " || event.key === "Enter") {
       event.preventDefault();
+      // eslint-disable-next-line security/detect-object-injection -- currentIndex is computed from controlled key-navigation flow and bounded by STACK_KEYS length.
       setSelectedId(STACK_KEYS[currentIndex]?.id ?? "");
       return;
     }
@@ -290,6 +291,7 @@ export function TechStackKeyboard() {
     }
 
     event.preventDefault();
+    // eslint-disable-next-line security/detect-object-injection -- nextIndex is derived from bounded modulo/home/end logic over STACK_KEYS.
     setSelectedId(STACK_KEYS[nextIndex]?.id ?? "");
   };
 
@@ -304,6 +306,7 @@ export function TechStackKeyboard() {
           {(Object.entries(keysByCategory) as Array<[StackKeyCategory, StackKey[]]>).map(
             ([category, keys]) => {
               if (keys.length === 0) return null;
+              // eslint-disable-next-line security/detect-object-injection -- category is a StackKeyCategory union from keysByCategory, not user input.
               const categoryData = CATEGORY_COLORS[category];
               return (
                 <div key={category} className="space-y-2">
