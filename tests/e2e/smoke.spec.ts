@@ -45,9 +45,9 @@ test.describe("Resilience checks", () => {
       const response = await page.goto("/");
       expect(response?.status()).toBeLessThan(400);
 
-      await expect(page.getByText("MODULE 01 / THE ARC")).toBeVisible();
       await expect(page.getByText("MODULE 02 / OPERATING PRINCIPLES")).toBeVisible();
       await expect(page.getByText("MODULE 03 / BY THE NUMBERS")).toBeVisible();
+      await expect(page.getByText("MODULE 04 / CAREER HIGHLIGHTS")).toBeVisible();
     });
   });
 

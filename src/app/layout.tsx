@@ -9,6 +9,7 @@ import { headers } from "next/headers";
 import "./globals.css";
 
 import { DOCS_BASE_URL, GITHUB_BASE_URL, LINKEDIN_URL, SITE_URL } from "@/lib/config";
+import { PerformanceMonitor } from "./performance-monitor";
 
 const APP_TITLE = "Bryce Seefieldt | Portfolio";
 const APP_DESCRIPTION =
@@ -162,6 +163,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </div>
         </footer>
         <BackToTop />
+        <PerformanceMonitor />
         {enableTelemetry ? <Analytics /> : null}
         {enableTelemetry ? <SpeedInsights /> : null}
       </body>

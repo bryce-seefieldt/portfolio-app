@@ -1069,9 +1069,7 @@ describe("Module Name", () => {
   describe("functionToTest", () => {
     it("should [expected behavior]", () => {
       // Arrange: Set up test inputs
-      const input = {
-        /* test data */
-      };
+      const input = {/* test data */};
 
       // Act: Call the function
       const result = functionToTest(input);
