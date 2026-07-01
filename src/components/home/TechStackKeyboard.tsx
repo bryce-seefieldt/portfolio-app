@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useMemo, useState } from "react";
+import { Keycap } from "@/components/Keycap";
 import { LabelTag } from "@/components/LabelTag";
 import { Panel } from "@/components/Panel";
 import type { ReactNode } from "react";
@@ -239,11 +240,15 @@ const STACK_KEYS: StackKey[] = [
 const CATEGORY_COLORS: Record<StackKeyCategory, { label: string }> = {
   languages: { label: "LANGUAGES" },
   frontend: { label: "FRONTEND" },
-  backend: { label: "BACKEND / RUNTIME" },
+  backend: { label: "BACKEND" },
   data: { label: "DATA" },
-  cloud: { label: "CLOUD / INFRA" },
-  tooling: { label: "TOOLING / PRACTICE" },
+  cloud: { label: "CLOUD" },
+  tooling: { label: "TOOLING" },
 };
+
+function getLegendInkVar(capRole: string) {
+  return `var(${capRole}-ink)`;
+}
 
 export function TechStackKeyboard() {
   const [selectedId, setSelectedId] = useState(STACK_KEYS[0]?.id ?? "");
@@ -298,7 +303,7 @@ export function TechStackKeyboard() {
   return (
     <div className="grid gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:items-start">
       <Panel label="TECH STACK / KEYBOARD" variant="default">
-        <div role="radiogroup" aria-labelledby={groupId} className="space-y-4">
+        <div role="radiogroup" aria-labelledby={groupId} className="tech-stack-board keypad-shell">
           <span id={groupId} className="sr-only">
             Tech stack technologies
           </span>
@@ -309,31 +314,36 @@ export function TechStackKeyboard() {
               // eslint-disable-next-line security/detect-object-injection -- category is a StackKeyCategory union from keysByCategory, not user input.
               const categoryData = CATEGORY_COLORS[category];
               return (
-                <div key={category} className="space-y-2">
-                  <div className="type-label text-ink-muted">{categoryData?.label}</div>
-                  <div
-                    className="keypad-grid"
-                    style={{ gridTemplateColumns: "repeat(auto-fit, minmax(3.5rem, 1fr))" }}
-                  >
+                <div key={category} className="tech-stack-row">
+                  <div className="tech-stack-row__label" aria-hidden="true">
+                    {categoryData?.label}
+                  </div>
+                  <div className="tech-stack-row__keys">
                     {keys.map((key) => {
                       const globalIndex = STACK_KEYS.findIndex((k) => k.id === key.id);
                       const isActive = key.id === selectedKey.id;
-                      const sizeClass = `keycap--${key.size ?? "1u"}`;
                       return (
-                        <button
+                        <Keycap
                           key={key.id}
-                          type="button"
                           role="radio"
                           aria-checked={isActive}
                           tabIndex={isActive ? 0 : -1}
-                          className={`keycap ${sizeClass} ${isActive ? "keycap--backlit" : ""}`}
-                          style={{ "--keycap-bg": `var(${key.capRole})` } as React.CSSProperties}
+                          aria-label={`${categoryData?.label} ${key.name}`}
+                          className={isActive ? "keycap--backlit" : ""}
+                          capColor={`var(${key.capRole})`}
+                          legendColor={getLegendInkVar(key.capRole)}
+                          size={key.size ?? "1u"}
+                          legend={
+                            <span className="stack-keycap-legend">
+                              <span className="stack-keycap-legend__icon" aria-hidden="true">
+                                {key.legend}
+                              </span>
+                              <span className="stack-keycap-legend__text">{key.name}</span>
+                            </span>
+                          }
                           onClick={() => setSelectedId(key.id)}
                           onKeyDown={(e) => handleKeyDown(e, globalIndex)}
-                        >
-                          <span className="keycap__legend">{key.legend}</span>
-                          <span className="keycap__sublegend text-xs">{key.name}</span>
-                        </button>
+                        />
                       );
                     })}
                   </div>

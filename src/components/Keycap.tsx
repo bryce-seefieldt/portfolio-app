@@ -1,9 +1,12 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { ComponentPropsWithoutRef, CSSProperties, ReactNode } from "react";
 
 type KeycapSize = "1u" | "1.25u" | "1.5u" | "2u";
 type KeycapState = "rest" | "hover" | "pressed" | "backlit";
 
-interface KeycapProps {
+interface KeycapProps extends Omit<
+  ComponentPropsWithoutRef<"button">,
+  "children" | "type" | "className" | "style"
+> {
   legend: ReactNode;
   subLegend?: ReactNode;
   capColor: string;
@@ -47,6 +50,7 @@ export function Keycap({
   size = "1u",
   state = "rest",
   className = "",
+  ...buttonProps
 }: KeycapProps) {
   const style = {
     "--keycap-bg": capColor,
@@ -58,7 +62,8 @@ export function Keycap({
       type="button"
       className={`keycap ${getSizeClass(size)} ${getStateClass(state)} ${className}`.trim()}
       style={style}
-      aria-label={typeof legend === "string" ? legend : "Keycap"}
+      aria-label={buttonProps["aria-label"] ?? (typeof legend === "string" ? legend : "Keycap")}
+      {...buttonProps}
     >
       <span className="keycap__dish" aria-hidden="true" />
       <span className="keycap__legend">{legend}</span>

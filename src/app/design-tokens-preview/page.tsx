@@ -279,6 +279,40 @@ export default function DesignTokensPreviewPage() {
     },
   ];
 
+  const rowPackedPreview = [
+    {
+      label: "LANG",
+      keys: [
+        { id: "lang-ts", legend: "TS", capColor: "#00FF41", legendColor: "#07220E" },
+        { id: "lang-js", legend: "JS", capColor: "#00FF41", legendColor: "#07220E" },
+        { id: "lang-py", legend: "PY", capColor: "#00FF41", legendColor: "#07220E" },
+      ],
+    },
+    {
+      label: "FRONT",
+      keys: [
+        { id: "fe-react", legend: "RE", capColor: "#FFB000", legendColor: "#2F1800" },
+        { id: "fe-next", legend: "NX", capColor: "#FFB000", legendColor: "#2F1800" },
+        { id: "fe-tail", legend: "TW", capColor: "#FFB000", legendColor: "#2F1800" },
+      ],
+    },
+    {
+      label: "TOOL",
+      keys: [
+        { id: "tool-git", legend: "GIT", capColor: "#2A2722", legendColor: "#E8E2D0" },
+        { id: "tool-gh", legend: "GH", capColor: "#2A2722", legendColor: "#E8E2D0" },
+        {
+          id: "tool-claude",
+          legend: "CLAUDE",
+          subLegend: "2u",
+          capColor: "#2A2722",
+          legendColor: "#E8E2D0",
+          size: "2u" as const,
+        },
+      ],
+    },
+  ];
+
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6">
       {/* Governance: this page is the canonical rendered gallery for reusable design-system components. */}
@@ -450,6 +484,36 @@ export default function DesignTokensPreviewPage() {
               key.
             </p>
             <Keypad label="MINI KEYBOARD / DEPTH REBUILD" keys={miniKeyboard} columns={5} />
+          </div>
+
+          <div className="space-y-3">
+            <h3 className="type-h3 text-ink">Row-packed board layout sample</h3>
+            <p className="type-caption text-ink-muted">
+              Shared left-gutter labels + tight uniform key gutters used by the hero keyboard.
+            </p>
+            <div
+              className="tech-stack-board keypad-shell"
+              role="group"
+              aria-label="Row packed board sample"
+            >
+              {rowPackedPreview.map((row) => (
+                <div key={row.label} className="tech-stack-row">
+                  <div className="tech-stack-row__label">{row.label}</div>
+                  <div className="tech-stack-row__keys">
+                    {row.keys.map((key) => (
+                      <Keycap
+                        key={key.id}
+                        legend={key.legend}
+                        subLegend={key.subLegend}
+                        capColor={key.capColor}
+                        legendColor={key.legendColor}
+                        size={key.size}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </Panel>

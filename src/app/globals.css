@@ -72,6 +72,7 @@
   --keycap-drop-shadow: 0 9px 14px rgba(0, 0, 0, 0.24);
   --keypad-gutter: color-mix(in srgb, var(--surface-2) 62%, var(--bg) 38%);
   --keypad-gutter-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --key-gutter: 0.4rem;
   --dial-face-shadow-1: rgba(0, 0, 0, 0.36);
   --dial-face-shadow-2: rgba(0, 0, 0, 0.2);
   --dial-face-highlight: rgba(255, 255, 255, 0.14);
@@ -1158,9 +1159,9 @@ html:not(.light) .crt-screen__detail {
 }
 
 .keypad-grid {
-  --keycap-unit: 3.78rem; /* 3.2rem base + 0.58rem gap = 3.78rem per unit */
+  --keycap-unit: 3.78rem;
   display: grid;
-  gap: 0.58rem;
+  gap: var(--key-gutter);
   border-radius: 0.46rem;
   padding: 0.34rem;
   background: color-mix(in srgb, var(--surface-2) 52%, var(--bg) 48%);
@@ -1230,11 +1231,42 @@ html:not(.light) .crt-screen__detail {
 
 .keycap__legend {
   z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-departure-mono), var(--font-jetbrains-mono), monospace;
   font-size: 0.72rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   line-height: 1;
+}
+
+.stack-keycap-legend {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  text-transform: none;
+  line-height: 1.1;
+}
+
+.stack-keycap-legend__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stack-keycap-legend__icon > svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.stack-keycap-legend__text {
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.02em;
+  text-align: center;
 }
 
 .keycap__sublegend {
@@ -1307,6 +1339,36 @@ html:not(.light) .crt-screen__detail {
     inset 0 -2px 0 rgba(0, 0, 0, 0.36);
 }
 
+.tech-stack-board {
+  --label-gutter-width: 6.5rem;
+  display: grid;
+  gap: var(--key-gutter);
+}
+
+.tech-stack-row {
+  display: grid;
+  grid-template-columns: var(--label-gutter-width) minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--key-gutter);
+}
+
+.tech-stack-row__label {
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 0.64rem;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  color: color-mix(in srgb, var(--accent) 62%, var(--ink-muted) 38%);
+  text-transform: uppercase;
+}
+
+.tech-stack-row__keys {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: var(--key-gutter);
+}
+
 .instrument-lamps {
   display: inline-flex;
   align-items: center;
@@ -1350,6 +1412,26 @@ html:not(.light) .crt-screen__detail {
 
   .type-readout {
     font-size: 2rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .tech-stack-board {
+    gap: calc(var(--key-gutter) + 0.1rem);
+  }
+
+  .tech-stack-row {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0.24rem;
+  }
+
+  .tech-stack-row__label {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+  }
+
+  .tech-stack-row__keys {
+    flex-wrap: wrap;
   }
 }
 
