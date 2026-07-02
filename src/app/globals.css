@@ -994,6 +994,22 @@ html:not(.light) .annunciator-tile.is-active {
     inset 0 -1px 0 rgba(255, 255, 255, 0.08);
 }
 
+.tech-stack-keyboard-well {
+  overflow: hidden;
+}
+
+.tech-stack-keyboard-layout {
+  display: grid;
+  align-items: start;
+  gap: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .tech-stack-keyboard-layout {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  }
+}
+
 .crt-screen__detail {
   color: var(--ink);
 }

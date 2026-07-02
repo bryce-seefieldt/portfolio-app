@@ -18,6 +18,7 @@ interface KeypadProps {
   keys: KeypadKey[];
   columns?: number;
   className?: string;
+  embedded?: boolean;
   getKeyButtonProps?: (key: KeypadKey, index: number) => ComponentPropsWithoutRef<"button">;
 }
 
@@ -35,6 +36,7 @@ export function Keypad({
   keys,
   columns = 6,
   className = "",
+  embedded = false,
   getKeyButtonProps,
 }: KeypadProps) {
   const gridStyle = {
@@ -48,8 +50,8 @@ export function Keypad({
     maxWidth: "100%",
   } as CSSProperties;
 
-  return (
-    <Panel label={label} variant="inset" className={className}>
+  const keypadContent = (
+    <div className={className}>
       <div className="keypad-shell" style={shellStyle}>
         <div className="keypad-grid" style={gridStyle}>
           {keys.map((key, index) => {
@@ -76,6 +78,16 @@ export function Keypad({
           })}
         </div>
       </div>
+    </div>
+  );
+
+  if (embedded) {
+    return keypadContent;
+  }
+
+  return (
+    <Panel label={label} variant="inset" className={className}>
+      {keypadContent}
     </Panel>
   );
 }

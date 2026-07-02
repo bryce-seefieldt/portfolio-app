@@ -300,53 +300,58 @@ export function TechStackKeyboard() {
   };
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:items-start">
-      <div role="radiogroup" aria-labelledby={groupId} className="tech-stack-keyboard-well">
-        <span id={groupId} className="sr-only">
-          Tech stack technologies
-        </span>
-        <Keypad
-          label="TECH STACK / KEYBOARD"
-          columns={4}
-          keys={matrixKeys}
-          getKeyButtonProps={(key, index) => {
-            // eslint-disable-next-line security/detect-object-injection -- index is row-major index over in-memory HERO_STACK_KEYS.
-            const keyData = HERO_STACK_KEYS[index];
-            const isActive = key.id === selectedKey.id;
-            const categoryLabel = keyData ? CATEGORY_COLORS[keyData.category]?.label : undefined;
-            return {
-              role: "radio",
-              "aria-checked": isActive,
-              tabIndex: isActive ? 0 : -1,
-              "aria-label": `${keyData?.name ?? "Technology"} (${categoryLabel ?? "Category"})`,
-              onClick: () => setSelectedId(key.id),
-              onKeyDown: (event: React.KeyboardEvent) => handleKeyDown(event, index),
-            };
-          }}
-        />
-      </div>
+    <Panel variant="inset" className="tech-stack-keyboard-well">
+      <div className="tech-stack-keyboard-layout grid gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:items-start">
+        <div role="radiogroup" aria-labelledby={groupId}>
+          <span id={groupId} className="sr-only">
+            Tech stack technologies
+          </span>
+          <div className="type-label text-ink-muted mb-4">TECH STACK / KEYBOARD</div>
+          <Keypad
+            label="TECH STACK / KEYBOARD"
+            columns={4}
+            keys={matrixKeys}
+            embedded
+            getKeyButtonProps={(key, index) => {
+              // eslint-disable-next-line security/detect-object-injection -- index is row-major index over in-memory HERO_STACK_KEYS.
+              const keyData = HERO_STACK_KEYS[index];
+              const isActive = key.id === selectedKey.id;
+              const categoryLabel = keyData ? CATEGORY_COLORS[keyData.category]?.label : undefined;
+              return {
+                role: "radio",
+                "aria-checked": isActive,
+                tabIndex: isActive ? 0 : -1,
+                "aria-label": `${keyData?.name ?? "Technology"} (${categoryLabel ?? "Category"})`,
+                onClick: () => setSelectedId(key.id),
+                onKeyDown: (event: React.KeyboardEvent) => handleKeyDown(event, index),
+              };
+            }}
+          />
+        </div>
 
-      <Panel label="CRT / TECH DETAIL" variant="inset">
-        <div className="crt-screen" role="status" aria-live="polite" aria-atomic="true">
-          <LabelTag tone="accent" className="mb-3">
-            {selectedKey?.name ?? "SELECT A KEY"}
-          </LabelTag>
+        <div>
+          <div className="type-label text-ink-muted mb-4">CRT / TECH DETAIL</div>
+          <div className="crt-screen" role="status" aria-live="polite" aria-atomic="true">
+            <LabelTag tone="accent" className="mb-3">
+              {selectedKey?.name ?? "SELECT A KEY"}
+            </LabelTag>
 
-          <div className="space-y-4">
-            {HERO_STACK_KEYS.map((key) => (
-              <p
-                key={key.id}
-                className={`type-body crt-screen__detail ${
-                  key.id === selectedKey?.id ? "is-active" : ""
-                }`}
-                hidden={key.id !== selectedKey?.id}
-              >
-                {key.blurb}
-              </p>
-            ))}
+            <div className="space-y-4">
+              {HERO_STACK_KEYS.map((key) => (
+                <p
+                  key={key.id}
+                  className={`type-body crt-screen__detail ${
+                    key.id === selectedKey?.id ? "is-active" : ""
+                  }`}
+                  hidden={key.id !== selectedKey?.id}
+                >
+                  {key.blurb}
+                </p>
+              ))}
+            </div>
           </div>
         </div>
-      </Panel>
-    </div>
+      </div>
+    </Panel>
   );
 }
