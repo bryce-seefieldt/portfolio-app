@@ -72,6 +72,17 @@
   --keycap-drop-shadow: 0 9px 14px rgba(0, 0, 0, 0.24);
   --keypad-gutter: color-mix(in srgb, var(--surface-2) 62%, var(--bg) 38%);
   --keypad-gutter-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --obl-depth: 6px;
+  --obl-lean: 5px;
+  --obl-taper: 0.14;
+  --obl-glare: 0.1;
+  --obl-gap: 0px;
+  --obl-sock: 4px;
+  --obl-slices: 16;
+  --socket: color-mix(in srgb, var(--surface) 30%, black 70%);
+  --socket-far: rgba(255, 255, 255, 0.22);
+  --rim: color-mix(in srgb, var(--line) 56%, var(--ink) 44%);
+  --edge-hi: rgba(255, 255, 255, 0.3);
   --dial-face-shadow-1: rgba(0, 0, 0, 0.36);
   --dial-face-shadow-2: rgba(0, 0, 0, 0.2);
   --dial-face-highlight: rgba(255, 255, 255, 0.14);
@@ -159,6 +170,10 @@ html.light {
   --keycap-drop-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
   --keypad-gutter: color-mix(in srgb, var(--surface-2) 70%, var(--bg) 30%);
   --keypad-gutter-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  --socket: color-mix(in srgb, var(--surface-2) 48%, black 52%);
+  --socket-far: rgba(255, 255, 255, 0.36);
+  --rim: color-mix(in srgb, var(--line) 62%, var(--ink) 38%);
+  --edge-hi: rgba(255, 255, 255, 0.42);
   --dial-face-shadow-1: rgba(0, 0, 0, 0.32);
   --dial-face-shadow-2: rgba(0, 0, 0, 0.16);
   --dial-face-highlight: rgba(255, 255, 255, 0.18);
@@ -367,109 +382,44 @@ html:not(.light) .dial-accent-arc {
 }
 
 .control-button {
+  --topw: 7.1rem;
+  --toph: 2.1rem;
+  --radius: 8px;
+  --obl-depth: 4px;
+  --obl-lean: 3px;
+  --obl-taper: 0.06;
+}
+
+.control-button .obl__legend {
+  font-family: var(--font-departure-mono), var(--font-jetbrains-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.control-button__cap {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 2.45rem;
-  padding: 0.52rem 1.02rem;
-  border-radius: 0.5rem;
-  border: 1px solid color-mix(in srgb, var(--line) 76%, white 24%);
+  border: 0;
+  text-decoration: none;
   color: var(--ink);
-  position: relative;
-  overflow: hidden;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--surface-2) 62%, white 38%) 0%,
-      color-mix(in srgb, var(--surface-2) 84%, white 16%) 26%,
-      color-mix(in srgb, var(--surface-2) 88%, black 12%) 62%,
-      color-mix(in srgb, var(--surface-2) 70%, black 30%) 100%
-    ),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.28), transparent 36%);
-  box-shadow:
-    0 2px 0 color-mix(in srgb, var(--surface-2) 46%, black 54%),
-    0 4px 0 color-mix(in srgb, var(--surface-2) 38%, black 62%),
-    var(--depth-cast-shadow),
-    var(--depth-lift-halo),
-    inset 0 2px 0 var(--depth-edge-highlight),
-    inset 0 -2px 0 var(--depth-edge-shadow),
-    inset 0 0 0 1px rgba(0, 0, 0, 0.12);
-  text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.22),
-    0 -1px 0 rgba(0, 0, 0, 0.68);
-  transition:
-    transform 140ms ease,
-    box-shadow 180ms ease,
-    border-color 180ms ease;
 }
 
-.control-button::before {
-  content: "";
-  position: absolute;
-  inset: 2px;
-  border-radius: inherit;
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.3), transparent 44%),
-    radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.32), transparent 62%),
-    radial-gradient(circle at 50% 94%, rgba(0, 0, 0, 0.45), transparent 58%);
-  pointer-events: none;
+.control-button:hover .obl__cap,
+.control-button.is-hover .obl__cap {
+  border-color: color-mix(in srgb, var(--accent) 62%, var(--line) 38%);
 }
 
-.control-button::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.34),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.38);
-  pointer-events: none;
-}
-
-.control-button:hover {
-  transform: translateY(-1px);
-  border-color: color-mix(in srgb, var(--accent) 60%, var(--line) 40%);
-  box-shadow:
-    0 2px 0 color-mix(in srgb, var(--surface-2) 48%, black 52%),
-    0 5px 0 color-mix(in srgb, var(--surface-2) 40%, black 60%),
-    var(--depth-cast-shadow-strong),
-    0 0 14px color-mix(in srgb, var(--accent) 28%, transparent),
-    var(--depth-lift-halo),
-    inset 0 2px 0 color-mix(in srgb, white 52%, transparent),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.38);
-}
-
+.control-button:hover,
 .control-button.is-hover {
-  transform: translateY(-1px);
-  border-color: color-mix(in srgb, var(--accent) 60%, var(--line) 40%);
-  box-shadow:
-    0 2px 0 color-mix(in srgb, var(--surface-2) 48%, black 52%),
-    0 5px 0 color-mix(in srgb, var(--surface-2) 40%, black 60%),
-    var(--depth-cast-shadow-strong),
-    0 0 14px color-mix(in srgb, var(--accent) 28%, transparent),
-    var(--depth-lift-halo),
-    inset 0 2px 0 color-mix(in srgb, white 52%, transparent),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.38);
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 22%, transparent));
 }
 
-.control-button:active {
-  transform: translateY(3px);
-  box-shadow:
-    0 1px 0 color-mix(in srgb, var(--surface-2) 42%, black 58%),
-    0 2px 5px rgba(0, 0, 0, 0.3),
-    inset 0 3px 5px rgba(0, 0, 0, 0.46),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
-}
-
-.control-button.is-active {
-  transform: translateY(3px);
-  box-shadow:
-    0 1px 0 color-mix(in srgb, var(--surface-2) 42%, black 58%),
-    0 2px 5px rgba(0, 0, 0, 0.3),
-    inset 0 3px 5px rgba(0, 0, 0, 0.46),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+.control-button:active .obl__cap,
+.control-button.is-active .obl__cap {
+  transform: translate(1px, 2px);
+  filter: brightness(0.96);
 }
 
 .control-button:focus-visible,
@@ -479,14 +429,17 @@ html:not(.light) .dial-accent-arc {
 }
 
 .control-button.is-focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--accent) 70%, white 30%);
+  outline: 2px solid color-mix(in srgb, var(--accent) 68%, white 32%);
   outline-offset: 2px;
 }
 
 .control-button--compact {
-  min-height: 2.1rem;
-  padding: 0.34rem 0.78rem;
-  letter-spacing: 0.06em;
+  --topw: 5.4rem;
+  --toph: 1.75rem;
+}
+
+.control-button--compact .obl__legend {
+  font-size: 0.64rem;
 }
 
 .dial-mount {
@@ -1141,6 +1094,123 @@ html:not(.light) .crt-screen__detail {
    Keycap + Keypad primitives
    ========================================================================= */
 
+.obl {
+  --topw: var(--keycap-unit);
+  --toph: calc(var(--keycap-unit) - 6px);
+  --radius: 10px;
+  position: relative;
+  display: inline-block;
+  width: calc(var(--topw) + var(--obl-lean) + (var(--topw) * var(--obl-taper)) + var(--obl-gap));
+  height: calc(var(--toph) + var(--obl-depth) + (var(--toph) * var(--obl-taper)) + var(--obl-gap));
+}
+
+.obl__slice,
+.obl__top,
+.obl__cap,
+.obl__socket {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+
+.obl__slice,
+.obl__top,
+.obl__cap {
+  width: var(--topw);
+  height: var(--toph);
+  border-radius: var(--radius);
+}
+
+.obl__slice,
+.obl__top {
+  transform: translate(calc(var(--obl-lean) * var(--t)), calc(var(--obl-depth) * var(--t)))
+    scale(calc(1 + var(--obl-taper) * var(--t)));
+}
+
+.obl__socket {
+  width: calc(var(--topw) * (1 + var(--obl-taper)) + var(--obl-sock) * 2);
+  height: calc(var(--toph) * (1 + var(--obl-taper)) + var(--obl-sock) * 2);
+  transform: translate(
+    calc(var(--obl-lean) - var(--obl-sock)),
+    calc(var(--obl-depth) - var(--obl-sock))
+  );
+  border-radius: calc(var(--radius) + 2px);
+  background: var(--socket);
+  box-shadow:
+    inset 1.5px 1.5px 2px rgba(0, 0, 0, 0.6),
+    inset -1.5px -1.5px 1px var(--socket-far),
+    0 1px 0 var(--rim);
+}
+
+.obl__cap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--line) 74%, var(--ink) 26%);
+  background: transparent;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.obl__top {
+  --t: 0;
+  overflow: hidden;
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--cap) 92%, white 8%) 0%,
+    var(--cap) 52%,
+    color-mix(in srgb, var(--cap) 90%, black 10%) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 var(--edge-hi),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.36);
+}
+
+.obl__dish {
+  position: absolute;
+  inset: 8% 7% 18%;
+  border-radius: calc(var(--radius) - 3px);
+  background:
+    radial-gradient(circle at 50% 24%, rgba(255, 255, 255, 0.42), transparent 60%),
+    radial-gradient(circle at 50% 90%, rgba(0, 0, 0, 0.42), transparent 58%);
+}
+
+.obl__glare {
+  position: absolute;
+  inset: 8% 34% auto 8%;
+  height: 24%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, var(--obl-glare)), transparent 72%);
+}
+
+.obl__legend-wrap {
+  position: relative;
+  z-index: 3;
+  width: var(--topw);
+  height: var(--toph);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.16rem;
+  color: var(--legend);
+  text-align: center;
+  pointer-events: none;
+}
+
+.obl__legend {
+  line-height: 1;
+}
+
+.obl__sub {
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 0.58rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  opacity: 0.85;
+}
+
 .keypad-shell {
   border: 1px solid color-mix(in srgb, var(--line) 72%, var(--ink) 28%);
   border-radius: 0.64rem;
@@ -1158,11 +1228,20 @@ html:not(.light) .crt-screen__detail {
 }
 
 .keypad-grid {
-  --keycap-unit: 3.78rem; /* 3.2rem base + 0.58rem gap = 3.78rem per unit */
+  --keycap-unit: 3.78rem;
+  --keypad-unit-pitch-x: calc(
+    var(--keycap-unit) + var(--obl-lean) + (var(--keycap-unit) * var(--obl-taper)) + var(--obl-gap)
+  );
+  --keypad-unit-pitch-y: calc(
+    (var(--keycap-unit) - 6px) + var(--obl-depth) +
+      ((var(--keycap-unit) - 6px) * var(--obl-taper)) + var(--obl-gap)
+  );
   display: grid;
-  gap: 0.58rem;
+  grid-auto-rows: var(--keypad-unit-pitch-y);
+  gap: 0;
   border-radius: 0.46rem;
-  padding: 0.34rem;
+  padding: 0.44rem;
+  overflow: visible;
   background: color-mix(in srgb, var(--surface-2) 52%, var(--bg) 48%);
   box-shadow:
     inset 0 2px 0 rgba(255, 255, 255, 0.16),
@@ -1170,141 +1249,67 @@ html:not(.light) .crt-screen__detail {
 }
 
 .keycap {
-  --keycap-bg: var(--surface);
-  --keycap-legend: var(--ink);
-  width: calc(1 * var(--keycap-unit));
-  /* Cap-color-derived depth must be declared on .keycap to resolve against per-key inline --keycap-bg. */
-  --depth-raised-top-light: color-mix(in srgb, var(--keycap-bg) 96%, white 4%);
-  --depth-raised-top-mid: var(--keycap-bg);
-  --depth-raised-top-dark: color-mix(in srgb, var(--keycap-bg) 95%, black 5%);
-  --depth-sidewall-1: color-mix(in srgb, var(--keycap-bg) 64%, black 36%);
-  --depth-sidewall-2: color-mix(in srgb, var(--keycap-bg) 58%, black 42%);
-  --depth-sidewall-3: color-mix(in srgb, var(--keycap-bg) 52%, black 48%);
-  --depth-sidewall-4: color-mix(in srgb, var(--keycap-bg) 46%, black 54%);
-  --depth-sidewall-5: color-mix(in srgb, var(--keycap-bg) 42%, black 58%);
-  --depth-sidewall-6: color-mix(in srgb, var(--keycap-bg) 38%, black 62%);
-  --keycap-skirt: color-mix(in srgb, var(--keycap-bg) 56%, black 44%);
-  position: relative;
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.22rem;
-  min-height: 3.2rem;
-  border: 1px solid color-mix(in srgb, var(--line) 74%, var(--ink) 26%);
-  border-radius: 0.5rem;
-  background: linear-gradient(
-    140deg,
-    var(--depth-raised-top-light) 0%,
-    var(--depth-raised-top-mid) 45%,
-    var(--depth-raised-top-dark) 100%
-  );
-  box-shadow:
-    0 2px 0 var(--depth-sidewall-1),
-    0 4px 0 var(--depth-sidewall-2),
-    0 6px 0 var(--depth-sidewall-3),
-    0 7px 0 var(--depth-sidewall-4),
-    0 8px 0 var(--depth-sidewall-5),
-    0 9px 0 var(--depth-sidewall-6),
-    var(--depth-cast-shadow),
-    var(--depth-lift-halo),
-    inset 0 2px 0 var(--depth-edge-highlight),
-    inset 0 -2px 0 var(--depth-edge-shadow);
-  color: var(--keycap-legend);
-  padding: 0.36rem 0.3rem;
-  transition:
-    transform 150ms ease,
-    box-shadow 170ms ease,
-    filter 170ms ease;
+  --keycap-unit: 3.78rem;
+  --keycap-units: 1;
+  margin-right: calc(var(--obl-lean) + var(--topw) * var(--obl-taper));
+  margin-bottom: calc(var(--obl-depth) + var(--toph) * var(--obl-taper));
 }
 
-.keycap__dish {
-  position: absolute;
-  inset: 0.28rem 0.26rem 0.9rem;
-  border-radius: 0.38rem;
-  background:
-    radial-gradient(circle at 50% 24%, rgba(255, 255, 255, 0.48), transparent 60%),
-    radial-gradient(circle at 50% 88%, rgba(0, 0, 0, 0.45), transparent 56%);
-  pointer-events: none;
-}
-
-.keycap__legend {
-  z-index: 1;
+.keycap .obl__legend {
   font-family: var(--font-departure-mono), var(--font-jetbrains-mono), monospace;
   font-size: 0.72rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  line-height: 1;
-}
-
-.keycap__sublegend {
-  z-index: 1;
-  font-family: var(--font-jetbrains-mono), monospace;
-  font-size: 0.58rem;
-  line-height: 1;
-  letter-spacing: 0.04em;
-  opacity: 0.85;
 }
 
 .keycap--1u {
-  width: calc(1 * var(--keycap-unit));
+  --keycap-units: 1;
 }
 
 .keycap--1-25u {
-  width: calc(1.25 * var(--keycap-unit));
-  min-height: 3.2rem;
+  --keycap-units: 1.25;
 }
 
 .keycap--1-5u {
-  width: calc(1.5 * var(--keycap-unit));
+  --keycap-units: 1.5;
 }
 
 .keycap--2u {
-  width: calc(2 * var(--keycap-unit));
+  --keycap-units: 2;
 }
 
-.keycap--hover,
-.keycap:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 2px 0 var(--depth-sidewall-1),
-    0 4px 0 var(--depth-sidewall-2),
-    0 6px 0 var(--depth-sidewall-3),
-    0 8px 0 var(--depth-sidewall-4),
-    0 10px 0 var(--depth-sidewall-5),
-    0 11px 0 var(--depth-sidewall-6),
-    var(--depth-cast-shadow-strong),
-    0 0 12px color-mix(in srgb, var(--keycap-bg) 24%, transparent),
-    var(--depth-lift-halo),
-    inset 0 2px 0 color-mix(in srgb, white 56%, transparent),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.34);
+.keypad-grid__cell {
+  overflow: visible;
+  position: relative;
 }
 
-.keycap--pressed {
-  transform: translateY(6px);
-  box-shadow:
-    0 1px 0 var(--depth-sidewall-3),
-    0 2px 0 var(--depth-sidewall-4),
-    0 3px 0 var(--depth-sidewall-5),
-    0 4px 0 var(--depth-sidewall-6),
-    0 2px 6px rgba(0, 0, 0, 0.36),
-    inset 0 3px 4px rgba(0, 0, 0, 0.52),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+.keypad-grid__key {
+  margin-right: 0;
+  margin-bottom: 0;
 }
 
-.keycap--backlit {
-  box-shadow:
-    0 2px 0 var(--depth-sidewall-1),
-    0 4px 0 var(--depth-sidewall-2),
-    0 6px 0 var(--depth-sidewall-3),
-    0 8px 0 var(--depth-sidewall-4),
-    0 9px 0 var(--depth-sidewall-5),
-    0 10px 0 var(--depth-sidewall-6),
-    var(--depth-cast-shadow),
-    0 0 16px color-mix(in srgb, var(--keycap-bg) 44%, transparent),
-    var(--depth-lift-halo),
-    inset 0 2px 0 color-mix(in srgb, white 56%, transparent),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.36);
+.obl--backlit .obl__cap {
+  filter: drop-shadow(0 0 14px color-mix(in srgb, var(--cap) 46%, transparent));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .obl__cap {
+    transition:
+      transform 120ms cubic-bezier(0.2, 0.7, 0.3, 1),
+      filter 120ms;
+  }
+
+  .obl:hover .obl__cap,
+  .obl--hover .obl__cap {
+    transform: translate(-1px, -1px);
+    filter: brightness(1.05);
+  }
+
+  .obl:active .obl__cap,
+  .obl--pressed .obl__cap {
+    transform: translate(1px, 2px);
+    filter: brightness(0.96);
+  }
 }
 
 .instrument-lamps {
@@ -1375,7 +1380,7 @@ html:not(.light) .crt-screen__detail {
   }
 
   .control-button,
-  .keycap,
+  .obl__cap,
   .control-switch-rocker,
   .control-switch-rocker-half,
   .control-switch-face {

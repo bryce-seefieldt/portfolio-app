@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { ControlButton } from "./ControlButton";
 import { ThemeToggle } from "./ThemeToggle";
 import { DOCS_BASE_URL, GITHUB_BASE_URL } from "@/lib/config";
+import Link from "next/link";
 
 /**
  * NavigationEnhanced Component
@@ -27,14 +27,18 @@ interface NavLinkProps {
 }
 
 function NavLink({ href, children, onClick }: NavLinkProps) {
+  if (onClick) {
+    return (
+      <Link href={href} onClick={onClick} className="control-link">
+        {children}
+      </Link>
+    );
+  }
+
   return (
-    <Link
-      href={href}
-      onClick={onClick}
-      className="control-button control-button--compact type-label"
-    >
+    <ControlButton href={href} className="control-button--compact">
       {children}
-    </Link>
+    </ControlButton>
   );
 }
 
