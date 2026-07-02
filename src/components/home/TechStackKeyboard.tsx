@@ -246,20 +246,22 @@ const CATEGORY_COLORS: Record<StackKeyCategory, { label: string }> = {
   tooling: { label: "TOOLING" },
 };
 
+const HERO_STACK_KEYS = STACK_KEYS.filter((key) => key.id !== "claude");
+
 function getLegendInkVar(capRole: string) {
   return `var(${capRole}-ink)`;
 }
 
 export function TechStackKeyboard() {
-  const [selectedId, setSelectedId] = useState(STACK_KEYS[0]?.id ?? "");
+  const [selectedId, setSelectedId] = useState(HERO_STACK_KEYS[0]?.id ?? "");
   const groupId = useId();
 
   const selectedKey = useMemo(() => {
-    return STACK_KEYS.find((key) => key.id === selectedId) ?? STACK_KEYS[0];
+    return HERO_STACK_KEYS.find((key) => key.id === selectedId) ?? HERO_STACK_KEYS[0];
   }, [selectedId]);
 
   const matrixKeys = useMemo(() => {
-    return STACK_KEYS.map((key) => ({
+    return HERO_STACK_KEYS.map((key) => ({
       id: key.id,
       legend: key.legend,
       capColor: `var(${key.capRole})`,
@@ -274,42 +276,42 @@ export function TechStackKeyboard() {
   const handleKeyDown = (event: React.KeyboardEvent, currentIndex: number) => {
     if (event.key === " " || event.key === "Enter") {
       event.preventDefault();
-      // eslint-disable-next-line security/detect-object-injection -- currentIndex is computed from controlled key-navigation flow and bounded by STACK_KEYS length.
-      setSelectedId(STACK_KEYS[currentIndex]?.id ?? "");
+      // eslint-disable-next-line security/detect-object-injection -- currentIndex is computed from controlled key-navigation flow and bounded by HERO_STACK_KEYS length.
+      setSelectedId(HERO_STACK_KEYS[currentIndex]?.id ?? "");
       return;
     }
 
     let nextIndex = currentIndex;
     if (event.key === "ArrowRight" || event.key === "ArrowDown") {
-      nextIndex = (currentIndex + 1) % STACK_KEYS.length;
+      nextIndex = (currentIndex + 1) % HERO_STACK_KEYS.length;
     } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
-      nextIndex = (currentIndex - 1 + STACK_KEYS.length) % STACK_KEYS.length;
+      nextIndex = (currentIndex - 1 + HERO_STACK_KEYS.length) % HERO_STACK_KEYS.length;
     } else if (event.key === "Home") {
       nextIndex = 0;
     } else if (event.key === "End") {
-      nextIndex = STACK_KEYS.length - 1;
+      nextIndex = HERO_STACK_KEYS.length - 1;
     } else {
       return;
     }
 
     event.preventDefault();
-    // eslint-disable-next-line security/detect-object-injection -- nextIndex is derived from bounded modulo/home/end logic over STACK_KEYS.
-    setSelectedId(STACK_KEYS[nextIndex]?.id ?? "");
+    // eslint-disable-next-line security/detect-object-injection -- nextIndex is derived from bounded modulo/home/end logic over HERO_STACK_KEYS.
+    setSelectedId(HERO_STACK_KEYS[nextIndex]?.id ?? "");
   };
 
   return (
     <div className="grid gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:items-start">
-      <div role="radiogroup" aria-labelledby={groupId}>
+      <div role="radiogroup" aria-labelledby={groupId} className="tech-stack-keyboard-well">
         <span id={groupId} className="sr-only">
           Tech stack technologies
         </span>
         <Keypad
           label="TECH STACK / KEYBOARD"
-          columns={5}
+          columns={4}
           keys={matrixKeys}
           getKeyButtonProps={(key, index) => {
-            // eslint-disable-next-line security/detect-object-injection -- index is row-major index over in-memory STACK_KEYS.
-            const keyData = STACK_KEYS[index];
+            // eslint-disable-next-line security/detect-object-injection -- index is row-major index over in-memory HERO_STACK_KEYS.
+            const keyData = HERO_STACK_KEYS[index];
             const isActive = key.id === selectedKey.id;
             const categoryLabel = keyData ? CATEGORY_COLORS[keyData.category]?.label : undefined;
             return {
@@ -331,7 +333,7 @@ export function TechStackKeyboard() {
           </LabelTag>
 
           <div className="space-y-4">
-            {STACK_KEYS.map((key) => (
+            {HERO_STACK_KEYS.map((key) => (
               <p
                 key={key.id}
                 className={`type-body crt-screen__detail ${

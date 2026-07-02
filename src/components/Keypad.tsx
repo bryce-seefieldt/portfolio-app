@@ -38,12 +38,19 @@ export function Keypad({
   getKeyButtonProps,
 }: KeypadProps) {
   const gridStyle = {
+    display: "inline-grid",
+    width: "max-content",
     gridTemplateColumns: `repeat(${columns}, var(--keypad-unit-pitch-x))`,
+  } as CSSProperties;
+
+  const shellStyle = {
+    width: "fit-content",
+    maxWidth: "100%",
   } as CSSProperties;
 
   return (
     <Panel label={label} variant="inset" className={className}>
-      <div className="keypad-shell">
+      <div className="keypad-shell" style={shellStyle}>
         <div className="keypad-grid" style={gridStyle}>
           {keys.map((key, index) => {
             const span = getSpan(key.size);
