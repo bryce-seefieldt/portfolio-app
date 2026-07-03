@@ -1,11 +1,10 @@
 "use client";
 
 import { useId, useMemo, useState } from "react";
+import { KeycapLegend } from "@/components/KeycapLegend";
 import { Keypad } from "@/components/Keypad";
 import { LabelTag } from "@/components/LabelTag";
 import { Panel } from "@/components/Panel";
-import type { ReactNode } from "react";
-import * as Icons from "@/icons/TechStackIcons";
 
 export type StackKeyCategory = "languages" | "frontend" | "backend" | "data" | "cloud" | "tooling";
 
@@ -14,7 +13,6 @@ export type StackKey = {
   name: string;
   category: StackKeyCategory;
   capRole: string;
-  legend: ReactNode;
   blurb: string;
   size?: "1u" | "1.25u" | "1.5u" | "2u";
 };
@@ -26,7 +24,6 @@ const STACK_KEYS: StackKey[] = [
     name: "TypeScript",
     category: "languages",
     capRole: "--key-primary",
-    legend: <Icons.TypeScriptIcon className="h-5 w-5" />,
     blurb:
       "My primary production language; everything I ship runs on it, in strict mode, because I want the compiler catching my mistakes before a user does.",
     size: "1u",
@@ -36,7 +33,6 @@ const STACK_KEYS: StackKey[] = [
     name: "JavaScript",
     category: "languages",
     capRole: "--key-primary",
-    legend: <Icons.JavaScriptIcon className="h-5 w-5" />,
     blurb:
       "The foundation underneath the TypeScript, and still where I reach when I want something small and direct.",
     size: "1u",
@@ -46,7 +42,6 @@ const STACK_KEYS: StackKey[] = [
     name: "Python",
     category: "languages",
     capRole: "--key-primary",
-    legend: <Icons.PythonIcon className="h-5 w-5" />,
     blurb:
       "My go-to for scripting, automation, and anything data-shaped that does not need a front end.",
     size: "1u",
@@ -56,7 +51,6 @@ const STACK_KEYS: StackKey[] = [
     name: "Java",
     category: "languages",
     capRole: "--key-primary",
-    legend: <Icons.JavaLegend className="h-5 w-5" />,
     blurb:
       "Where I learned to think in objects and systems; two full terms of OOP plus Spring, a neural-net build, and an open-source contribution.",
     size: "1u",
@@ -67,7 +61,6 @@ const STACK_KEYS: StackKey[] = [
     name: "React",
     category: "frontend",
     capRole: "--key-secondary",
-    legend: <Icons.ReactIcon className="h-5 w-5" />,
     blurb:
       "The library I build interfaces in, components, state, and hooks, and the one I am most fluent in.",
     size: "1u",
@@ -77,7 +70,6 @@ const STACK_KEYS: StackKey[] = [
     name: "Next.js",
     category: "frontend",
     capRole: "--key-secondary",
-    legend: <Icons.NextJsIcon className="h-5 w-5" />,
     blurb:
       "The framework my production site runs on; App Router, server components, and static generation doing the heavy lifting.",
     size: "1u",
@@ -87,7 +79,6 @@ const STACK_KEYS: StackKey[] = [
     name: "Angular",
     category: "frontend",
     capRole: "--key-secondary",
-    legend: <Icons.AngularIcon className="h-5 w-5" />,
     blurb:
       "A second framework in my toolkit, useful for understanding how the other half of the ecosystem thinks.",
     size: "1u",
@@ -97,7 +88,6 @@ const STACK_KEYS: StackKey[] = [
     name: "Tailwind",
     category: "frontend",
     capRole: "--key-secondary",
-    legend: <Icons.TailwindIcon className="h-5 w-5" />,
     blurb:
       "How I style without leaving the markup; a design-token layer that keeps a whole site visually consistent.",
     size: "1u",
@@ -108,7 +98,6 @@ const STACK_KEYS: StackKey[] = [
     name: "Node.js",
     category: "backend",
     capRole: "--key-tertiary",
-    legend: <Icons.NodeJsIcon className="h-5 w-5" />,
     blurb:
       "The runtime under my APIs and tooling, and the reason my front-end and back-end speak the same language.",
     size: "1u",
@@ -118,7 +107,6 @@ const STACK_KEYS: StackKey[] = [
     name: "REST",
     category: "backend",
     capRole: "--key-tertiary",
-    legend: <Icons.RestLegend className="h-5 w-5" />,
     blurb:
       "How I design services to talk to each other: predictable endpoints, clear contracts, nothing clever for its own sake.",
     size: "1u",
@@ -129,7 +117,6 @@ const STACK_KEYS: StackKey[] = [
     name: "PostgreSQL",
     category: "data",
     capRole: "--key2-teal",
-    legend: <Icons.PostgreSQLIcon className="h-5 w-5" />,
     blurb:
       "My default relational database; where I model data properly and let constraints do their job.",
     size: "1u",
@@ -139,7 +126,6 @@ const STACK_KEYS: StackKey[] = [
     name: "SQL Server",
     category: "data",
     capRole: "--key2-teal",
-    legend: <Icons.SQLServerLegend className="h-5 w-5" />,
     blurb:
       "The enterprise database I rebuilt a five-office manual report on top of, turning 45-plus weekly hours into an automated pipeline.",
     size: "1u",
@@ -149,7 +135,6 @@ const STACK_KEYS: StackKey[] = [
     name: "MongoDB",
     category: "data",
     capRole: "--key2-teal",
-    legend: <Icons.MongoDBIcon className="h-5 w-5" />,
     blurb:
       "My reach-for when the data is document-shaped and a rigid schema would only get in the way.",
     size: "1u",
@@ -160,7 +145,6 @@ const STACK_KEYS: StackKey[] = [
     name: "AWS",
     category: "cloud",
     capRole: "--key2-blue",
-    legend: <Icons.AWSLegend className="h-5 w-5" />,
     blurb:
       "Where I am building a containerized microservice right now: a REST API on ECS, secured with Cognito and JWT.",
     size: "1u",
@@ -170,7 +154,6 @@ const STACK_KEYS: StackKey[] = [
     name: "Azure",
     category: "cloud",
     capRole: "--key2-blue",
-    legend: <Icons.AzureLegend className="h-5 w-5" />,
     blurb:
       "The cloud I ran enterprise infrastructure on at OCAD, migrating 2,500 users with Entra ID and Intune.",
     size: "1u",
@@ -180,7 +163,6 @@ const STACK_KEYS: StackKey[] = [
     name: "Vercel",
     category: "cloud",
     capRole: "--key2-blue",
-    legend: <Icons.VercelIcon className="h-5 w-5" />,
     blurb:
       "Where my production site actually lives and ships, with preview, staging, and production deploys on every commit.",
     size: "1u",
@@ -190,7 +172,6 @@ const STACK_KEYS: StackKey[] = [
     name: "Docker",
     category: "cloud",
     capRole: "--key2-blue",
-    legend: <Icons.DockerIcon className="h-5 w-5" />,
     blurb: "How I package services so they run the same on my machine, in CI, and in the cloud.",
     size: "1u",
   },
@@ -200,7 +181,6 @@ const STACK_KEYS: StackKey[] = [
     name: "Git",
     category: "tooling",
     capRole: "--key-neutral",
-    legend: <Icons.GitIcon className="h-5 w-5" />,
     blurb:
       "Every change I make is a small, reviewed commit on a short-lived branch; version control is a discipline, not an afterthought.",
     size: "1u",
@@ -210,7 +190,6 @@ const STACK_KEYS: StackKey[] = [
     name: "GitHub",
     category: "tooling",
     capRole: "--key-neutral",
-    legend: <Icons.GitHubIcon className="h-5 w-5" />,
     blurb:
       "Where my work is public and my pipeline lives: Actions running tests, scans, and quality gates on every pull request.",
     size: "1u",
@@ -220,7 +199,6 @@ const STACK_KEYS: StackKey[] = [
     name: "Linux",
     category: "tooling",
     capRole: "--key-neutral",
-    legend: <Icons.LinuxIcon className="h-5 w-5" />,
     blurb:
       "My development environment; I learned the command line before the GUI and I have never really left it.",
     size: "1u",
@@ -230,7 +208,6 @@ const STACK_KEYS: StackKey[] = [
     name: "Claude Code",
     category: "tooling",
     capRole: "--key-neutral",
-    legend: <Icons.ClaudeCodeLegend className="h-5 w-5" />,
     blurb:
       "My AI pair, used like a sharp colleague: fast, capable, and always reviewed, never shipped unexamined.",
     size: "2u",
@@ -246,7 +223,32 @@ const CATEGORY_COLORS: Record<StackKeyCategory, { label: string }> = {
   tooling: { label: "TOOLING" },
 };
 
-const HERO_STACK_KEYS = STACK_KEYS.filter((key) => key.id !== "claude");
+const HERO_STACK_ORDER = [
+  "typescript",
+  "javascript",
+  "python",
+  "java",
+  "react",
+  "nextjs",
+  "angular",
+  "tailwind",
+  "nodejs",
+  "rest",
+  "postgresql",
+  "sqlserver",
+  "mongodb",
+  "git",
+  "github",
+  "linux",
+  "aws",
+  "azure",
+  "vercel",
+  "docker",
+] as const;
+
+const HERO_STACK_KEYS = HERO_STACK_ORDER.map((id) =>
+  STACK_KEYS.find((key) => key.id === id),
+).filter((key): key is StackKey => Boolean(key));
 
 function getLegendInkVar(capRole: string) {
   return `var(${capRole}-ink)`;
@@ -263,7 +265,7 @@ export function TechStackKeyboard() {
   const matrixKeys = useMemo(() => {
     return HERO_STACK_KEYS.map((key) => ({
       id: key.id,
-      legend: key.legend,
+      legend: <KeycapLegend id={key.id} />,
       capColor: `var(${key.capRole})`,
       legendColor: getLegendInkVar(key.capRole),
       size: key.size,

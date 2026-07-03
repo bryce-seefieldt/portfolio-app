@@ -4,12 +4,14 @@ import { DeployPipeline } from "@/components/DeployPipeline";
 import { Dial } from "@/components/Dial";
 import { GoldStandardBadge } from "@/components/GoldStandardBadge";
 import { Keycap } from "@/components/Keycap";
+import { KeycapLegend } from "@/components/KeycapLegend";
 import { Keypad } from "@/components/Keypad";
 import { LabelTag } from "@/components/LabelTag";
 import { Panel } from "@/components/Panel";
 import { Readout } from "@/components/Readout";
 import { Section } from "@/components/Section";
 import { VerificationBadge } from "@/components/VerificationBadge";
+import { LOGO_REGISTRY } from "@/icons/logo-registry";
 
 const LIGHT_PALETTE = [
   ["bg", "#E8E2D0"],
@@ -289,35 +291,46 @@ export default function DesignTokensPreviewPage() {
   ];
 
   const matrixKeyboard = [
-    { id: "typescript", legend: "TS", subLegend: "LANG", category: "languages" },
-    { id: "javascript", legend: "JS", subLegend: "LANG", category: "languages" },
-    { id: "python", legend: "PY", subLegend: "LANG", category: "languages" },
-    { id: "java", legend: "JAVA", subLegend: "LANG", category: "languages" },
-    { id: "react", legend: "RE", subLegend: "FRONT", category: "frontend" },
-    { id: "nextjs", legend: "NX", subLegend: "FRONT", category: "frontend" },
-    { id: "angular", legend: "NG", subLegend: "FRONT", category: "frontend" },
-    { id: "tailwind", legend: "TW", subLegend: "FRONT", category: "frontend" },
-    { id: "nodejs", legend: "NODE", subLegend: "BACK", category: "backend" },
-    { id: "rest", legend: "REST", subLegend: "BACK", category: "backend" },
-    { id: "postgresql", legend: "PG", subLegend: "DATA", category: "data" },
-    { id: "sqlserver", legend: "SQL", subLegend: "DATA", category: "data" },
-    { id: "mongodb", legend: "MDB", subLegend: "DATA", category: "data" },
-    { id: "aws", legend: "AWS", subLegend: "CLOUD", category: "cloud" },
-    { id: "azure", legend: "AZ", subLegend: "CLOUD", category: "cloud" },
-    { id: "vercel", legend: "VC", subLegend: "CLOUD", category: "cloud" },
-    { id: "docker", legend: "DKR", subLegend: "CLOUD", category: "cloud" },
-    { id: "git", legend: "GIT", subLegend: "TOOL", category: "tooling" },
-    { id: "github", legend: "GH", subLegend: "TOOL", category: "tooling" },
-    { id: "linux", legend: "LNX", subLegend: "TOOL", category: "tooling" },
-    { id: "claude", legend: "CLAUDE", subLegend: "TOOL", category: "tooling", size: "2u" as const },
+    { id: "typescript", category: "languages" },
+    { id: "javascript", category: "languages" },
+    { id: "python", category: "languages" },
+    { id: "java", category: "languages" },
+    { id: "react", category: "frontend" },
+    { id: "nextjs", category: "frontend" },
+    { id: "angular", category: "frontend" },
+    { id: "tailwind", category: "frontend" },
+    { id: "nodejs", category: "backend" },
+    { id: "rest", category: "backend" },
+    { id: "postgresql", category: "data" },
+    { id: "sqlserver", category: "data" },
+    { id: "mongodb", category: "data" },
+    { id: "git", category: "tooling" },
+    { id: "github", category: "tooling" },
+    { id: "linux", category: "tooling" },
+    { id: "aws", category: "cloud" },
+    { id: "azure", category: "cloud" },
+    { id: "vercel", category: "cloud" },
+    { id: "docker", category: "cloud" },
+    { id: "claude", category: "tooling", size: "2u" as const },
   ].map((key) => {
     const tokens = CATEGORY_TOKEN_MAP[key.category as keyof typeof CATEGORY_TOKEN_MAP];
     return {
       ...key,
+      legend: <KeycapLegend id={key.id} />,
+      subLegend: LOGO_REGISTRY[key.id]?.label,
       capColor: `var(${tokens.cap})`,
       legendColor: `var(${tokens.ink})`,
     };
   });
+
+  const legendBoardKeys = Object.values(LOGO_REGISTRY).map((entry) => ({
+    id: `legend-${entry.id}`,
+    legend: <KeycapLegend id={entry.id} />,
+    subLegend: entry.label,
+    capColor: "#2A2722",
+    legendColor: "#E8E2D0",
+    size: entry.id === "claude" ? ("2u" as const) : ("1u" as const),
+  }));
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6">
@@ -490,6 +503,15 @@ export default function DesignTokensPreviewPage() {
               key.
             </p>
             <Keypad label="MINI KEYBOARD / DEPTH REBUILD" keys={miniKeyboard} columns={5} />
+          </div>
+
+          <div className="space-y-3">
+            <h3 className="type-h3 text-ink">Legend optical scale board</h3>
+            <p className="type-caption text-ink-muted">
+              Monochrome legend calibration board used to tune icon silhouette weight before hero
+              deployment.
+            </p>
+            <Keypad label="LEGEND BOARD / MONO SILHOUETTES" keys={legendBoardKeys} columns={5} />
           </div>
 
           <div className="space-y-3">
