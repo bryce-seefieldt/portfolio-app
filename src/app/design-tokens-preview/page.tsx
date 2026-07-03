@@ -4,12 +4,14 @@ import { DeployPipeline } from "@/components/DeployPipeline";
 import { Dial } from "@/components/Dial";
 import { GoldStandardBadge } from "@/components/GoldStandardBadge";
 import { Keycap } from "@/components/Keycap";
+import { KeycapLegend } from "@/components/KeycapLegend";
 import { Keypad } from "@/components/Keypad";
 import { LabelTag } from "@/components/LabelTag";
 import { Panel } from "@/components/Panel";
 import { Readout } from "@/components/Readout";
 import { Section } from "@/components/Section";
 import { VerificationBadge } from "@/components/VerificationBadge";
+import { LOGO_REGISTRY } from "@/icons/logo-registry";
 
 const LIGHT_PALETTE = [
   ["bg", "#E8E2D0"],
@@ -78,6 +80,15 @@ const KEY_TOKENS_LIGHT_SECONDARY: readonly TokenEntry[] = [
   { token: "--key2-ochre", bg: "#A67D2E", legend: "#181109" },
   { token: "--key2-mauve", bg: "#8B6677", legend: "#FFFEFE" },
 ];
+
+const CATEGORY_TOKEN_MAP = {
+  languages: { cap: "--key-primary", ink: "--key-primary-ink" },
+  frontend: { cap: "--key-secondary", ink: "--key-secondary-ink" },
+  backend: { cap: "--key-tertiary", ink: "--key-tertiary-ink" },
+  data: { cap: "--key2-teal", ink: "--key2-teal-ink" },
+  cloud: { cap: "--key2-blue", ink: "--key2-blue-ink" },
+  tooling: { cap: "--key-neutral", ink: "--key-neutral-ink" },
+} as const;
 
 function hexToRgb(hex: string) {
   const normalized = hex.replace("#", "");
@@ -279,6 +290,48 @@ export default function DesignTokensPreviewPage() {
     },
   ];
 
+  const matrixKeyboard = [
+    { id: "typescript", category: "languages" },
+    { id: "javascript", category: "languages" },
+    { id: "python", category: "languages" },
+    { id: "java", category: "languages" },
+    { id: "react", category: "frontend" },
+    { id: "nextjs", category: "frontend" },
+    { id: "angular", category: "frontend" },
+    { id: "tailwind", category: "frontend" },
+    { id: "nodejs", category: "backend" },
+    { id: "rest", category: "backend" },
+    { id: "postgresql", category: "data" },
+    { id: "sqlserver", category: "data" },
+    { id: "mongodb", category: "data" },
+    { id: "git", category: "tooling" },
+    { id: "github", category: "tooling" },
+    { id: "linux", category: "tooling" },
+    { id: "aws", category: "cloud" },
+    { id: "azure", category: "cloud" },
+    { id: "vercel", category: "cloud" },
+    { id: "docker", category: "cloud" },
+    { id: "claude", category: "tooling", size: "2u" as const },
+  ].map((key) => {
+    const tokens = CATEGORY_TOKEN_MAP[key.category as keyof typeof CATEGORY_TOKEN_MAP];
+    return {
+      ...key,
+      legend: <KeycapLegend id={key.id} />,
+      subLegend: LOGO_REGISTRY[key.id]?.label,
+      capColor: `var(${tokens.cap})`,
+      legendColor: `var(${tokens.ink})`,
+    };
+  });
+
+  const legendBoardKeys = Object.values(LOGO_REGISTRY).map((entry) => ({
+    id: `legend-${entry.id}`,
+    legend: <KeycapLegend id={entry.id} />,
+    subLegend: entry.label,
+    capColor: "#2A2722",
+    legendColor: "#E8E2D0",
+    size: entry.id === "claude" ? ("2u" as const) : ("1u" as const),
+  }));
+
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6">
       {/* Governance: this page is the canonical rendered gallery for reusable design-system components. */}
@@ -450,6 +503,24 @@ export default function DesignTokensPreviewPage() {
               key.
             </p>
             <Keypad label="MINI KEYBOARD / DEPTH REBUILD" keys={miniKeyboard} columns={5} />
+          </div>
+
+          <div className="space-y-3">
+            <h3 className="type-h3 text-ink">Legend optical scale board</h3>
+            <p className="type-caption text-ink-muted">
+              Monochrome legend calibration board used to tune icon silhouette weight before hero
+              deployment.
+            </p>
+            <Keypad label="LEGEND BOARD / MONO SILHOUETTES" keys={legendBoardKeys} columns={5} />
+          </div>
+
+          <div className="space-y-3">
+            <h3 className="type-h3 text-ink">Equal-width matrix keypad (Option C)</h3>
+            <p className="type-caption text-ink-muted">
+              Five-column matrix with category-by-color mapping and a 2u Claude key anchoring the
+              final row.
+            </p>
+            <Keypad label="MATRIX / CATEGORY COLOR MAP" keys={matrixKeyboard} columns={5} />
           </div>
         </div>
       </Panel>
