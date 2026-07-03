@@ -56,10 +56,10 @@ describe("ProjectsPage", () => {
 
     render(<ProjectsPage />);
 
-    expect(screen.getByText("Projects")).toBeInTheDocument();
+    expect(screen.getByText("The work.")).toBeInTheDocument();
     expect(screen.getAllByText("Portfolio App").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Featured").length).toBeGreaterThan(0);
-    expect(screen.getByText("Demo")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "DEMO" })).toBeInTheDocument();
   });
 
   it("should omit tags and repo link when missing", async () => {
@@ -86,6 +86,6 @@ describe("ProjectsPage", () => {
 
     render(<ProjectsPage />);
 
-    expect(screen.queryByText("Repo")).toBeNull();
+    expect(screen.queryByRole("link", { name: "REPO" })).toBeNull();
   });
 });

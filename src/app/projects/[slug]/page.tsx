@@ -1,28 +1,17 @@
-// src/app/projects/[slug]/page.tsx
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Section } from "@/components/Section";
-import { Callout } from "@/components/Callout";
 import { BadgeGroup } from "@/components/BadgeGroup";
+import { Callout } from "@/components/Callout";
+import { ControlButton } from "@/components/ControlButton";
 import { EvidenceBlock } from "@/components/EvidenceBlock";
+import { LabelTag } from "@/components/LabelTag";
+import { Panel } from "@/components/Panel";
 import { ScrollFadeIn } from "@/components/ScrollFadeIn";
 import { getProjectBySlug, PROJECTS } from "@/data/projects";
 import { docsUrl, githubUrl, SITE_URL } from "@/lib/config";
 
-/**
- * ISR (Incremental Static Regeneration) Strategy:
- * - generateStaticParams() pre-renders all project pages at build time
- * - revalidate: 3600 enables background revalidation every 1 hour
- * - Benefits: Fast initial loads, SEO-friendly, updates without full rebuild
- * - Cache-Control: max-age=3600, stale-while-revalidate=86400 (browser cache 1hr, serve stale 24hr)
- */
-export const revalidate = 3600; // Revalidate every 1 hour (ISR)
+export const revalidate = 3600;
 
-/**
- * Pre-render all project pages at build time.
- * Extracts all project slugs from the registry and generates static HTML.
- */
 export async function generateStaticParams() {
   return PROJECTS.map((project) => ({
     slug: project.slug,
@@ -67,265 +56,252 @@ export async function generateMetadata({
 export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const project = getProjectBySlug(slug);
+
   if (!project) return notFound();
 
   const isGoldStandard = slug === "portfolio-app";
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-10 pb-6">
       <ScrollFadeIn>
         <header className="flex flex-col gap-3">
-          <div className="text-sm text-zinc-600 dark:text-zinc-400">
-            <Link className="underline hover:text-zinc-950 dark:hover:text-white" href="/projects">
-              Projects
-            </Link>{" "}
-            <span className="text-zinc-400 dark:text-zinc-600">/</span> {project.title}
-          </div>
+          <LabelTag>{`CASE FILE / ${project.slug.toUpperCase()}`}</LabelTag>
+          <h1 className="type-h1 text-ink">{project.title}</h1>
+          <p className="text-ink-muted max-w-3xl text-sm">{project.summary}</p>
 
           <BadgeGroup project={project} />
 
-          <h1 className="text-3xl font-semibold tracking-tight">{project.title}</h1>
-          <p className="max-w-3xl text-zinc-700 dark:text-zinc-300">{project.summary}</p>
-
-          <div className="flex flex-wrap items-center gap-3 text-sm">
+          <div className="flex flex-wrap gap-2">
             {project.repoUrl ? (
-              <a
-                className="underline"
-                href={project.repoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Repo
-              </a>
-            ) : (
-              <span className="text-zinc-500 dark:text-zinc-400">Repo: (add when ready)</span>
-            )}
+              <ControlButton href={project.repoUrl} external>
+                REPO
+              </ControlButton>
+            ) : null}
             {project.demoUrl ? (
-              <a
-                className="underline"
-                href={project.demoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Demo
-              </a>
-            ) : (
-              <span className="text-zinc-500 dark:text-zinc-400">Demo: (add when deployed)</span>
-            )}
+              <ControlButton href={project.demoUrl} external>
+                DEMO
+              </ControlButton>
+            ) : null}
+            <ControlButton href="/projects">BACK TO PROJECTS</ControlButton>
           </div>
         </header>
       </ScrollFadeIn>
 
       {isGoldStandard ? (
         <>
-          <ScrollFadeIn>
-            <Section title="What This Project Proves">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <h3 className="font-medium text-zinc-900 dark:text-white">
-                    Technical Competency
-                  </h3>
-                  <ul className="mt-2 space-y-1 text-sm text-zinc-700 dark:text-zinc-300">
-                    <li>• Next.js 15+ (App Router, React Server Components)</li>
-                    <li>• TypeScript 5+ (strict mode)</li>
-                    <li>• Tailwind CSS 4 (responsive design)</li>
-                    <li>• Evidence-first UX</li>
-                  </ul>
-                </div>
+          <ScrollFadeIn delay={60}>
+            <section className="space-y-4">
+              <LabelTag>MODULE 00 / WHAT THIS PROVES</LabelTag>
+              <h2 className="type-h2 text-ink">Project capability profile.</h2>
+              <Panel label="CARD / WHAT THIS PROVES" variant="default">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <Panel label="SIGNAL / TECHNICAL COMPETENCY" variant="inset" showRivets={false}>
+                    <h3 className="text-ink text-base font-medium">Technical competency</h3>
+                    <ul className="text-ink-muted mt-2 space-y-1 text-sm">
+                      <li>• Next.js 15+ (App Router, React Server Components)</li>
+                      <li>• TypeScript 5+ (strict mode)</li>
+                      <li>• Tailwind CSS 4 (responsive design)</li>
+                      <li>• Evidence-first UX</li>
+                    </ul>
+                  </Panel>
 
-                <div>
-                  <h3 className="font-medium text-zinc-900 dark:text-white">
-                    Engineering Discipline
-                  </h3>
-                  <ul className="mt-2 space-y-1 text-sm text-zinc-700 dark:text-zinc-300">
-                    <li>• CI quality gates (lint, format, typecheck, secrets scan)</li>
-                    <li>• Automated smoke testing (Playwright)</li>
-                    <li>• Frozen lockfile builds (determinism)</li>
-                    <li>• PR-only merge discipline</li>
-                  </ul>
-                </div>
+                  <Panel label="SIGNAL / ENGINEERING DISCIPLINE" variant="inset" showRivets={false}>
+                    <h3 className="text-ink text-base font-medium">Engineering discipline</h3>
+                    <ul className="text-ink-muted mt-2 space-y-1 text-sm">
+                      <li>• CI quality gates (lint, format, typecheck, secrets scan)</li>
+                      <li>• Automated smoke testing (Playwright)</li>
+                      <li>• Frozen lockfile builds (determinism)</li>
+                      <li>• PR-only merge discipline</li>
+                    </ul>
+                  </Panel>
 
-                <div>
-                  <h3 className="font-medium text-zinc-900 dark:text-white">Security Awareness</h3>
-                  <ul className="mt-2 space-y-1 text-sm text-zinc-700 dark:text-zinc-300">
-                    <li>• Public-safe by design (no secrets)</li>
-                    <li>• CodeQL + Dependabot (supply chain)</li>
-                    <li>• Least-privilege CI permissions</li>
-                    <li>• Secrets incident response runbook</li>
-                  </ul>
-                </div>
+                  <Panel label="SIGNAL / SECURITY AWARENESS" variant="inset" showRivets={false}>
+                    <h3 className="text-ink text-base font-medium">Security awareness</h3>
+                    <ul className="text-ink-muted mt-2 space-y-1 text-sm">
+                      <li>• Public-safe by design (no secrets)</li>
+                      <li>• CodeQL + Dependabot (supply chain)</li>
+                      <li>• Least-privilege CI permissions</li>
+                      <li>• Secrets incident response runbook</li>
+                    </ul>
+                  </Panel>
 
-                <div>
-                  <h3 className="font-medium text-zinc-900 dark:text-white">
-                    Operational Maturity
-                  </h3>
-                  <ul className="mt-2 space-y-1 text-sm text-zinc-700 dark:text-zinc-300">
-                    <li>• Deploy/rollback runbooks</li>
-                    <li>• CI triage procedures</li>
-                    <li>• Vercel promotion gating</li>
-                    <li>• Evidence-based release notes</li>
-                  </ul>
+                  <Panel label="SIGNAL / OPERATIONAL MATURITY" variant="inset" showRivets={false}>
+                    <h3 className="text-ink text-base font-medium">Operational maturity</h3>
+                    <ul className="text-ink-muted mt-2 space-y-1 text-sm">
+                      <li>• Deploy/rollback runbooks</li>
+                      <li>• CI triage procedures</li>
+                      <li>• Vercel promotion gating</li>
+                      <li>• Evidence-based release notes</li>
+                    </ul>
+                  </Panel>
                 </div>
-              </div>
-            </Section>
-
-            <Section title="Evidence Artifacts">
-              <EvidenceBlock project={project} />
-            </Section>
+              </Panel>
+            </section>
           </ScrollFadeIn>
 
-          <ScrollFadeIn delay={200}>
-            <Section title="Verification Checklist">
-              <Callout type="info">
-                The following checklist allows a reviewer to verify gold standard claims in &lt; 5
-                minutes without running local builds.
-              </Callout>
-
-              <div className="mt-4 flex flex-col gap-3 text-sm text-zinc-700 dark:text-zinc-300">
-                <div>
-                  <strong>Enforced quality gates:</strong> Open{" "}
-                  <a
-                    className="underline"
-                    href={githubUrl("blob/main/.github/workflows/ci.yml")}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    .github/workflows/ci.yml
-                  </a>{" "}
-                  → see <code>quality</code>, <code>secrets-scan</code>, <code>build-and-test</code>
-                  , <code>codeql</code> jobs all required.
-                </div>
-
-                <div>
-                  <strong>PR discipline:</strong> Open{" "}
-                  <a
-                    className="underline"
-                    href={githubUrl("settings/branches")}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Branch Protection
-                  </a>{" "}
-                  → confirm require-PR + status-checks enabled.
-                </div>
-
-                <div>
-                  <strong>Secrets safety:</strong> Grep <code>src/</code> for API_KEY, PASSWORD,
-                  SECRET → zero matches expected. See{" "}
-                  <a
-                    className="underline"
-                    href={docsUrl("/docs/projects/portfolio-app/04-security#public-safety-rules")}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    public-safety rules
-                  </a>
-                  .
-                </div>
-
-                <div>
-                  <strong>Smoke tests:</strong> Check{" "}
-                  <a
-                    className="underline"
-                    href={githubUrl("actions")}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    recent CI runs
-                  </a>{" "}
-                  → see Playwright smoke tests passing post-build.
-                </div>
-
-                <div>
-                  <strong>Dependencies:</strong> Open{" "}
-                  <a
-                    className="underline"
-                    href={githubUrl("blob/main/package.json")}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    package.json
-                  </a>{" "}
-                  → see Next 15+, React 19, Tailwind 4, TypeScript 5.
-                </div>
-              </div>
-            </Section>
+          <ScrollFadeIn delay={120}>
+            <section className="space-y-4">
+              <LabelTag>MODULE 01 / EVIDENCE ARTIFACTS</LabelTag>
+              <h2 className="type-h2 text-ink">Inspectable evidence trail.</h2>
+              <Panel label="CARD / EVIDENCE ARTIFACTS" variant="default">
+                <EvidenceBlock project={project} />
+              </Panel>
+            </section>
           </ScrollFadeIn>
 
-          <ScrollFadeIn delay={300}>
-            <Section title="Tech Stack">
-              <div className="flex flex-wrap gap-2">
-                {[
-                  "Next.js 15+",
-                  "React 19",
-                  "TypeScript 5",
-                  "Tailwind CSS 4",
-                  "Playwright",
-                  "ESLint 9",
-                  "Prettier",
-                  "pnpm",
-                  "Vercel",
-                ].map((tech) => (
-                  <span
-                    key={tech}
-                    className="rounded-full border border-zinc-200 px-3 py-1 text-sm text-zinc-700 dark:border-zinc-800 dark:text-zinc-300"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </Section>
+          <ScrollFadeIn delay={180}>
+            <section className="space-y-4">
+              <LabelTag>MODULE 02 / VERIFICATION</LabelTag>
+              <h2 className="type-h2 text-ink">Five-minute verification checklist.</h2>
+              <Panel label="CARD / VERIFICATION CHECKLIST" variant="default">
+                <Callout type="info">
+                  The following checklist allows a reviewer to verify gold standard claims in &lt; 5
+                  minutes without running local builds.
+                </Callout>
+
+                <div className="mt-4 space-y-3">
+                  <Panel label="CHECK / QUALITY GATES" variant="inset" showRivets={false}>
+                    <p className="text-ink-muted mb-3 text-sm">
+                      Confirm required CI jobs for quality, secrets scan, build/test, and CodeQL.
+                    </p>
+                    <ControlButton href={githubUrl("blob/main/.github/workflows/ci.yml")} external>
+                      OPEN CI WORKFLOW
+                    </ControlButton>
+                  </Panel>
+
+                  <Panel label="CHECK / PR DISCIPLINE" variant="inset" showRivets={false}>
+                    <p className="text-ink-muted mb-3 text-sm">
+                      Confirm branch protection is configured for PR reviews plus required status
+                      checks.
+                    </p>
+                    <ControlButton href={githubUrl("settings/branches")} external>
+                      OPEN BRANCH PROTECTION
+                    </ControlButton>
+                  </Panel>
+
+                  <Panel label="CHECK / PUBLIC SAFETY" variant="inset" showRivets={false}>
+                    <p className="text-ink-muted mb-3 text-sm">
+                      Validate public-safe publication rules and secret-handling constraints.
+                    </p>
+                    <ControlButton
+                      href={docsUrl("/docs/projects/portfolio-app/04-security#public-safety-rules")}
+                      external
+                    >
+                      OPEN SAFETY RULES
+                    </ControlButton>
+                  </Panel>
+
+                  <Panel label="CHECK / SMOKE TESTS" variant="inset" showRivets={false}>
+                    <p className="text-ink-muted mb-3 text-sm">
+                      Inspect recent GitHub Actions runs and confirm Playwright smoke tests pass.
+                    </p>
+                    <ControlButton href={githubUrl("actions")} external>
+                      OPEN ACTIONS
+                    </ControlButton>
+                  </Panel>
+
+                  <Panel label="CHECK / DEPENDENCIES" variant="inset" showRivets={false}>
+                    <p className="text-ink-muted mb-3 text-sm">
+                      Verify stack versions in package metadata (Next, React, Tailwind, TypeScript).
+                    </p>
+                    <ControlButton href={githubUrl("blob/main/package.json")} external>
+                      OPEN PACKAGE.JSON
+                    </ControlButton>
+                  </Panel>
+                </div>
+              </Panel>
+            </section>
+          </ScrollFadeIn>
+
+          <ScrollFadeIn delay={220}>
+            <section className="space-y-4">
+              <LabelTag>MODULE 03 / TECH STACK</LabelTag>
+              <h2 className="type-h2 text-ink">Runtime stack snapshot.</h2>
+              <Panel label="CARD / TECH STACK" variant="default">
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    "Next.js 15+",
+                    "React 19",
+                    "TypeScript 5",
+                    "Tailwind CSS 4",
+                    "Playwright",
+                    "ESLint 9",
+                    "Prettier",
+                    "pnpm",
+                    "Vercel",
+                  ].map((tech) => (
+                    <LabelTag key={tech}>{tech}</LabelTag>
+                  ))}
+                </div>
+              </Panel>
+            </section>
           </ScrollFadeIn>
         </>
       ) : (
         <>
-          <ScrollFadeIn>
-            <Section
-              title="What this project proves"
-              subtitle="A reviewer-oriented proof checklist (expand as you mature)."
-            >
-              <ul className="list-disc pl-5 text-sm text-zinc-700 dark:text-zinc-300">
-                <li>Clear technical scope, boundaries, and design rationale.</li>
-                <li>Enterprise SDLC posture: PR discipline and CI quality gates.</li>
-                <li>Security-aware delivery: threat modeling and safe-publication rules.</li>
-                <li>Operational readiness: deploy/rollback/triage procedures where relevant.</li>
-              </ul>
-            </Section>
+          <ScrollFadeIn delay={60}>
+            <section className="space-y-4">
+              <LabelTag>MODULE 00 / WHAT THIS PROVES</LabelTag>
+              <h2 className="type-h2 text-ink">Project proof checklist.</h2>
+              <Panel label="CARD / WHAT THIS PROVES" variant="default">
+                <ul className="text-ink-muted list-disc space-y-2 pl-5 text-sm">
+                  <li>Clear technical scope, boundaries, and design rationale.</li>
+                  <li>Enterprise SDLC posture: PR discipline and CI quality gates.</li>
+                  <li>Security-aware delivery: threat modeling and safe-publication rules.</li>
+                  <li>Operational readiness: deploy/rollback/triage procedures where relevant.</li>
+                </ul>
+              </Panel>
+            </section>
           </ScrollFadeIn>
 
-          <ScrollFadeIn delay={100}>
-            <Section title="Evidence Artifacts">
-              <EvidenceBlock project={project} />
-            </Section>
+          <ScrollFadeIn delay={120}>
+            <section className="space-y-4">
+              <LabelTag>MODULE 01 / EVIDENCE ARTIFACTS</LabelTag>
+              <h2 className="type-h2 text-ink">Inspectable evidence trail.</h2>
+              <Panel label="CARD / EVIDENCE ARTIFACTS" variant="default">
+                <EvidenceBlock project={project} />
+              </Panel>
+            </section>
           </ScrollFadeIn>
 
-          <ScrollFadeIn delay={200}>
-            <Section
-              title="Technical summary (first-pass)"
-              subtitle="Keep this concise; link to dossiers for depth."
-            >
-              <div className="flex flex-col gap-2 text-sm text-zinc-700 dark:text-zinc-300">
-                <p>
-                  This page is intentionally structured to scale: project data will move into a
-                  validated registry, and evidence links will remain stable. Long-form technical
-                  details and operational artifacts live in the Documentation App to preserve a
-                  clean front-of-house experience.
-                </p>
-                <p className="text-zinc-600 dark:text-zinc-400">
-                  Next step: replace placeholder proof statements with project-specific evidence and
-                  add diagrams/screenshots where public-safe.
-                </p>
-              </div>
-            </Section>
+          <ScrollFadeIn delay={180}>
+            <section className="space-y-4">
+              <LabelTag>MODULE 02 / VERIFICATION</LabelTag>
+              <h2 className="type-h2 text-ink">Operational verification notes.</h2>
+              <Panel label="CARD / VERIFICATION" variant="default">
+                <div className="text-ink-muted space-y-2 text-sm">
+                  <p>
+                    This page is intentionally structured to scale: project data will move into a
+                    validated registry, and evidence links will remain stable. Long-form technical
+                    details and operational artifacts live in the Documentation App to preserve a
+                    clean front-of-house experience.
+                  </p>
+                  <p>
+                    Next step: replace placeholder proof statements with project-specific evidence
+                    and add diagrams/screenshots where public-safe.
+                  </p>
+                </div>
+              </Panel>
+            </section>
+          </ScrollFadeIn>
+
+          <ScrollFadeIn delay={220}>
+            <section className="space-y-4">
+              <LabelTag>MODULE 03 / TECH STACK</LabelTag>
+              <h2 className="type-h2 text-ink">Current stack markers.</h2>
+              <Panel label="CARD / TECH STACK" variant="default">
+                <div className="flex flex-wrap gap-2">
+                  {(project.tags?.length ? project.tags : ["Documentation in progress"]).map(
+                    (tag) => (
+                      <LabelTag key={`${project.slug}-${tag}`}>{tag}</LabelTag>
+                    ),
+                  )}
+                </div>
+              </Panel>
+            </section>
           </ScrollFadeIn>
         </>
       )}
-
-      <div className="flex flex-wrap items-center gap-3 text-sm">
-        <Link className="underline" href="/projects">
-          Back to projects
-        </Link>
-      </div>
     </div>
   );
 }

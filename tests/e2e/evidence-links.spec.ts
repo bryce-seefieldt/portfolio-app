@@ -3,6 +3,8 @@
 
 import { test, expect } from "@playwright/test";
 
+const evidenceModuleLocator = "text=MODULE 01 / EVIDENCE ARTIFACTS";
+
 test.describe("Evidence Link Resolution", () => {
   test.describe("Portfolio App Project Page", () => {
     test("should render project page without errors", async ({ page }) => {
@@ -18,8 +20,8 @@ test.describe("Evidence Link Resolution", () => {
     test("should render EvidenceBlock component", async ({ page }) => {
       await page.goto("/projects/portfolio-app");
 
-      // Verify "Evidence Artifacts" section exists
-      await expect(page.locator("text=Evidence Artifacts")).toBeVisible();
+      // Verify evidence module section exists.
+      await expect(page.locator(evidenceModuleLocator)).toBeVisible();
     });
 
     test("should display all evidence categories", async ({ page }) => {
@@ -77,7 +79,7 @@ test.describe("Evidence Link Resolution", () => {
 
       // Verify content is visible on mobile
       await expect(page.locator("h1")).toContainText("Portfolio App");
-      await expect(page.locator("text=Evidence Artifacts")).toBeVisible();
+      await expect(page.locator(evidenceModuleLocator)).toBeVisible();
     });
 
     test("should render on tablet viewport", async ({ page }) => {
@@ -87,7 +89,7 @@ test.describe("Evidence Link Resolution", () => {
 
       // Verify content is visible on tablet
       await expect(page.locator("h1")).toContainText("Portfolio App");
-      await expect(page.locator("text=Evidence Artifacts")).toBeVisible();
+      await expect(page.locator(evidenceModuleLocator)).toBeVisible();
     });
 
     test("should render on desktop viewport", async ({ page }) => {
@@ -97,7 +99,7 @@ test.describe("Evidence Link Resolution", () => {
 
       // Verify content is visible on desktop
       await expect(page.locator("h1")).toContainText("Portfolio App");
-      await expect(page.locator("text=Evidence Artifacts")).toBeVisible();
+      await expect(page.locator(evidenceModuleLocator)).toBeVisible();
     });
   });
 
@@ -137,7 +139,7 @@ test.describe("Evidence Link Resolution", () => {
 
       // Verify content is still visible
       await expect(page.locator("h1")).toContainText("Portfolio App");
-      await expect(page.locator("text=Evidence Artifacts")).toBeVisible();
+      await expect(page.locator(evidenceModuleLocator)).toBeVisible();
     });
 
     test("should render correctly with light mode", async ({ page }) => {
@@ -147,7 +149,7 @@ test.describe("Evidence Link Resolution", () => {
 
       // Verify content is still visible
       await expect(page.locator("h1")).toContainText("Portfolio App");
-      await expect(page.locator("text=Evidence Artifacts")).toBeVisible();
+      await expect(page.locator(evidenceModuleLocator)).toBeVisible();
     });
   });
 
@@ -157,7 +159,7 @@ test.describe("Evidence Link Resolution", () => {
 
       // Verify consistent rendering across browsers
       await expect(page.locator("h1")).toContainText("Portfolio App");
-      await expect(page.locator("text=Evidence Artifacts")).toBeVisible();
+      await expect(page.locator(evidenceModuleLocator)).toBeVisible();
       await expect(page.getByText("Gold Standard", { exact: true }).first()).toBeVisible();
     });
   });
