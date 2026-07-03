@@ -82,7 +82,6 @@ export function ObliqueSurface({
           <>
             {slices}
             <span className="obl__top" aria-hidden="true">
-              <span className="obl__dish" />
               <span className="obl__glare" />
             </span>
             <span className="obl__legend-wrap">

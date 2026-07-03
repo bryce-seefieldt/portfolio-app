@@ -75,7 +75,7 @@
   --obl-depth: 6px;
   --obl-lean: 5px;
   --obl-taper: 0.14;
-  --obl-glare: 0.1;
+  --obl-glare: 0.11;
   --obl-gap: 0px;
   --obl-sock: 4px;
   --obl-slices: 16;
@@ -1183,15 +1183,6 @@ html:not(.light) .crt-screen__detail {
     inset 0 -1px 0 rgba(0, 0, 0, 0.36);
 }
 
-.obl__dish {
-  position: absolute;
-  inset: 8% 7% 18%;
-  border-radius: calc(var(--radius) - 3px);
-  background:
-    radial-gradient(circle at 50% 24%, rgba(255, 255, 255, 0.42), transparent 60%),
-    radial-gradient(circle at 50% 90%, rgba(0, 0, 0, 0.42), transparent 58%);
-}
-
 .obl__glare {
   position: absolute;
   inset: 8% 34% auto 8%;
@@ -1276,6 +1267,40 @@ html:not(.light) .crt-screen__detail {
   font-size: 0.72rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--topw) * 0.8);
+  height: calc(var(--toph) * 0.8);
+  color: color-mix(in srgb, var(--legend) 86%, black 14%);
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.2),
+    0 -1px 0 rgba(0, 0, 0, 0.36);
+}
+
+.keycap .obl__legend svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 0.5px 0 rgba(255, 255, 255, 0.2))
+    drop-shadow(0 -0.5px 0 rgba(0, 0, 0, 0.34));
+}
+
+.keycap .obl__legend svg path,
+.keycap .obl__legend svg polygon,
+.keycap .obl__legend svg rect,
+.keycap .obl__legend svg circle {
+  fill: currentColor;
+}
+
+.keycap .obl__legend svg text {
+  font-family: var(--font-departure-mono), var(--font-jetbrains-mono), monospace;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  paint-order: stroke;
+  stroke: rgba(0, 0, 0, 0.12);
+  stroke-width: 0.25px;
 }
 
 .keycap--1u {
