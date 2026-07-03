@@ -223,7 +223,32 @@ const CATEGORY_COLORS: Record<StackKeyCategory, { label: string }> = {
   tooling: { label: "TOOLING" },
 };
 
-const HERO_STACK_KEYS = STACK_KEYS.filter((key) => key.id !== "claude");
+const HERO_STACK_ORDER = [
+  "typescript",
+  "javascript",
+  "python",
+  "java",
+  "react",
+  "nextjs",
+  "angular",
+  "tailwind",
+  "nodejs",
+  "rest",
+  "postgresql",
+  "sqlserver",
+  "mongodb",
+  "git",
+  "github",
+  "linux",
+  "aws",
+  "azure",
+  "vercel",
+  "docker",
+] as const;
+
+const HERO_STACK_KEYS = HERO_STACK_ORDER.map((id) =>
+  STACK_KEYS.find((key) => key.id === id),
+).filter((key): key is StackKey => Boolean(key));
 
 function getLegendInkVar(capRole: string) {
   return `var(${capRole}-ink)`;

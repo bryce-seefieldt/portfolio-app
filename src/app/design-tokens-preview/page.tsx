@@ -304,13 +304,13 @@ export default function DesignTokensPreviewPage() {
     { id: "postgresql", category: "data" },
     { id: "sqlserver", category: "data" },
     { id: "mongodb", category: "data" },
+    { id: "git", category: "tooling" },
+    { id: "github", category: "tooling" },
+    { id: "linux", category: "tooling" },
     { id: "aws", category: "cloud" },
     { id: "azure", category: "cloud" },
     { id: "vercel", category: "cloud" },
     { id: "docker", category: "cloud" },
-    { id: "git", category: "tooling" },
-    { id: "github", category: "tooling" },
-    { id: "linux", category: "tooling" },
     { id: "claude", category: "tooling", size: "2u" as const },
   ].map((key) => {
     const tokens = CATEGORY_TOKEN_MAP[key.category as keyof typeof CATEGORY_TOKEN_MAP];

@@ -9,13 +9,11 @@ import {
   siMongodb,
   siNodedotjs,
   siNextdotjs,
-  siOpenjdk,
   siPostgresql,
   siPython,
   siReact,
   siTailwindcss,
   siTypescript,
-  siVercel,
 } from "simple-icons";
 
 export type LegendTier = "svg" | "mask" | "text";
@@ -30,7 +28,6 @@ export interface LogoEntry {
   note?: string;
 }
 
-const AZURE_TRIANGLE_PATH = "M12 2L22 22H2L12 2ZM12 7.8L16.2 16.2H7.8L12 7.8Z";
 const SQL_SERVER_PATH =
   "M12 2C7.3 2 4 3.6 4 5.8v12.4C4 20.4 7.3 22 12 22s8-1.6 8-3.8V5.8C20 3.6 16.7 2 12 2Zm0 1.8c3.8 0 6.2 1.2 6.2 2s-2.4 2-6.2 2-6.2-1.2-6.2-2 2.4-2 6.2-2Zm6.2 7.1v2.3c0 .8-2.4 2-6.2 2s-6.2-1.2-6.2-2v-2.3c1.6 1 4.1 1.5 6.2 1.5s4.6-.5 6.2-1.5Zm-6.2 9.3c-3.8 0-6.2-1.2-6.2-2v-2.3c1.6 1 4.1 1.5 6.2 1.5s4.6-.5 6.2-1.5v2.3c0 .8-2.4 2-6.2 2Z";
 
@@ -62,10 +59,10 @@ export const LOGO_REGISTRY: Record<string, LogoEntry> = {
   java: {
     id: "java",
     label: "Java",
-    tier: "svg",
-    asset: siOpenjdk.path,
+    tier: "mask",
+    asset: "/logos/vendor/java.svg",
     opticalScale: 1,
-    note: "OpenJDK mark from Simple Icons",
+    note: "Vendor-sourced Java logo asset",
   },
   react: {
     id: "react",
@@ -142,26 +139,26 @@ export const LOGO_REGISTRY: Record<string, LogoEntry> = {
   aws: {
     id: "aws",
     label: "AWS",
-    tier: "text",
-    text: "aws",
-    opticalScale: 1,
-    note: "Intentional lowercase wordmark",
+    tier: "mask",
+    asset: "/logos/vendor/aws.svg",
+    opticalScale: 0.95,
+    note: "Vendor-sourced AWS wordmark asset",
   },
   azure: {
     id: "azure",
     label: "Azure",
-    tier: "svg",
-    asset: AZURE_TRIANGLE_PATH,
+    tier: "mask",
+    asset: "/logos/vendor/azure.svg",
     opticalScale: 1,
-    note: "Custom monochrome Azure triangle mark",
+    note: "Vendor-sourced Azure logo asset",
   },
   vercel: {
     id: "vercel",
     label: "Vercel",
-    tier: "svg",
-    asset: siVercel.path,
+    tier: "mask",
+    asset: "/logos/vendor/vercel.svg",
     opticalScale: 1.05,
-    note: "Simple Icons source",
+    note: "Vendor-sourced Vercel logo asset",
   },
   docker: {
     id: "docker",
