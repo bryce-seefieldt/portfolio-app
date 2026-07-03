@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useMemo, useState } from "react";
+import { Keypad } from "@/components/Keypad";
 import { LabelTag } from "@/components/LabelTag";
 import { Panel } from "@/components/Panel";
 import type { ReactNode } from "react";
@@ -239,132 +240,118 @@ const STACK_KEYS: StackKey[] = [
 const CATEGORY_COLORS: Record<StackKeyCategory, { label: string }> = {
   languages: { label: "LANGUAGES" },
   frontend: { label: "FRONTEND" },
-  backend: { label: "BACKEND / RUNTIME" },
+  backend: { label: "BACKEND" },
   data: { label: "DATA" },
-  cloud: { label: "CLOUD / INFRA" },
-  tooling: { label: "TOOLING / PRACTICE" },
+  cloud: { label: "CLOUD" },
+  tooling: { label: "TOOLING" },
 };
 
+const HERO_STACK_KEYS = STACK_KEYS.filter((key) => key.id !== "claude");
+
+function getLegendInkVar(capRole: string) {
+  return `var(${capRole}-ink)`;
+}
+
 export function TechStackKeyboard() {
-  const [selectedId, setSelectedId] = useState(STACK_KEYS[0]?.id ?? "");
+  const [selectedId, setSelectedId] = useState(HERO_STACK_KEYS[0]?.id ?? "");
   const groupId = useId();
 
   const selectedKey = useMemo(() => {
-    return STACK_KEYS.find((key) => key.id === selectedId) ?? STACK_KEYS[0];
+    return HERO_STACK_KEYS.find((key) => key.id === selectedId) ?? HERO_STACK_KEYS[0];
   }, [selectedId]);
 
-  const keysByCategory = useMemo(() => {
-    const result: Record<StackKeyCategory, StackKey[]> = {
-      languages: [],
-      frontend: [],
-      backend: [],
-      data: [],
-      cloud: [],
-      tooling: [],
-    };
-
-    STACK_KEYS.forEach((key) => {
-      result[key.category].push(key);
-    });
-    return result;
-  }, []);
+  const matrixKeys = useMemo(() => {
+    return HERO_STACK_KEYS.map((key) => ({
+      id: key.id,
+      legend: key.legend,
+      capColor: `var(${key.capRole})`,
+      legendColor: getLegendInkVar(key.capRole),
+      size: key.size,
+      state: key.id === selectedKey.id ? ("backlit" as const) : ("rest" as const),
+      category: key.category,
+      name: key.name,
+    }));
+  }, [selectedKey.id]);
 
   const handleKeyDown = (event: React.KeyboardEvent, currentIndex: number) => {
     if (event.key === " " || event.key === "Enter") {
       event.preventDefault();
-      // eslint-disable-next-line security/detect-object-injection -- currentIndex is computed from controlled key-navigation flow and bounded by STACK_KEYS length.
-      setSelectedId(STACK_KEYS[currentIndex]?.id ?? "");
+      // eslint-disable-next-line security/detect-object-injection -- currentIndex is computed from controlled key-navigation flow and bounded by HERO_STACK_KEYS length.
+      setSelectedId(HERO_STACK_KEYS[currentIndex]?.id ?? "");
       return;
     }
 
     let nextIndex = currentIndex;
     if (event.key === "ArrowRight" || event.key === "ArrowDown") {
-      nextIndex = (currentIndex + 1) % STACK_KEYS.length;
+      nextIndex = (currentIndex + 1) % HERO_STACK_KEYS.length;
     } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
-      nextIndex = (currentIndex - 1 + STACK_KEYS.length) % STACK_KEYS.length;
+      nextIndex = (currentIndex - 1 + HERO_STACK_KEYS.length) % HERO_STACK_KEYS.length;
     } else if (event.key === "Home") {
       nextIndex = 0;
     } else if (event.key === "End") {
-      nextIndex = STACK_KEYS.length - 1;
+      nextIndex = HERO_STACK_KEYS.length - 1;
     } else {
       return;
     }
 
     event.preventDefault();
-    // eslint-disable-next-line security/detect-object-injection -- nextIndex is derived from bounded modulo/home/end logic over STACK_KEYS.
-    setSelectedId(STACK_KEYS[nextIndex]?.id ?? "");
+    // eslint-disable-next-line security/detect-object-injection -- nextIndex is derived from bounded modulo/home/end logic over HERO_STACK_KEYS.
+    setSelectedId(HERO_STACK_KEYS[nextIndex]?.id ?? "");
   };
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:items-start">
-      <Panel label="TECH STACK / KEYBOARD" variant="default">
-        <div role="radiogroup" aria-labelledby={groupId} className="space-y-4">
+    <Panel variant="inset" className="tech-stack-keyboard-well">
+      <div className="tech-stack-keyboard-layout grid gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:items-start">
+        <div role="radiogroup" aria-labelledby={groupId}>
           <span id={groupId} className="sr-only">
             Tech stack technologies
           </span>
-
-          {(Object.entries(keysByCategory) as Array<[StackKeyCategory, StackKey[]]>).map(
-            ([category, keys]) => {
-              if (keys.length === 0) return null;
-              // eslint-disable-next-line security/detect-object-injection -- category is a StackKeyCategory union from keysByCategory, not user input.
-              const categoryData = CATEGORY_COLORS[category];
-              return (
-                <div key={category} className="space-y-2">
-                  <div className="type-label text-ink-muted">{categoryData?.label}</div>
-                  <div
-                    className="keypad-grid"
-                    style={{ gridTemplateColumns: "repeat(auto-fit, minmax(3.5rem, 1fr))" }}
-                  >
-                    {keys.map((key) => {
-                      const globalIndex = STACK_KEYS.findIndex((k) => k.id === key.id);
-                      const isActive = key.id === selectedKey.id;
-                      const sizeClass = `keycap--${key.size ?? "1u"}`;
-                      return (
-                        <button
-                          key={key.id}
-                          type="button"
-                          role="radio"
-                          aria-checked={isActive}
-                          tabIndex={isActive ? 0 : -1}
-                          className={`keycap ${sizeClass} ${isActive ? "keycap--backlit" : ""}`}
-                          style={{ "--keycap-bg": `var(${key.capRole})` } as React.CSSProperties}
-                          onClick={() => setSelectedId(key.id)}
-                          onKeyDown={(e) => handleKeyDown(e, globalIndex)}
-                        >
-                          <span className="keycap__legend">{key.legend}</span>
-                          <span className="keycap__sublegend text-xs">{key.name}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            },
-          )}
+          <div className="type-label text-ink-muted mb-4">TECH STACK / KEYBOARD</div>
+          <Keypad
+            label="TECH STACK / KEYBOARD"
+            columns={4}
+            keys={matrixKeys}
+            embedded
+            getKeyButtonProps={(key, index) => {
+              // eslint-disable-next-line security/detect-object-injection -- index is row-major index over in-memory HERO_STACK_KEYS.
+              const keyData = HERO_STACK_KEYS[index];
+              const isActive = key.id === selectedKey.id;
+              const categoryLabel = keyData ? CATEGORY_COLORS[keyData.category]?.label : undefined;
+              return {
+                role: "radio",
+                "aria-checked": isActive,
+                tabIndex: isActive ? 0 : -1,
+                "aria-label": `${keyData?.name ?? "Technology"} (${categoryLabel ?? "Category"})`,
+                onClick: () => setSelectedId(key.id),
+                onKeyDown: (event: React.KeyboardEvent) => handleKeyDown(event, index),
+              };
+            }}
+          />
         </div>
-      </Panel>
 
-      <Panel label="CRT / TECH DETAIL" variant="inset">
-        <div className="crt-screen" role="status" aria-live="polite" aria-atomic="true">
-          <LabelTag tone="accent" className="mb-3">
-            {selectedKey?.name ?? "SELECT A KEY"}
-          </LabelTag>
+        <div>
+          <div className="type-label text-ink-muted mb-4">CRT / TECH DETAIL</div>
+          <div className="crt-screen" role="status" aria-live="polite" aria-atomic="true">
+            <LabelTag tone="accent" className="mb-3">
+              {selectedKey?.name ?? "SELECT A KEY"}
+            </LabelTag>
 
-          <div className="space-y-4">
-            {STACK_KEYS.map((key) => (
-              <p
-                key={key.id}
-                className={`type-body crt-screen__detail ${
-                  key.id === selectedKey?.id ? "is-active" : ""
-                }`}
-                hidden={key.id !== selectedKey?.id}
-              >
-                {key.blurb}
-              </p>
-            ))}
+            <div className="space-y-4">
+              {HERO_STACK_KEYS.map((key) => (
+                <p
+                  key={key.id}
+                  className={`type-body crt-screen__detail ${
+                    key.id === selectedKey?.id ? "is-active" : ""
+                  }`}
+                  hidden={key.id !== selectedKey?.id}
+                >
+                  {key.blurb}
+                </p>
+              ))}
+            </div>
           </div>
         </div>
-      </Panel>
-    </div>
+      </div>
+    </Panel>
   );
 }

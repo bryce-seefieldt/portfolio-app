@@ -83,74 +83,78 @@ export function OperatingPrinciplesPanel() {
   const selectedPrinciple = PRINCIPLES.at(selectedIndex) ?? PRINCIPLES.at(0);
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-start">
-      <Panel label="ANNUNCIATOR / PRINCIPLE SELECT" variant="default">
-        <div
-          role="radiogroup"
-          aria-labelledby={groupId}
-          className="grid grid-cols-1 gap-2 sm:grid-cols-2"
-        >
-          <span id={groupId} className="sr-only">
-            Operating principles
-          </span>
-          {PRINCIPLES.map((principle, index) => {
-            const isActive = principle.id === selectedPrinciple?.id;
-            return (
-              <button
-                key={principle.id}
-                type="button"
-                role="radio"
-                aria-checked={isActive}
-                aria-controls={`principle-detail-${principle.id}`}
-                tabIndex={isActive ? 0 : -1}
-                className={`annunciator-tile ${isActive ? "is-active" : ""}`}
-                onClick={() => setSelectedId(principle.id)}
-                onKeyDown={(event) => {
-                  if (event.key === " " || event.key === "Enter") {
-                    event.preventDefault();
-                    setSelectedId(principle.id);
-                    return;
-                  }
+    <Panel variant="default" className="operating-principles-well">
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-start">
+        <div>
+          <div className="type-label text-ink-muted mb-4">ANNUNCIATOR / PRINCIPLE SELECT</div>
+          <div
+            role="radiogroup"
+            aria-labelledby={groupId}
+            className="grid grid-cols-1 gap-2 sm:grid-cols-2"
+          >
+            <span id={groupId} className="sr-only">
+              Operating principles
+            </span>
+            {PRINCIPLES.map((principle, index) => {
+              const isActive = principle.id === selectedPrinciple?.id;
+              return (
+                <button
+                  key={principle.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={isActive}
+                  aria-controls={`principle-detail-${principle.id}`}
+                  tabIndex={isActive ? 0 : -1}
+                  className={`annunciator-tile ${isActive ? "is-active" : ""}`}
+                  onClick={() => setSelectedId(principle.id)}
+                  onKeyDown={(event) => {
+                    if (event.key === " " || event.key === "Enter") {
+                      event.preventDefault();
+                      setSelectedId(principle.id);
+                      return;
+                    }
 
-                  const nextIndex = getNextIndex(index, event.key);
-                  if (nextIndex !== index) {
-                    event.preventDefault();
-                    const nextPrinciple = PRINCIPLES.at(nextIndex);
-                    if (!nextPrinciple) return;
-                    setSelectedId(nextPrinciple.id);
-                  }
-                }}
-              >
-                <span className="annunciator-tile__lamp" aria-hidden="true" />
-                <span className="annunciator-tile__text">{principle.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </Panel>
-
-      <Panel label="CRT DETAIL / ACTIVE PRINCIPLE" variant="inset">
-        <div className="crt-screen" role="status" aria-live="polite" aria-atomic="true">
-          <LabelTag tone="accent" className="mb-3">
-            {selectedPrinciple?.label}
-          </LabelTag>
-
-          <div className="space-y-4">
-            {PRINCIPLES.map((principle) => (
-              <p
-                id={`principle-detail-${principle.id}`}
-                key={principle.id}
-                className={`type-body crt-screen__detail ${
-                  principle.id === selectedPrinciple?.id ? "is-active" : ""
-                }`}
-                hidden={principle.id !== selectedPrinciple?.id}
-              >
-                {principle.detail}
-              </p>
-            ))}
+                    const nextIndex = getNextIndex(index, event.key);
+                    if (nextIndex !== index) {
+                      event.preventDefault();
+                      const nextPrinciple = PRINCIPLES.at(nextIndex);
+                      if (!nextPrinciple) return;
+                      setSelectedId(nextPrinciple.id);
+                    }
+                  }}
+                >
+                  <span className="annunciator-tile__lamp" aria-hidden="true" />
+                  <span className="annunciator-tile__text">{principle.label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
-      </Panel>
-    </div>
+
+        <div>
+          <div className="type-label text-ink-muted mb-4">CRT DETAIL / ACTIVE PRINCIPLE</div>
+          <div className="crt-screen" role="status" aria-live="polite" aria-atomic="true">
+            <LabelTag tone="accent" className="mb-3">
+              {selectedPrinciple?.label}
+            </LabelTag>
+
+            <div className="space-y-4">
+              {PRINCIPLES.map((principle) => (
+                <p
+                  id={`principle-detail-${principle.id}`}
+                  key={principle.id}
+                  className={`type-body crt-screen__detail ${
+                    principle.id === selectedPrinciple?.id ? "is-active" : ""
+                  }`}
+                  hidden={principle.id !== selectedPrinciple?.id}
+                >
+                  {principle.detail}
+                </p>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </Panel>
   );
 }

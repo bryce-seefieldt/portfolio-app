@@ -79,6 +79,15 @@ const KEY_TOKENS_LIGHT_SECONDARY: readonly TokenEntry[] = [
   { token: "--key2-mauve", bg: "#8B6677", legend: "#FFFEFE" },
 ];
 
+const CATEGORY_TOKEN_MAP = {
+  languages: { cap: "--key-primary", ink: "--key-primary-ink" },
+  frontend: { cap: "--key-secondary", ink: "--key-secondary-ink" },
+  backend: { cap: "--key-tertiary", ink: "--key-tertiary-ink" },
+  data: { cap: "--key2-teal", ink: "--key2-teal-ink" },
+  cloud: { cap: "--key2-blue", ink: "--key2-blue-ink" },
+  tooling: { cap: "--key-neutral", ink: "--key-neutral-ink" },
+} as const;
+
 function hexToRgb(hex: string) {
   const normalized = hex.replace("#", "");
   const parsed = [0, 2, 4].map((idx) => Number.parseInt(normalized.slice(idx, idx + 2), 16));
@@ -279,6 +288,37 @@ export default function DesignTokensPreviewPage() {
     },
   ];
 
+  const matrixKeyboard = [
+    { id: "typescript", legend: "TS", subLegend: "LANG", category: "languages" },
+    { id: "javascript", legend: "JS", subLegend: "LANG", category: "languages" },
+    { id: "python", legend: "PY", subLegend: "LANG", category: "languages" },
+    { id: "java", legend: "JAVA", subLegend: "LANG", category: "languages" },
+    { id: "react", legend: "RE", subLegend: "FRONT", category: "frontend" },
+    { id: "nextjs", legend: "NX", subLegend: "FRONT", category: "frontend" },
+    { id: "angular", legend: "NG", subLegend: "FRONT", category: "frontend" },
+    { id: "tailwind", legend: "TW", subLegend: "FRONT", category: "frontend" },
+    { id: "nodejs", legend: "NODE", subLegend: "BACK", category: "backend" },
+    { id: "rest", legend: "REST", subLegend: "BACK", category: "backend" },
+    { id: "postgresql", legend: "PG", subLegend: "DATA", category: "data" },
+    { id: "sqlserver", legend: "SQL", subLegend: "DATA", category: "data" },
+    { id: "mongodb", legend: "MDB", subLegend: "DATA", category: "data" },
+    { id: "aws", legend: "AWS", subLegend: "CLOUD", category: "cloud" },
+    { id: "azure", legend: "AZ", subLegend: "CLOUD", category: "cloud" },
+    { id: "vercel", legend: "VC", subLegend: "CLOUD", category: "cloud" },
+    { id: "docker", legend: "DKR", subLegend: "CLOUD", category: "cloud" },
+    { id: "git", legend: "GIT", subLegend: "TOOL", category: "tooling" },
+    { id: "github", legend: "GH", subLegend: "TOOL", category: "tooling" },
+    { id: "linux", legend: "LNX", subLegend: "TOOL", category: "tooling" },
+    { id: "claude", legend: "CLAUDE", subLegend: "TOOL", category: "tooling", size: "2u" as const },
+  ].map((key) => {
+    const tokens = CATEGORY_TOKEN_MAP[key.category as keyof typeof CATEGORY_TOKEN_MAP];
+    return {
+      ...key,
+      capColor: `var(${tokens.cap})`,
+      legendColor: `var(${tokens.ink})`,
+    };
+  });
+
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6">
       {/* Governance: this page is the canonical rendered gallery for reusable design-system components. */}
@@ -450,6 +490,15 @@ export default function DesignTokensPreviewPage() {
               key.
             </p>
             <Keypad label="MINI KEYBOARD / DEPTH REBUILD" keys={miniKeyboard} columns={5} />
+          </div>
+
+          <div className="space-y-3">
+            <h3 className="type-h3 text-ink">Equal-width matrix keypad (Option C)</h3>
+            <p className="type-caption text-ink-muted">
+              Five-column matrix with category-by-color mapping and a 2u Claude key anchoring the
+              final row.
+            </p>
+            <Keypad label="MATRIX / CATEGORY COLOR MAP" keys={matrixKeyboard} columns={5} />
           </div>
         </div>
       </Panel>
