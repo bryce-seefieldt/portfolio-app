@@ -35,22 +35,21 @@ vi.mock("@/lib/config", () => ({
 
 import CVPage from "../cv/page";
 
-// RATIONALE: CV page should remain a traditional, scannable resume.
+// RATIONALE: CV page should render module-based sections while remaining scannable.
 describe("CVPage", () => {
-  it("should render the traditional CV structure and key content", () => {
+  it("should render the module CV structure and key content", () => {
     configValues.GITHUB_BASE_URL = "https://github.com/example-base";
     configValues.LINKEDIN_URL = "https://linkedin.example.com";
 
     render(<CVPage />);
 
-    expect(screen.getByRole("heading", { level: 1, name: "Curriculum Vitae" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: "Bryce Seefieldt" })).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { level: 2, name: "Full-Stack Developer" }),
+      screen.getByRole("heading", { level: 2, name: "Professional summary." }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 3, name: "Summary" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 3, name: "Experience" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 3, name: "Education" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 3, name: "Technical Skills" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Experience." })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Education." })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Skills matrix." })).toBeInTheDocument();
 
     expect(
       screen.getByRole("heading", { level: 3, name: "IT Services Specialist" }),
@@ -83,24 +82,23 @@ describe("CVPage", () => {
       screen.getByRole("heading", { level: 3, name: "Music Production and Engineering" }),
     ).toBeInTheDocument();
 
-    expect(screen.getByText(/Languages:/i)).toBeInTheDocument();
-    expect(screen.getByText(/Cloud & DevOps:/i)).toBeInTheDocument();
-    expect(screen.getByText(/Design & UX:/i)).toBeInTheDocument();
+    expect(screen.getByText("Languages")).toBeInTheDocument();
+    expect(screen.getByText("Cloud and DevOps")).toBeInTheDocument();
+    expect(screen.getByText("Design and UX")).toBeInTheDocument();
 
-    const pdfDownloadLink = screen.getByRole("link", { name: "Download PDF" });
+    const pdfDownloadLink = screen.getByRole("link", { name: "DOWNLOAD PDF" });
     expect(pdfDownloadLink).toHaveAttribute("href", "/Bryce_Seefieldt_Full_Stack_Developer.pdf");
-    expect(pdfDownloadLink).toHaveAttribute("download", "Bryce_Seefieldt_Full_Stack_Developer.pdf");
-    expect(screen.getByRole("link", { name: "projects" })).toHaveAttribute("href", "/projects");
-    expect(screen.getByRole("link", { name: "engineering docs" })).toHaveAttribute("href", "/docs");
-    expect(screen.getByRole("link", { name: "get in touch" })).toHaveAttribute("href", "/contact");
+    expect(screen.getByRole("link", { name: "PROJECTS" })).toHaveAttribute("href", "/projects");
+    expect(screen.getByRole("link", { name: "ENGINEERING DOCS" })).toHaveAttribute("href", "/docs");
+    expect(screen.getByRole("link", { name: "GET IN TOUCH" })).toHaveAttribute("href", "/contact");
 
     expect(screen.queryByText("CIO / IT Executive + Full-Stack Developer")).toBeNull();
     expect(screen.queryByText("Suggested reviewer path")).toBeNull();
     expect(screen.queryByText("Evidence Hubs")).toBeNull();
     expect(screen.queryByText("Proofs & Evidence")).toBeNull();
 
-    expect(screen.getByText("GitHub")).toBeInTheDocument();
-    expect(screen.getByText("LinkedIn")).toBeInTheDocument();
+    expect(screen.getByText("GITHUB")).toBeInTheDocument();
+    expect(screen.getByText("LINKEDIN")).toBeInTheDocument();
   });
 
   it("should omit optional profile links when missing", () => {
@@ -109,7 +107,7 @@ describe("CVPage", () => {
 
     render(<CVPage />);
 
-    expect(screen.queryByText("GitHub")).toBeNull();
-    expect(screen.queryByText("LinkedIn")).toBeNull();
+    expect(screen.queryByText("GITHUB")).toBeNull();
+    expect(screen.queryByText("LINKEDIN")).toBeNull();
   });
 });

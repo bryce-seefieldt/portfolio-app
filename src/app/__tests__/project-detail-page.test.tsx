@@ -107,7 +107,7 @@ describe("ProjectDetailPage", () => {
     render(node as React.ReactElement);
 
     expect(screen.getByRole("heading", { name: "Portfolio App" })).toBeInTheDocument();
-    expect(screen.getByText("Evidence Artifacts")).toBeInTheDocument();
+    expect(screen.getByText("Inspectable evidence trail.")).toBeInTheDocument();
   });
 
   it("should call notFound when slug is missing", async () => {
@@ -125,8 +125,8 @@ describe("ProjectDetailPage", () => {
 
     render(node as React.ReactElement);
 
-    expect(screen.getByText("What this project proves")).toBeInTheDocument();
-    expect(screen.getByText("Technical summary (first-pass)")).toBeInTheDocument();
+    expect(screen.getByText("Project proof checklist.")).toBeInTheDocument();
+    expect(screen.getByText("Operational verification notes.")).toBeInTheDocument();
   });
 
   it("should render demo link when available", async () => {
@@ -136,8 +136,8 @@ describe("ProjectDetailPage", () => {
 
     render(node as React.ReactElement);
 
-    expect(screen.getByText("Demo")).toBeInTheDocument();
-    expect(screen.getByText("Repo: (add when ready)")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "DEMO" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "BACK TO PROJECTS" })).toBeInTheDocument();
   });
 
   it("should generate static params for project slugs", async () => {

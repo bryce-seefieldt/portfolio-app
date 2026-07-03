@@ -1,13 +1,13 @@
-// src/app/projects/page.tsx
-import Link from "next/link";
-import { Section } from "@/components/Section";
+import { ControlButton } from "@/components/ControlButton";
+import { LabelTag } from "@/components/LabelTag";
+import { Panel } from "@/components/Panel";
 import { ScrollFadeIn } from "@/components/ScrollFadeIn";
 import { getFeaturedProjects, PROJECTS } from "@/data/projects";
 import { DOCS_BASE_URL } from "@/lib/config";
 
 function Tag({ children }: { children: React.ReactNode }) {
   return (
-    <span className="rounded-full border border-zinc-200 px-2 py-0.5 text-xs text-zinc-700 dark:border-zinc-800 dark:text-zinc-300">
+    <span className="border-line text-ink-muted rounded-full border px-2 py-0.5 text-xs">
       {children}
     </span>
   );
@@ -22,8 +22,9 @@ function StatusBadge({ status }: { status: string }) {
         : status === "planned"
           ? "Planned"
           : "Archived";
+
   return (
-    <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
+    <span className="bg-surface-2 text-ink-muted rounded-full px-2 py-0.5 text-xs font-medium">
       {label}
     </span>
   );
@@ -33,128 +34,105 @@ export default function ProjectsPage() {
   const featured = getFeaturedProjects();
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-10 pb-6">
       <ScrollFadeIn>
         <header className="flex flex-col gap-3">
-          <h1 className="text-3xl font-semibold tracking-tight">Projects</h1>
-          <p className="max-w-3xl text-zinc-700 dark:text-zinc-300">
+          <LabelTag>SELECTED WORK</LabelTag>
+          <h1 className="type-h1 text-ink">The work.</h1>
+          <p className="text-ink-muted max-w-3xl text-sm">
             Projects are documented with an evidence-first model. Each project page links to deeper
             artifacts (dossier, ADRs, threat model, runbooks) in the Documentation App where
             applicable.
           </p>
-          <div className="text-sm text-zinc-600 dark:text-zinc-400">
+          <div className="text-ink-muted text-sm">
             Evidence engine:{" "}
-            <a
-              className="underline hover:text-zinc-950 dark:hover:text-white"
-              href={DOCS_BASE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              open Documentation App
-            </a>
+            <ControlButton href={DOCS_BASE_URL} external className="control-button--compact">
+              OPEN DOCUMENTATION APP
+            </ControlButton>
           </div>
         </header>
       </ScrollFadeIn>
 
-      <ScrollFadeIn delay={50}>
-        <Section
-          title="Featured"
-          subtitle="Best entry points for reviewers. Each has a defined evidence trail."
-        >
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {featured.map((p) => (
-              <div
-                key={p.slug}
-                className="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800"
+      <ScrollFadeIn delay={60}>
+        <section className="space-y-4">
+          <LabelTag>MODULE 00 / FEATURED</LabelTag>
+          <h2 className="type-h2 text-ink">Best entry points for reviewers.</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            {featured.map((project) => (
+              <Panel
+                key={project.slug}
+                className="h-full"
+                label={`CARD / ${project.title.toUpperCase()}`}
+                variant="default"
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="font-medium">
-                      <Link className="hover:underline" href={`/projects/${p.slug}`}>
-                        {p.title}
-                      </Link>
+                <div className="text-ink space-y-3 text-sm">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <StatusBadge status={project.status} />
+                    <div className="flex flex-wrap gap-2">
+                      {project.tags?.slice(0, 4).map((tag) => (
+                        <Tag key={`${project.slug}-${tag}`}>{tag}</Tag>
+                      ))}
                     </div>
-                    <div className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{p.summary}</div>
                   </div>
-                  <StatusBadge status={p.status} />
-                </div>
 
-                {p.tags?.length ? (
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {p.tags.slice(0, 6).map((t) => (
-                      <Tag key={t}>{t}</Tag>
-                    ))}
+                  <p>{project.summary}</p>
+
+                  <div className="flex flex-wrap gap-2">
+                    <ControlButton href={`/projects/${project.slug}`}>VIEW DETAILS</ControlButton>
+                    {project.repoUrl ? (
+                      <ControlButton href={project.repoUrl} external>
+                        REPO
+                      </ControlButton>
+                    ) : null}
+                    {project.demoUrl ? (
+                      <ControlButton href={project.demoUrl} external>
+                        DEMO
+                      </ControlButton>
+                    ) : null}
                   </div>
-                ) : null}
-
-                <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
-                  <Link className="underline" href={`/projects/${p.slug}`}>
-                    View details
-                  </Link>
-                  {p.repoUrl ? (
-                    <a
-                      className="underline"
-                      href={p.repoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Repo
-                    </a>
-                  ) : null}
-                  {p.demoUrl ? (
-                    <a
-                      className="underline"
-                      href={p.demoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Demo
-                    </a>
-                  ) : null}
                 </div>
-              </div>
+              </Panel>
             ))}
           </div>
-        </Section>
+        </section>
       </ScrollFadeIn>
 
-      <ScrollFadeIn delay={100}>
-        <Section
-          title="All projects (registry placeholder)"
-          subtitle="This list will become filterable once the registry expands."
-        >
-          <div className="flex flex-col gap-3">
-            {PROJECTS.map((p) => (
-              <div
-                key={p.slug}
-                className="flex flex-col gap-1 rounded-xl border border-zinc-200 p-4 dark:border-zinc-800"
-              >
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <Link className="font-medium hover:underline" href={`/projects/${p.slug}`}>
-                    {p.title}
-                  </Link>
-                  <StatusBadge status={p.status} />
-                </div>
-                <div className="text-sm text-zinc-600 dark:text-zinc-400">{p.summary}</div>
-                <div className="mt-2 flex flex-wrap items-center gap-3 text-sm">
-                  <Link className="underline" href={`/projects/${p.slug}`}>
-                    Details
-                  </Link>
-                  {p.repoUrl ? (
-                    <a
-                      className="underline"
-                      href={p.repoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Repo
-                    </a>
-                  ) : null}
-                </div>
-              </div>
-            ))}
-          </div>
-        </Section>
+      <ScrollFadeIn delay={120}>
+        <section className="space-y-4">
+          <LabelTag>MODULE 01 / REGISTRY</LabelTag>
+          <h2 className="type-h2 text-ink">All projects.</h2>
+          <Panel label="CARD / PROJECT REGISTRY" variant="default">
+            <p className="text-ink-muted mb-4 text-sm">
+              This list will become filterable once the registry expands.
+            </p>
+            <div className="space-y-3">
+              {PROJECTS.map((project) => (
+                <Panel
+                  key={project.slug}
+                  label={`ENTRY / ${project.slug.toUpperCase()}`}
+                  variant="inset"
+                  showRivets={false}
+                >
+                  <div className="text-ink space-y-3 text-sm">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <p className="font-medium">{project.title}</p>
+                      <StatusBadge status={project.status} />
+                    </div>
+                    <p className="text-ink-muted">{project.summary}</p>
+                    <div className="flex flex-wrap gap-2">
+                      <ControlButton href={`/projects/${project.slug}`}>DETAILS</ControlButton>
+                      {project.repoUrl ? (
+                        <ControlButton href={project.repoUrl} external>
+                          REPO
+                        </ControlButton>
+                      ) : null}
+                    </div>
+                  </div>
+                </Panel>
+              ))}
+            </div>
+          </Panel>
+        </section>
       </ScrollFadeIn>
     </div>
   );
