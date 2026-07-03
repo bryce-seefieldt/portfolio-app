@@ -9,7 +9,11 @@ export function KeycapLegend({ id }: KeycapLegendProps) {
   const entry = Object.values(LOGO_REGISTRY).find((candidate) => candidate.id === id);
 
   if (!entry) {
-    return <span aria-hidden className="obl__legend--text">?</span>;
+    return (
+      <span aria-hidden className="obl__legend--text">
+        ?
+      </span>
+    );
   }
 
   const style = { "--legend-scale": entry.opticalScale } as CSSProperties;
