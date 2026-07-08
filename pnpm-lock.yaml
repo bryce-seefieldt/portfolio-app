@@ -23,8 +23,8 @@ importers:
   .:
     dependencies:
       '@proj-airi/font-departure-mono':
-        specifier: ^0.10.2
-        version: 0.10.2
+        specifier: ^0.11.0
+        version: 0.11.0
       '@vercel/analytics':
         specifier: ^1.6.1
         version: 1.6.1(next@16.2.10(@babel/core@7.29.7)(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)
@@ -44,8 +44,8 @@ importers:
         specifier: 19.2.7
         version: 19.2.7(react@19.2.7)
       simple-icons:
-        specifier: ^16.24.1
-        version: 16.24.1
+        specifier: ^16.25.0
+        version: 16.25.0
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -800,8 +800,8 @@ packages:
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
 
-  '@proj-airi/font-departure-mono@0.10.2':
-    resolution: {integrity: sha512-IFXUr7HVpKbT4jaaz8vtNWQjHzb6/HEq0ufCYOSDBUKJ97nIwDfCdtiJDgavGV0h6gU+XXCWT/d5L/WaV2Iu6w==}
+  '@proj-airi/font-departure-mono@0.11.0':
+    resolution: {integrity: sha512-dmnSJHZtax+qUd79tcR50ylzYwUXd+hOkuDzopkporFZeTl5+Gxq71DmnvAcqo5J/Mov7wn9JDPLyeWWAcPDqw==}
 
   '@rollup/rollup-android-arm-eabi@4.62.2':
     resolution: {integrity: sha512-6o7ZLZK+BeenkZCFNDXqpbjw9bD6nuWonvS/lwQJp7NoVVxm6p3qE7qQ5jGuBjiFsgvqjD8mZAU5oWxTmbOeOg==}
@@ -2858,8 +2858,8 @@ packages:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
 
-  simple-icons@16.24.1:
-    resolution: {integrity: sha512-AnDQPrZAVzYSym7cBVIrnbhLk9auWGgkl+9hKvkbTqGEfH6TU7WKgumEXYYaJuM1Ib87+cnzr881UZniCM7t+A==}
+  simple-icons@16.25.0:
+    resolution: {integrity: sha512-ReYPfbqjkTBovxjerHw2tf6E1rQdaCqNJKaJbd78Mui8w+78xQlE1aDO/2ekID++n8qa+1t+oaueYLeiSoQsIA==}
     engines: {node: '>=0.12.18'}
 
   sirv@2.0.4:
@@ -3817,7 +3817,7 @@ snapshots:
 
   '@polka/url@1.0.0-next.29': {}
 
-  '@proj-airi/font-departure-mono@0.10.2': {}
+  '@proj-airi/font-departure-mono@0.11.0': {}
 
   '@rollup/rollup-android-arm-eabi@4.62.2':
     optional: true
@@ -5986,7 +5986,7 @@ snapshots:
 
   signal-exit@4.1.0: {}
 
-  simple-icons@16.24.1: {}
+  simple-icons@16.25.0: {}
 
   sirv@2.0.4:
     dependencies:
