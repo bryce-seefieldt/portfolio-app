@@ -22,10 +22,8 @@ export default function HomePage() {
       <ScrollFadeIn>
         <section className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-start">
           <header className="flex flex-col gap-4">
-            {/* TODO(phase2c1-copy): Workshop decision pending - consider present-tense eyebrow variant. */}
             <p className="type-label text-ink-muted">
-              Full-Stack Cloud Engineer | Next.js, React, Python, Java, C++ | Docker, AWS, Azure |
-              Architect of secure, reliable applications & bulletproof pipelines
+              FULL-STACK CLOUD ENGINEER · TYPESCRIPT / PYTHON / JAVA · DOCKER / AWS / AZURE
             </p>
 
             <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
@@ -34,23 +32,12 @@ export default function HomePage() {
             </h1>
 
             <p className="type-body text-ink max-w-3xl">
-              I am a software engineer who looks at development through a wider lens. While I love
-              building intuitive, high-performance interfaces with Next.js and React, I care deeply
-              about what happens after the code is pushed. To me, a feature isn&apos;t complete
-              unless it&apos;s running on secure, resilient, and fully automated cloud
-              infrastructure.
-              <br />
-              <br />
-              Over my career, I’ve intentionally cultivated a stack that spans the entire lifecycle
-              of a product. I use TypeScript/JavaScript for rapid web development, Python and Java
-              for heavy-duty backend services, and Docker paired with AWS or Azure to ensure
-              seamless cloud deployment.
-              <br />
-              <br />
-              Because of my background in project management, I don&apos;t just write code in a
-              vacuum. I design architectures with business constraints, security compliance, and
-              long-term reliability in mind. I specialize in building robust CI/CD pipelines that
-              eliminate deployment anxiety and keep engineering teams moving fast.
+              Full-stack developer with a background leading enterprise technology projects. I build
+              web applications end to end with TypeScript, Next.js, and React, backed by Python and
+              Java services, deployed with Docker to AWS and Azure. Twenty-five years of
+              professional delivery shaped how I work: every feature tested, secured, documented,
+              and shipped through an automated pipeline. Take a look around. The proof is one click
+              deep.
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-1">
@@ -68,6 +55,7 @@ export default function HomePage() {
                 <LabelTag tone="accent">BRYCE SEEFIELDT</LabelTag>
                 <LabelTag>PANEL: CONTROL BUS</LabelTag>
                 <LabelTag tone="warn">TORONTO, CANADA</LabelTag>
+                <LabelTag>MODEL CF-2026</LabelTag>
               </div>
 
               <div className="space-y-2">
@@ -95,42 +83,6 @@ export default function HomePage() {
           <TechStackKeyboard />
         </section>
       </ScrollFadeIn>
-
-      {/* THE ARC (ARCHIVED) */}
-      {/* <ScrollFadeIn>
-        <section className="space-y-4">
-          <LabelTag>MODULE 01 / THE ARC</LabelTag>
-          <h2 className="type-h2 text-ink">Twenty-five years, one throughline.</h2>
-          <div className="signal-path-rail" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-            <span />
-          </div>
-          <div className="text-ink max-w-4xl space-y-4 text-base">
-            <p>
-              I spent the first two decades of my career in music and entertainment, then in
-              enterprise publishing, then in university IT. Different industries, same instinct: I
-              kept finding the broken process, the manual workaround everyone had stopped
-              questioning, the thing that should be automated but wasn&apos;t. For years I fixed
-              those the way I could, with better systems, better coordination, better tools.
-            </p>
-            <p>
-              Then at Warner Chappell Music Publishing I automated a reporting process that five
-              international offices had been doing by hand for years, and watched 45-plus hours of
-              weekly manual work simply disappear. That was the moment. Software wasn&apos;t just a
-              tool for the job, it was the most powerful version of the thing I&apos;d always done.
-              So I went and learned it properly: a four-year honours degree, eighteen months of
-              enterprise IT delivery, and six years of building, every day, to a real standard.
-            </p>
-            <p>
-              I&apos;m not a career-changer who left one thing for another. I&apos;m the same person
-              I always was, finding what&apos;s broken and fixing it, with a much better set of
-              tools now.
-            </p>
-          </div>
-        </section>
-      </ScrollFadeIn> */}
 
       {/* MODULE 02 */}
       <ScrollFadeIn delay={60}>
@@ -231,12 +183,12 @@ export default function HomePage() {
               </div>
             </Panel>
 
-            {/* <Panel className="h-full opacity-85" label="CARD / RESERVED" variant="default">
+            <Panel className="h-full opacity-85" label="CARD / RESERVED" variant="default">
               <div className="text-ink-muted flex h-full flex-col items-start justify-between gap-4 text-sm">
                 <p>Reserved for the planned AI demo system.</p>
                 <LabelTag>SLOT OPEN</LabelTag>
               </div>
-            </Panel> */}
+            </Panel>
           </div>
         </section>
       </ScrollFadeIn>

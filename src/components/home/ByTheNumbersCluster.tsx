@@ -18,7 +18,7 @@ type Bank = {
 
 const BANKS: Bank[] = [
   {
-    title: "BANK D / THE CRAFT",
+    title: "BANK A / THE CRAFT",
     stats: [
       {
         value: "6 years",
@@ -45,7 +45,7 @@ const BANKS: Bank[] = [
     ],
   },
   {
-    title: "BANK A / ENTERPRISE DELIVERY",
+    title: "BANK B / ENTERPRISE DELIVERY",
     stats: [
       {
         value: "2,500+",
@@ -72,7 +72,7 @@ const BANKS: Bank[] = [
     ],
   },
   {
-    title: "BANK B / SCALE & AUTOMATION",
+    title: "BANK C / SCALE & AUTOMATION",
     stats: [
       {
         value: "1,000,000+",
@@ -92,7 +92,7 @@ const BANKS: Bank[] = [
     ],
   },
   {
-    title: "BANK C / THE CAREER",
+    title: "BANK D / THE CAREER",
     stats: [
       {
         value: "25+ years",
@@ -101,7 +101,7 @@ const BANKS: Bank[] = [
       },
       {
         value: "Multiple",
-        label: "Multiple certified gold records",
+        label: "Certified gold records",
         instrument: "glyph",
         glyph: "disc",
       },
@@ -210,9 +210,7 @@ export function ByTheNumbersCluster() {
           key={bank.title}
           label={bank.title}
           variant="inset"
-          className={
-            bank.title === "BANK D / THE CRAFT" ? "ring-accent/40 h-full ring-1" : "h-full"
-          }
+          className={bank.title.endsWith("/ THE CRAFT") ? "ring-accent/40 h-full ring-1" : "h-full"}
         >
           <div className="grid gap-3">
             {bank.stats.map((stat) => (
