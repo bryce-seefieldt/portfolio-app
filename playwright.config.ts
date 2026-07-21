@@ -58,6 +58,8 @@ export default defineConfig({
           "PLAYWRIGHT_E2E=1 NEXT_OTEL_PERFORMANCE_PREFIX=e2e pnpm build && PLAYWRIGHT_E2E=1 NEXT_OTEL_PERFORMANCE_PREFIX=e2e pnpm start",
         // URL to wait for before starting tests
         url: "http://localhost:3000",
+        // Local production builds can exceed the default 60s startup window.
+        timeout: 180 * 1000,
         // Reuse existing server if already running (except in CI)
         reuseExistingServer: !process.env.CI,
       },
